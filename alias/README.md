@@ -33,6 +33,30 @@ source ~/.bashrc
 - bashrc 파일을 수정한다고해서 바로 적용되는 건 아니고 source 명령어를 사용하여 동기화를 시켜주셔야 적용이 됩니다.
 - 이러한 과정을 마친다면 자신이 등록해놓은 명령어를 alias 별칭으로 편하게 명령어를 수행하실 수 있습니다.
 
-### 참고
+## .bash_aliases 를 만들어서 alias 파일관리
+
+### 설정파일 만들기
+```shell
+vi .bash_aliases
+```
+- .bash_aliases 파일을 생성하고 alias 들을 추가한다.
+
+### .bashrc, .zshrc 등 기본 bash 정보에서 .bash_aliases 읽어들이기
+.bashrc에 아래의 내용을 입력하고 반영(source ~/.bashrc)
+```
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+```
+
+### 설정 파일 바로 읽어들이기
+```shell
+source ~/.bashrc
+or
+source ~/.zshrc
+```
+- `source` 명령어는 수정한 스크립트를 바로 적용하기 위해서 사용하는 명령어
+
+## 참고
 - [[Linux] 리눅스 alias(명령어 별칭) 설정 및 사용법 (+ 영구 등록)](https://coding-factory.tistory.com/800)
 - [Alias 설정하기](https://ojava.tistory.com/153)
