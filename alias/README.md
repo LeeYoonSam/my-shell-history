@@ -41,6 +41,11 @@ vi .bash_aliases
 ```
 - .bash_aliases 파일을 생성하고 alias 들을 추가한다.
 
+```
+alias record="adb shell screenrecord --size 1280x720 /sdcard/demo.mp4"
+alias record-get="adb pull /sdcard/demo.mp4 ~/Downloads/demo.mp4 && open ~/Downloads"
+```
+
 ### .bashrc, .zshrc 등 기본 bash 정보에서 .bash_aliases 읽어들이기
 .bashrc에 아래의 내용을 입력하고 반영(source ~/.bashrc)
 ```
