@@ -35,3 +35,4 @@ source ~/.bashrc
 
 ### 참고
 - [[Linux] 리눅스 alias(명령어 별칭) 설정 및 사용법 (+ 영구 등록)](https://coding-factory.tistory.com/800)
+- [Alias 설정하기](https://ojava.tistory.com/153)
