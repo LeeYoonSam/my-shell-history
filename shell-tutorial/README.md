@@ -2,7 +2,7 @@
 
 ## 목록
 1. [Introduction](./1_Introduction/)
-2. Philosophy
+2. [Philosophy](./2_Philosophy/)
 3. A First Script
 4. Variables (Part 1)
 5. Wildcards
@@ -21,3 +21,5 @@
 
 ## 참고
 - [Shell Scripting Tutorial](https://www.shellscript.sh/)
+- [Bash Reference Manual](https://www.gnu.org/savannah-checkouts/gnu/bash/manual/bash.html)
+- [Linux Commands](https://docs.rockylinux.org/books/admin_guide/03-commands/)
