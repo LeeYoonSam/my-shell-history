@@ -143,3 +143,31 @@ touch "${USER_NAME}_file"
 - 쉘은 이제 우리가 변수 USER_NAME을 참조하고 있고 "_file" 접미사가 붙기를 원한다는 것을 알고 있습니다. 이것은 문제의 원인을 추적하기 어려울 수 있기 때문에 많은 새로운 쉘 스크립트 프로그래머의 몰락이 될 수 있습니다.
 - 또한 "${USER_NAME}_file" 주위의 따옴표에 유의하십시오. 사용자가 "Steve Parker"(공백에 주의)를 입력한 경우 따옴표 없이
 touch에 전달된 인수는 Steve와 Parker_file이 될 것입니다. 즉, 사실상 touch Steve Parker_file이라고 하는 것입니다. 이 파일은 하나가 아니라 두 개의 파일을 터치해야 합니다. 따옴표는 이것을 피합니다.
+
+## 명령어
+
+### read
+> `read`는 표준 입력(파이프라인 입력 또는 키보드 입력)에서 한 줄의 내용씩 읽어 들이는 명령어 입니다.
+
+**프롬프트 출력하기**
+-p 옵션을 사용해 프롬프트를 출력할 수도 있습니다.
+
+```shell
+#!/bin/bash
+# read_promt.sh
+
+read -p "성은? > " last_name  
+read -p "이름은? > " first_name  
+echo "성은 ${last_name}이고, 이름은 ${first_name}입니다."  
+```
+
+결과
+```shell
+$ sh read_promt.sh
+성은? >  Lee
+이름은? > YoonSam
+성은 Lee이고, 이름은 YoonSam입니다.
+```
+
+### 참고
+- [쉘 스크립트(Shell Script) 기초(5) - read](https://jupiny.com/2017/07/10/shell-script-basic-5/)
