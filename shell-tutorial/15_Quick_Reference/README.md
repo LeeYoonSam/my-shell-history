@@ -6,12 +6,12 @@ Command	Description | Example
 --- | ---
 & &emsp;&emsp;	Run the previous command in the background	| ls &
 && &emsp;&emsp;	Logical AND	| if [ "$foo" -ge "0" ] && [ "$foo" -le "9"]
-|| &emsp;&emsp;	Logical OR	| if [ "$foo" -lt "0" ] || [ "$foo" -gt "9" ]
+\|\| &emsp;&emsp;	Logical OR	| if [ "$foo" -lt "0" ] || [ "$foo" -gt "9" ]
 ^ &emsp;&emsp;	Start of line	| grep "^foo"
 $ &emsp;&emsp;	End of line	| grep "foo$"
 = &emsp;&emsp;	String equality (cf. -eq)	| if [ "$foo" = "bar" ]
 ! &emsp;&emsp;	Logical NOT	| if [ "$foo" != "bar" ]
-$$ &emsp;&emsp;	PID of current shell	| echo "my PID = $$"
+\$$ &emsp;&emsp;	PID of current shell	| echo "my PID = $$"
 $! &emsp;&emsp;	PID of last background command	| ls & echo "PID of ls = $!"
 $? &emsp;&emsp;	exit status of last command	| ls ; echo "ls returned code $?"
 $0 &emsp;&emsp;	Name of current command (as called)	| echo "I am $0"
