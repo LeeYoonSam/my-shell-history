@@ -3,6 +3,8 @@
 
 trap 'do_menu' 2
 
+. ./addr_libs.sh
+
 show_menu() 
 {
     # Called by do_menu
@@ -28,7 +30,7 @@ do_menu()
         read i
         # tr A B -> 문자열 내의 A를 모두 B로 변경
         # 대문자를 소문자로 모두 변경
-        i = `echo $i | tr '[A-Z]' '[a-z]'`
+        i=`echo $i | tr '[A-Z]' '[a-z]'`
         case "$i" in
             "1")
             list_items
