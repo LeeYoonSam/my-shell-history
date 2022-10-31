@@ -45,4 +45,5 @@ Email [ joe@smith.org.uk ]
 - 공백(" ")을 사용하여 필드를 구분하고 입력의 공백을 밑줄("_")로 변환한 다음 표시를 위해 다시 변환하는 것에 대해 생각하십시오.
 
 ### 참고
+- [Addressbook](https://www.shellscript.sh/exercises.html#addressbook)
 - [[리눅스] trap을 이용한 signal 처리](https://12bme.tistory.com/604)

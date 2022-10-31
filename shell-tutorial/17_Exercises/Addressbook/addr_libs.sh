@@ -115,5 +115,37 @@ remove_item()
 
 edit_item() 
 {
-    echo "called by edit_item"
+    locate_single_item
+    search=`head -$? $BOOK | tail -1|tr ' ' '.'`
+    if [ -z "${search}" ]; then
+        return
+    fi
+    list_items "$search"
+    this_line=`grep -i "$search" ${BOOK}`
+    oldname=`echo $this_line|cut -d":" -f1`
+    oldphone=`echo $this_line|cut -d":" -f2`
+    oldmail=`echo $this_line|cut -d":" -f3`
+    echo "SEARCH: $search"
+    grep -v "$search" $BOOK > ${BOOK}.tmp ; mv ${BOOK}.tmp ${BOOK}
+    echo -en "Name [ $oldname ]"
+    read name
+    if [ -z $name ]; then
+        naem=$oldname
+    fi
+    find_lines "^${name}:"
+    if [ `num_lines "^${name}:"` -ne "0" ]; then
+        echo "Sorry, $name already has an entry."
+        return
+    fi
+    echo -en "Phone [ $oldphone ] "
+    read phone
+    if [ -z "$phone" ]; then
+        phone=$oldphone
+    fi
+    echo -en "Email [ $email ] "
+    read email
+    if [ -z "$email" ]; then
+        email=$oldemail
+    fi
+    echo "${name}:${phone}:${email}" >> $BOOK
 }
