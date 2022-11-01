@@ -1,5 +1,5 @@
 #!/bin/sh
-echo -en "Please guess the magic number: "
+echo "Please guess the magic number: \c"
 read X
 echo $X | grep "[^0-9]" > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then

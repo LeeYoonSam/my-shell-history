@@ -18,7 +18,7 @@ show_menu()
     echo "3. Edit"
     echo "4. Remove"
     echo "q. Quit"
-    echo -en "Enter your selection: "
+    echo "Enter your selection: \c"
 }
 
 do_menu()

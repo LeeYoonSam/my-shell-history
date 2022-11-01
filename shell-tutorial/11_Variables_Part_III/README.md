@@ -15,14 +15,14 @@ echo ${foo}shine   # displays the word "sunshine"
 
 ```shell
 #!/bin/sh
-echo -en "What is your name [ `whoami` ] "
+echo "What is your name [ `whoami` ] \c"
 read myname
 if [ -z "$myname" ]; then
   myname=`whoami`
 fi
 echo "Your name is : $myname"
 ```
-- echo에 "-en"을 전달하면 줄 바꿈을 추가하지 않습니다(bash 및 csh의 경우). Dash, Bourne 및 기타 호환 셸의 경우 줄 끝에 "\c"를 대신 사용합니다.
+- echo에 "\c"을 전달하면 줄 바꿈을 추가하지 않습니다(bash 및 csh의 경우). Dash, Bourne 및 기타 호환 셸의 경우 줄 끝에 "\c"를 대신 사용합니다.
 - Ksh는 두 가지 형태를 모두 이해합니다. (참고: 다양한 구현, 특히 Dash/Bourne 대 Bash에 대한 참고 사항은 /echo.html 참조)
 
 이 스크립트는 "RETURN"을 눌러 기본값을 수락하면 다음과 같이 실행됩니다.

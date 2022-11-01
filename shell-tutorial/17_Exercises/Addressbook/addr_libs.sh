@@ -4,7 +4,7 @@ export BOOK
 
 confirm()
 {
-    echo -en "$@"
+    echo "$@\c"
     read ans
     ans=`echo $ans | tr '[a-z]' '[A-Z]'`
     if [ "$ans" == "Y" ]; then
@@ -34,7 +34,7 @@ list_items()
 {
     # 주어진 검색 기준과 일치하는 항목
     if [ "$#" -eq "0" ]; then
-        echo -en "Search for: (return to list all) "
+        echo "Search for: (return to list all) \c"
         read search
         if [ -z $search ]; then
             search="."
@@ -47,7 +47,7 @@ list_items()
     do
         echo "$i" | tr ':' '\t\'
     done
-    echo -en "Messages found: "
+    echo "Messages found: \c"
     num_lines "$search"
 }
 
@@ -56,16 +56,16 @@ add_item()
     echo "Add Item: You will be prompted for 3 items:"
     echo "  - Name, Phone, Email."
     echo
-    echo -en "Name: "
+    echo "Name: \c"
     read name
     find_lines "^${name}:"
     if [ `num_lines "^${name}:"` -ne "0" ]; then
         echo "Sorry, $name already has an entry."
         return
     fi
-    echo -en "Phone: "
+    echo "Phone: \c"
     read phone
-    echo -en "Email: "
+    echo "Email: \c"
     read email
     # Confirm
     echo "${name}:${phone}:${email}" >> $BOOK
@@ -73,7 +73,7 @@ add_item()
 
 locate_single_item()
 {
-    echo -en "Item to search for: "
+    echo "Item to search for: \c"
     read search
     n=`num_lines "$search"`
     if [ -z "$n" ]; then
@@ -81,7 +81,7 @@ locate_single_item()
     fi
     while [ "${n}" -ne "1" ]; do
         #list_items "$search"
-        echo -en "${n} matches found. Please choose a "
+        echo "${n} matches found. Please choose a \c"
         case "$n" in
             "0") echo "less" ;;
             "*") echo "more" ;;
@@ -127,7 +127,7 @@ edit_item()
     oldmail=`echo $this_line|cut -d":" -f3`
     echo "SEARCH: $search"
     grep -v "$search" $BOOK > ${BOOK}.tmp ; mv ${BOOK}.tmp ${BOOK}
-    echo -en "Name [ $oldname ]"
+    echo "Name [ $oldname ]\c"
     read name
     if [ -z $name ]; then
         naem=$oldname
@@ -137,12 +137,12 @@ edit_item()
         echo "Sorry, $name already has an entry."
         return
     fi
-    echo -en "Phone [ $oldphone ] "
+    echo "Phone [ $oldphone ] \c"
     read phone
     if [ -z "$phone" ]; then
         phone=$oldphone
     fi
-    echo -en "Email [ $email ] "
+    echo "Email [ $email ] \c"
     read email
     if [ -z "$email" ]; then
         email=$oldemail

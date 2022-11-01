@@ -150,7 +150,7 @@ test.sh: [: integer expression expected before -ge
 셸 스크립트가 보다 원활하게 작동하도록 하려면 테스트하기 전에 변수의 내용을 확인해야 합니다. 아마도 다음과 같을 것입니다.
 
 ```shell
-echo -en "Please guess the magic number: "
+echo "Please guess the magic number: \c"
 read X
 echo $X | grep "[^0-9]" > /dev/null 2>&1
 if [ "$?" -eq "0" ]; then
