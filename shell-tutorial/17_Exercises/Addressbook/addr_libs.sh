@@ -4,7 +4,7 @@ export BOOK
 
 confirm()
 {
-    echo -en "$@"
+    echo "$@\c"
     read ans
     ans=`echo $ans | tr '[a-z]' '[A-Z]'`
     if [ "$ans" == "Y" ]; then
@@ -34,7 +34,7 @@ list_items()
 {
     # 주어진 검색 기준과 일치하는 항목
     if [ "$#" -eq "0" ]; then
-        echo -en "Search for: (return to list all) "
+        echo "Search for: (return to list all) \c"
         read search
         if [ -z $search ]; then
             search="."
@@ -47,7 +47,7 @@ list_items()
     do
         echo "$i" | tr ':' '\t\'
     done
-    echo -en "Messages found: "
+    echo "Messages found: \c"
     num_lines "$search"
 }
 
@@ -56,16 +56,16 @@ add_item()
     echo "Add Item: You will be prompted for 3 items:"
     echo "  - Name, Phone, Email."
     echo
-    echo -en "Name: "
+    echo "Name: \c"
     read name
     find_lines "^${name}:"
     if [ `num_lines "^${name}:"` -ne "0" ]; then
         echo "Sorry, $name already has an entry."
         return
     fi
-    echo -en "Phone: "
+    echo "Phone: \c"
     read phone
-    echo -en "Email: "
+    echo "Email: \c"
     read email
     # Confirm
     echo "${name}:${phone}:${email}" >> $BOOK
@@ -73,7 +73,7 @@ add_item()
 
 locate_single_item()
 {
-    echo -en "Item to search for: "
+    echo "Item to search for: \c"
     read search
     n=`num_lines "$search"`
     if [ -z "$n" ]; then
@@ -81,7 +81,7 @@ locate_single_item()
     fi
     while [ "${n}" -ne "1" ]; do
         #list_items "$search"
-        echo -en "${n} matches found. Please choose a "
+        echo "${n} matches found. Please choose a \c"
         case "$n" in
             "0") echo "less" ;;
             "*") echo "more" ;;
@@ -115,5 +115,37 @@ remove_item()
 
 edit_item() 
 {
-    echo "called by edit_item"
+    locate_single_item
+    search=`head -$? $BOOK | tail -1|tr ' ' '.'`
+    if [ -z "${search}" ]; then
+        return
+    fi
+    list_items "$search"
+    this_line=`grep -i "$search" ${BOOK}`
+    oldname=`echo $this_line|cut -d":" -f1`
+    oldphone=`echo $this_line|cut -d":" -f2`
+    oldmail=`echo $this_line|cut -d":" -f3`
+    echo "SEARCH: $search"
+    grep -v "$search" $BOOK > ${BOOK}.tmp ; mv ${BOOK}.tmp ${BOOK}
+    echo "Name [ $oldname ]\c"
+    read name
+    if [ -z $name ]; then
+        naem=$oldname
+    fi
+    find_lines "^${name}:"
+    if [ `num_lines "^${name}:"` -ne "0" ]; then
+        echo "Sorry, $name already has an entry."
+        return
+    fi
+    echo "Phone [ $oldphone ] \c"
+    read phone
+    if [ -z "$phone" ]; then
+        phone=$oldphone
+    fi
+    echo "Email [ $email ] \c"
+    read email
+    if [ -z "$email" ]; then
+        email=$oldemail
+    fi
+    echo "${name}:${phone}:${email}" >> $BOOK
 }

@@ -15,7 +15,7 @@ echo ${foo}shine   # displays the word "sunshine"
 
 ```shell
 #!/bin/sh
-echo -en "What is your name [ `whoami` ] "
+echo "What is your name [ `whoami` ] \c"
 read myname
 if [ -z "$myname" ]; then
   myname=`whoami`
@@ -42,7 +42,7 @@ Your name is : foo
 
 중괄호와 특수 ":-" 사용법을 사용하여 변수가 설정되지 않은 경우 사용할 기본값을 지정할 수 있습니다.
 ```shell
-echo -en "What is your name [ `whoami` ] "
+echo "What is your name [ `whoami` ] \c"
 read myname
 echo "Your name is : ${myname:-`whoami`}"
 ```
