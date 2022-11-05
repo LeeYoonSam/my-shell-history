@@ -1,4 +1,4 @@
-# Select and Install Shell Software
+# [Select and Install Shell Software](https://learn.openwaterfoundation.org/owf-learn-linux-shell/install/install/)
 > Linux 셸을 선택하면 셸 스크립팅 언어의 기능이 정의됩니다.<br/>
 > 셸 명령 프로그램과 셸 스크립트를 실행하기 전에 Linux 셸 소프트웨어를 설치해야 합니다.</br>
 > sh 및 bash와 같은 기본 셸 프로그램은 Linux 환경에 이미 설치되어 있지만 다른 프로그램은 추가로 설치할 수 있습니다.
@@ -70,11 +70,37 @@ sh | 프로세스가 반복되고 빠르게 완료되어야 하는 경우 빠르
 ---
 
 ## Installing a Shell on Linux
+> 대부분의 경우 설치된 기본 셸 프로그램으로 충분하지만 때로는 다른 셸 프로그램을 설치하는 것이 유용합니다. Linux에 셸 프로그램을 설치하려면 프로그램의 패키지 이름을 확인한 다음 해당 Linux 버전에 대한 설치 프로그램을 실행해야 합니다.
+
+예를 들어, `Cygwin` 설치 프로그램은 사용 가능한 셸을 나열하고 `Linux` 배포는 일반적으로 `apt-get`과 같은 설치 프로그램을 사용합니다.
+
+Linux 버전에 대한 Linux 소프트웨어 설치 지침을 참조하십시오.
 
 ## Installing Cygwin
+> Cygwin 소프트웨어는 Windows에서 실행되는 무료 오픈 소스 Linux 구현입니다.
+Cygwin 프로그램은 Windows에서 실행되도록 컴파일되어 있으므로 Cygwin 셸은 Windows 프로그램을 실행할 수 있습니다.<br/>
+Cygwin 설치 프로그램은 기본적으로 sh 및 bash를 설치하며 추가 셸 및 프로그램을 설치할 수 있습니다. Cygwin은 생산성을 높이는 데 매우 유용한 환경입니다.
+
+- [Open Water Foundation / Learn Cygwin](https://learn.openwaterfoundation.org/owf-learn-cygwin/)
+- [Cygwin website](https://www.cygwin.com/)
+
 
 ## Installing MinGW
+> MinGW는 UNIX의 무료 및 오픈 소스 버전을 제공하기 위한 GNU 소프트웨어 프로젝트입니다.<br>
+Open Water Foundation은 일반적으로 Windows용 Git과 같은 다른 소프트웨어 도구의 일부가 아닌 한 MinGW를 설치하지 않습니다.<br>
+예를 들어 Git For Windows가 설치되어 있으면 MinGW를 어떤 형태로든 사용할 수 있으므로 명령 셸을 사용할 수 있습니다.
+- [Minimalist GNU for Windows](http://www6.mingw.org/?template=ARROW_3&tdfs=0&s_token=1667633674.0389440000&uuid=1667633674.0389440000&term=C%20Language%20Compiler&term=GCC%20Compiler&term=Test%20Code%20Online&searchbox=0&showDomain=0&backfill=0)
+
 
 ## Installing Git for Windows (Git Bash)
+> Windows용 Git은 소프트웨어 개발자 및 Git 버전 제어 시스템을 사용하여 전자 파일 버전을 추적하고 전자 파일 편집에 대해 다른 사람과 공동 작업하는 사람들이 설치하는 경우가 많습니다. Windows용 Git은 MinGW 및 Git Bash도 설치합니다.
+
+- [Git](https://git-scm.com/)
 
 ## Installing the Linux Subsystem on Windows 10
+> 다음은 Windows 10에서 Linux 하위 시스템을 활성화/설치하는 방법을 설명합니다. Microsoft는 현재 개발자를 돕기 위해 Linux 버전을 출시하고 있습니다.
+
+### [Windows 10에서 Linux Bash 셸을 설치하고 사용하는 방법](https://www.howtogeek.com/249966/how-to-install-and-use-the-linux-bash-shell-on-windows-10/)
+
+- 위에 표시된 대로 Linux용 Windows 하위 시스템을 활성화한 후 위 지침에 표시된 대로 앱 스토어를 방문하여 Linux 버전을 설치합니다. 우분투를 권장합니다.
+- 위에 표시된 대로 설치 후 Linux 셸에서 사용할 로그인 및 암호를 지정합니다.
