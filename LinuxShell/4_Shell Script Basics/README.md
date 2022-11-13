@@ -84,7 +84,135 @@ main
 ---
 
 ## Arrays
+> 배열은 데이터 값 목록을 관리하는 데 유용한 구조입니다. `sh` 쉘은 실제 배열을 표현하는 능력이 제한적이지만 `bash`는 광범위한 기능을 가지고 있습니다.
+
+이 섹션을 완료해야 `sh` 및 `bash`에서 지원을 확인합니다.
+
+### 참고
+- [Unix / Linux - Using Shell Arrays](https://www.tutorialspoint.com/unix/unix-using-arrays.htm)
+
 ## Functions
-## Function and Command Return Status for Error Handling
+> 일반적으로 가능한 경우 스크립트 코드를 함수로 구성하는 것이 좋습니다.
+이것은 코드를 더 읽기 쉽게 만들고, 기능을 캡슐화하며, 함수를 복사할 수 있기 때문에 스크립트 간에 코드를 더 쉽게 복사하여 붙여넣을 수 있습니다.<br>
+코드를 서로 호출하는 많은 작은 스크립트로 분할할 수 있지만 이것은 더 취약할 수 있습니다. 스크립트에 필요한 모든 기능이 포함되도록 하면 안정성이 제공됩니다. 함수의 일반적인 구문은 다음과 같으며 `sh` 및 `bash` 셸에서 작동합니다.
+
+```sh
+# Call a function
+# - arguments are passed as if running a program on command line
+functionName arg1 arg2
+
+# Comments to document function
+# - don't list arguments in the parentheses
+functionName() {
+    # Indicate which variables are have scope that is local to the function
+    # - if a variable is not declared as "local", it be global to the script
+    local arg1 arg2
+    arg1=$1
+    arg2=$2
+    # Can use "shift" or parse arguments by looping, similar to parsing script commmand line
+
+    # some logic here
+
+    # Can return value the following ways
+    # 1. Return an integer
+    #    - this is similar to any program's main calling exit with a status,
+    #      such as exit(0)
+    #    - exit status of 0 means success and non-zero indicates error code
+    #    - calling code can check value of $? but must assing to a variable
+    #      immediately because $? gets reassigned to the exit code of the
+    #      most-recently run program/command
+    return 0
+
+    # 2. Echo a string
+    #    - calling code would assign a variable using returnVal=$(functionName arg1 arg2)
+    # 
+    echo "some return string"
+
+    # 3. Use a script global scope variable
+    #    - DO NOT declare the variable as "local" in the script
+    #    - Can declare the variable and set an initial value in the main (global) scope
+    #      or wait until function sets the value
+}
+```
+
 ## "Here Document" to Include Text in Script
+다음과 같이 스크립트에 텍스트 블록을 포함하는 것이 종종 유용합니다.
+- 각 텍스트 줄에 백슬래시 연속 문자를 추가하지 않아도 됩니다.
+- 파일로 출력되지만 배포가 복잡하기 때문에 스크립트와 함께 별도의 파일을 배포하는 것은 바람직하지 않습니다.
+- 사용자에게 표시될 여러 줄 메시지
+- 데이터베이스 쿼리 프로그램과 함께 사용되는 SQL 문
+
+쉘의 Here Document 기능은 필요한 기능을 제공합니다. 배경은 다음을 참조하십시오.
+- [Here document on Wikipedia](https://en.wikipedia.org/wiki/Here_document)
+
+다음 예는 here 문서의 사용자가 파일에 텍스트 블록을 출력하는 방법을 보여줍니다(예: 시스템에 패치 파일로). 예제는 here 문서를 파일로 리디렉션하는 방법을 보여줍니다.
+
+```sh
+#!/bin/sh
+#
+# example-here-doc-redirect
+
+# Illustrate how to use a "here document" to populate a file that is needed for a system update.
+# - this demonstrates how to redirect the here document to a file
+
+# First might get the operating system and parse the returned string to determine specifics
+operatingSystem=$(uname -a)
+# Would have some logic to check for different operating systems
+# - for this example just check for empty string
+if [ ! -z "$operatingSystem" ]; then
+    # Need to make sure that the patch file is in place
+    # - use a here document to create the output file
+    # - for this example just use a temporary file
+    # - the __HERE_DOC__ string can be anything, as long as it bounds the text
+    #   and is not found in the text
+    # - using single quotes around __HERE_DOC indicates to the shell to NOT expand variables
+    #   (for example don't convert $variable to its value)
+    patchFile="$(mktemp).patch"
+    cat << '__HERE_DOC__' > $patchFile
+This is text that is part of the patch.
+Because single quotes were used around the here doc string,
+a variable like $PATH won't be expanded.
+There are other modifiers to the here doc string that can be used
+(see reference documentation).
+__HERE_DOC__
+fi
+
+echo "Created patch file $patchFile:"
+cat $patchFile
+```
+
+다음 예는 here 문서를 다른 명령으로 파이프하는 방법을 보여줍니다. 예를 들어 명령줄 쿼리 도구에 대한 SQL 문을 형식화하는 데 사용할 수 있습니다.
+
+```sh
+#!/bin/sh
+#
+# example-here-doc-pipe
+
+# Illustrate how to use a "here document" to pipe text to a command line program.
+
+# Set variables to the values used in a query
+queryVal1="something"
+queryVal2="somethingElse"
+
+# In the following example, cat just prints the text,
+# but if a database query program is used it would actually query a database
+# and return results, such as comma-separated-value result set.
+# - note that the output string has been expanded with variable values
+# - a simple awk program is used to print the expanded result and
+#   in a more substantial program would process the query result
+# - the receiving command is provided starting on the line immediately
+#   after the trailing __HERE_DOC__ string.
+    cat << __HERE_DOC__ |
+SELECT * from table where val1=${queryVal1} and val2='${queryVal2}'
+__HERE_DOC__
+    awk '
+    { print $0 }
+    '
+```
+위 스크립트의 출력은 다음과 같습니다.
+```sh
+SELECT * from table where val1=something and val2='somethingElse'
+```
+
+## Function and Command Return Status for Error Handling
 ## Scope of Variables
