@@ -215,4 +215,151 @@ SELECT * from table where val1=something and val2='somethingElse'
 ```
 
 ## Function and Command Return Status for Error Handling
+> 외부 프로그램(명령)에 대한 호출, 내장 셸 명령 및 스크립트 기능으로 구성된 모든 코드는 일종의 오류 처리를 구현해야 합니다. 
+
+정수 반환 상태는 성공 또는 실패를 나타내는 데 사용됩니다.
+- C, Java, Python 등과 같은 프로그래밍 언어는 일반적으로 exit(0)(또는 기타 정수 값)을 호출하여 프로그램을 종료하고 정수 값을 프로그램 종료 상태로 쉘에 전달하는 main() 프로그램 함수를 사용합니다.
+- 셸 스크립트는 스크립트의 종료 상태를 나타내기 위해 exit 0(또는 다른 정수 값)을 호출할 수 있습니다.
+- 셸 스크립트 함수는 return 0(또는 다른 정수 값)을 호출하여 스크립트의 반환 값을 나타낼 수 있습니다.
+
+일반적으로 0 값은 성공을 나타내는 데 사용되며 0이 아닌 값은 일반적으로 반환 상태를 이해하는 데 사용할 수 있는 문서와 함께 실패를 나타내는 데 사용됩니다.
+
+다음 섹션에서는 종료 상태를 확인하는 방법에 대해 설명합니다.
+
+### Built-in $? Exit Status Variable(내장 명령 $? 의 종료 상태 변수)
+> Linux 쉘은 `$?` 방금 호출된 내장 명령, 프로그램 또는 함수의 반환 상태를 확인하는 변수입니다. 이 변수의 값은 다른 명령이나 함수가 호출되는 즉시 재설정되므로 값을 보호하기 위해 다른 변수에 할당해야 합니다.
+
+예시:
+```sh
+#!/bin/sh
+
+# example-built-in-exit-status - example of exit status.
+# The following will always fail because the file does not exist.
+
+fileToRemove="/tmp/some-file-that-does-not-exist"
+# Redirect error to /dev/null so script message is used instead.
+rm "$fileToRemove" 2> /dev/null
+if [ $? -eq 0 ]; then
+    echo "Success removing file:  $fileToRemove"
+else
+    echo "File does not exist:  $fileToRemove"
+fi
+```
+
+스크립트의 출력:
+```sh
+File does not exist:  /tmp/some-file-that-does-not-exist
+```
+
+### Checking Return Status Directly(반환 상태 직접 확인)
+이전 섹션에서는 $?를 사용하여 반환 상태를 확인하는 방법에 대해 설명했습니다. 
+
+반환 값을 직접 확인할 수도 있습니다.
+
+프로그래밍 언어는 일반적으로 0 값을 "거짓"으로, 0이 아닌 값을 "참"으로 취급하는 반면, 쉘 스크립트 if 문은 반환 값 0을 성공으로 간주하고 다른 모든 값은 실패로 간주합니다.
+
+예시:
+```sh
+#!/bin/sh
+
+# example-if-return-status-check - example of checking return status
+
+# Function to return the value passed as first argument
+testFunction() {
+    local returnValue
+    returnValue=$1
+    return $returnValue
+}
+
+# Main entry point
+
+# Call the test function
+# - could also call a program or built-in command
+# - pass the value to return from the function
+if testFunction 0; then
+    echo "Function was successful (return value 0)"
+fi
+if testFunction 1; then
+    # This will not called because 1 is considered false
+    echo "Function was not successful (return value 1)"
+fi
+# Use ! to negate the logical check
+# - therefore a failure causes the if to evaluate as true
+if ! testFunction 1; then
+    echo "Function was not successful (return value 1)"
+fi
+```
+
+출력:
+```sh
+Function was successful (return value 0)
+Function was not successful (return value 1)
+```
+
+### Bash `PIPESTATUS` for Piped Exit Status
+> 파이프를 사용하여 여러 처리 단계를 함께 연결하는 것이 일반적입니다. 그러나 `sh` 셸에서는 체인의 각 단계에 대한 종료 상태를 확인할 수 없습니다. 예를 들어 다음은 체인의 마지막 명령에 대해 상태가 설정되고 `echo`가 항상 성공하기 때문에 항상 `$?=0`이 됩니다.
+
+```sh
+#!/bin/sh
+#
+# example-sh-pipe-status
+
+# Example to show how normal shell cannot get status of command that is piped.
+
+# Start a temporary file as an output file
+logFile="$(mktemp).log"
+echo "Using log file:  $logFile"
+
+# Write one message to start the log file
+echo "New log file" > $logFile
+
+# Run a command that will always fail.
+# - redirect standard error and output to logfile, while also showing to the terminal.
+# - the exit status will always be 0 because it is for the "tee" command
+
+fileToRemove="/tmp/some-file-that-does-not-exist"
+rm $fileToRemove 2>&1 | tee --append $logFile
+echo "exit status:  $?" 2>&1 | tee --append $logFile
+```
+
+위 스크립트의 출력은 다음과 같습니다. 불행히도 sh는 파이프 체인에서 명령의 종료 상태를 가져오는 간단한 방법을 제공하지 않습니다.
+
+```sh
+Using log file:  /tmp/tmp.iV310qo8EF.log
+rm: cannot remove '/tmp/some-file-that-does-not-exist': No such file or directory
+exit status:  0
+```
+
+그러나 `bash` 셸은 다음 예와 같이 파이프 체인의 각 부분에 대한 상태를 가져오는 `PIPESTATUS` 기능을 제공합니다.
+```sh
+#!/bin/bash
+#
+# example-bash-pipe-status
+
+# Example to show how bash can get status of command that is piped.
+
+# Start a temporary file as an output file
+logFile="$(mktemp).log"
+echo "Using log file:  $logFile"
+
+# Write one message to start the log file
+echo "New log file" > $logFile
+
+# Run a command that will always fail.
+# - redirect standard error and output to logfile, while also showing to the terminal.
+# - the exit status will be 1 for the remove command.
+
+fileToRemove="/tmp/some-file-that-does-not-exist"
+rm $fileToRemove 2>&1 | tee --append $logFile
+echo "exit status:  ${PIPESTATUS[0]}" 2>&1 | tee --append $logFile
+```
+
+위 스크립트의 출력은 다음과 같습니다. 결과적으로 적절한 오류 처리가 구현될 수 있습니다.
+```sh
+Using log file:  /tmp/tmp.lFs3ueX9J6.log
+rm: cannot remove '/tmp/some-file-that-does-not-exist': No such file or directory
+exit status:  1
+```
+
+
 ## Scope of Variables
