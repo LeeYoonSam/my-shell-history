@@ -362,4 +362,79 @@ exit status:  1
 ```
 
 
-## Scope of Variables
+## Scope of Variables (변수의 범위)
+> 변수에는 해당 이름이 다른 컨텍스트가 아닌 특정 컨텍스트에서 인식된다는 의미의 `범위`가 있습니다.<br>
+쉘 스크립트에서 변수의 기본 범위는 전역입니다. 즉, 변수는 기본 프로그램 영역이나 함수에서 선언될 수 있으며 스크립트 전체에서 볼 수 있습니다.<br>
+주 범위에는 호출 환경의 환경 변수도 포함되어 있고 변수 이름이 함수에서 재사용될 수 있기 때문에 혼동될 수 있습니다. 이 경우 마지막 사용에 따라 변수의 현재 값이 결정됩니다.
+
+함수에서 한 가지 모범 사례는 함수에 대해 로컬 범위를 가져야 하는 변수 목록 다음에 로컬을 사용하는 것입니다. 함수가 여러 값을 반환해야 하고 이를 수행하기 위해 전역 변수를 사용하는 경우는 예외입니다.
+
+예를 들어 `$()` 또는 파이프`(|)`가 사용되는 경우와 같이 쉘이 하위 쉘을 실행할 때 합병증이 발생합니다.
+
+`while` 명령은 하위 쉘로도 실행됩니다. 이 경우 하위 셸의 변수는 하위 셸에 대해 로컬이며 하위 셸이 호출하는 셸로 반환될 때 사용할 수 없습니다.
+하위 셸 변수에 액세스하려면 반향 문자열이나 파일을 사용하여 데이터를 전달해야 할 수 있습니다. 
+
+다음 예는 이러한 문제 중 일부를 보여줍니다.
+
+다음(`sh` 및 `bash`에서 작동)에서 하위 셸이 `while` 루프에 사용되기 때문에 실행 후 결합된 변수의 값이 설정되지 않습니다.
+
+```sh
+#!/bin/sh
+#
+# example-broken-while-return-string.sh
+#
+# Example showing how while loop variable can be shared with calling code.
+# - generating input with "printf" requires \n to terminate each line
+# - generating input with "echo" requires -e to convert \n to newline, but does not need \n at end
+
+#joined2=$(printf "line1\nline2\n" |
+joined2=$(echo -e "line1\nline2" |
+     while read line; do
+       if [ -z "$joined" ]; then
+         joined="$line"
+       else
+         joined="$joined,$line"
+       fi
+     done
+     echo $joined
+)
+# Will echo blank because scope of "joined" modifications in while
+# does not extend to outside of the while loop
+echo $joined2
+```
+
+이 문제를 해결하는 한 가지 방법은 중괄호를 사용하여 명령을 그룹화하는 것입니다. 다음 예제(`sh` 및 `bash`에서 작동)는 중괄호를 사용하여 `while` 루프를 그룹화하고 다음 `echo` 명령을 사용하여 하위 쉘이 호출 쉘에 대한 변수 값을 가질 수 있도록 하는 방법을 보여줍니다.
+
+```sh
+#!/bin/sh
+#
+# example-braces-while-return-string.sh
+#
+# Example showing how while loop variable can be shared with calling code.
+# - generating input with "printf" requires \n to terminate each line
+# - generating input with "echo" requires -e to convert \n to newline, but does not need \n at end
+# - the curly braces group commands in the same shell (or sub-shell),
+#   in this case ensuring that "joined" variable has a final value
+
+# Notes
+#joined2=$(printf "line1\nline2\n" |
+joined2=$(echo -e "line1\nline2" |
+{
+    while read line; do
+        if [ -z "$joined" ]; then
+            joined="$line"
+        else
+            joined="$joined,$line"
+        fi
+    done
+    echo $joined
+}
+)
+# Will echo "line1,line2"
+echo $joined2
+```
+하위 셸 출력을 호출 코드로 반환하는 다른 옵션은 다음과 같습니다.
+- 파일을 사용합니다. 하나의 하위 프로세스에서 파일로 직접 출력한 다음 호출 코드에서 파일을 읽습니다. Linux `mktemp` 명령을 사용하여 고유한 임시 파일 이름을 생성할 수 있으며 임시 파일은 사용 후 제거해야 합니다.
+- 프로세스 대체 구문을 사용합니다(파일과 유사). 다음을 참조하십시오.
+    - ["while 루프 내부에 설정된 쉘 변수는 외부에서 볼 수 없습니다"](https://stackoverflow.com/questions/4667509/shell-variables-set-inside-while-loop-not-visible-outside-of-it)
+    - [고급 Bash 스크립팅 가이드 / 프로세스 대체](https://tldp.org/LDP/abs/html/process-sub.html)
