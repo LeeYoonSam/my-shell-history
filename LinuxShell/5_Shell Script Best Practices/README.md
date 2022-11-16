@@ -98,6 +98,12 @@ scriptName=$(basename $scriptFolder)
 ```
 
 ## Echo useful troubleshooting information
+> 유용한 문제 해결 정보 Echo
+
+셸 스크립트는 특히 스크립트 코딩이 명확하지 않고 스크립트 사용자가 스크립트를 작성하지 않은 경우 문제를 해결하기 어려울 수 있습니다. 따라서 스크립트 시작 부분에 중요한 구성 정보를 인쇄하는 것이 종종 도움이 됩니다. 예를 들어 echo 문을 사용하여 중요한 환경 변수 이름과 값, 입력 파일 이름 등을 인쇄합니다.
+
+스크립트가 더 발전된 경우 이러한 출력은 `--verbose`와 같은 명령줄 매개변수가 지정된 경우에만 인쇄될 수 있습니다.
+
 ## Consider options for logging
 ## Create documentation
 ## Include useful web resource links in shell script comments
