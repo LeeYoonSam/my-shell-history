@@ -55,8 +55,24 @@ checkSudo() {
 }
 ```
 
-
 ## Command to do nothing
+> 아무것도 하지 말라는 명령
+
+아무것도 하지 않는 명령을 사용하는 것이 때때로 유용합니다(예: Python의 `pass` 명령). 
+
+예를 들어, 이러한 명령은 명확한 `if` 문을 작성하는 데 유용할 수 있습니다. 
+
+다음은 콜론 명령을 사용하여 이 결과를 얻는 방법을 보여줍니다.
+
+```sh
+answer="no"
+if [ "$answer" = "no" ]; then
+    # don't do anything
+    :
+fi
+```
+- `if` 블록 내에서만 주석을 달면 구문 오류가 발생하므로 위의 논리가 필요합니다.
+
 ## Control echo of script commands as script runs
 ## Determine the folder where a script exists
 ## Determine the operating system
