@@ -114,6 +114,51 @@ somecommands..
 `set -x`는 echo/trace를 켭니다. `{ set +x; } 2> /dev/null`은 echo/trace를 끄고 출력을 특수 `/dev/null` 출력 장치로 흡수합니다.
 
 ## Determine the folder where a script exists
+> 스크립트가 있는 폴더 확인
+
+스크립트는 종종 입력 및 출력 파일의 위치를 ​​알아야 합니다. 예를 들어 현재 폴더에 이름을 지정하거나, 다른 폴더에 대한 절대 또는 상대 경로를 사용하거나, `PATH` 환경 변수에서 찾는 등 스크립트가 실행되는 방식으로 인해 복잡해질 수 있습니다.
+
+한 가지 옵션은 스크립트 위치와 같은 특정 폴더에서 스크립트를 실행하도록 요구하는 것입니다. 그러나 이것은 유연성을 감소시킵니다. 모든 폴더에서 스크립트 실행을 허용하려면 입력 및 출력이 해당 위치에 상대적으로 지정될 수 있도록 스크립트의 절대 위치를 결정해야 합니다. 다음은 실행 중인 스크립트의 절대 경로를 결정합니다.
+
+```sh
+# Get the location where this script is located since it may have been run from any folder
+scriptFolder=$(cd $(dirname "$0") && pwd)
+# Also determine the script name, for example for usage and version.
+# - this is useful to prevent issues if the script name has been changed by renaming the file
+scriptName=$(basename $scriptFolder)
+```
+
+$0 명령 인수에는 파일 또는 경로일 수 있는 스크립트 이름이 포함됩니다. 따라서 위의 논리는 스크립트가 있는 디렉토리로 변경됩니다. &&는 첫 번째 명령(이 경우 pwd 명령) 다음에 두 번째 명령을 실행하도록 나타냅니다. 출력은 다른 논리에서 사용할 수 있는 scriptFolder 변수에 할당됩니다. 심볼릭 링크가 관련되어 있고 웹에서 추가 정보를 사용할 수 있는 경우 이 방법이 작동하지 않을 수 있습니다.
+
+Examples:
+- [Open Water Foundation git-check-util](https://github.com/OpenWaterFoundation/owf-util-git/blob/main/build-util/git-check-util.sh)
+
+```sh
+#!/bin/sh
+(set -o igncr) 2>/dev/null && set -o igncr; # this comment is required
+# The above line ensures that the script can be run on Cygwin/Linux even with Windows CRNL
+#
+# git-check-util - check the Git utilities repositories for status
+# - this script calls the general git utilities script
+
+# Get the location where this script is located since it may have been run from any folder
+scriptFolder=`cd $(dirname "$0") && pwd`
+
+# Git utilities folder is relative to the user's files in a standard development files location
+# - determine based on location relative to the script folder
+# Specific repository folder for this repository
+repoHome=`dirname ${scriptFolder}`
+# Want the parent folder to the specific Git repository folder
+gitReposHome=`dirname ${repoHome}`
+
+# Main repository
+mainRepo="owf-util-git"
+
+# Now run the general script using full path
+${scriptFolder}/git-util/git-check.sh -m "${mainRepo}" -g "${gitReposHome}" $@
+```
+
+
 ## Determine the operating system
 ## Echo colored text to console
 ## Ensure that script runs on Linux and Windows
