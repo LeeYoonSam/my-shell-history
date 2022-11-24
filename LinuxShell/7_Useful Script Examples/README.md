@@ -158,8 +158,38 @@ mainRepo="owf-util-git"
 ${scriptFolder}/git-util/git-check.sh -m "${mainRepo}" -g "${gitReposHome}" $@
 ```
 
-
 ## Determine the operating system
+> 운영 체제 결정
+
+다른 Linux 유사 운영 체제를 지원하기 위해 스크립트에 다른 논리가 필요한 경우가 있습니다.
+
+예를 들어 파일은 서로 다른 운영 체제의 서로 다른 위치에 존재할 수 있습니다. 다음 `sh` 함수는 운영 체제를 나타내는 변수를 설정하며 이 변수는 `if` 문에서 로직을 제어하는 ​​데 사용할 수 있습니다.
+
+```sh
+# Determine the operating system that is running the script
+# - mainly care whether Cygwin
+checkOperatingSystem()
+{
+    operatingSystem="unknown"
+    os=`uname | tr [a-z] [A-Z]`
+    case "${os}" in
+        CYGWIN*)
+            operatingSystem="cygwin"
+            ;;
+        LINUX*)
+            operatingSystem="linux"
+            ;;
+        MINGW*)
+            operatingSystem="mingw"
+            ;;
+    esac
+    echo "operatingSystem=$operatingSystem (used to check for Cygwin and filemode compatibility)"
+}
+```
+
+Examples:
+- [Open Water Foundation git-check](https://github.com/OpenWaterFoundation/owf-app-geoprocessor-python/blob/master/build-util/git-util/git-check.sh)
+
 ## Echo colored text to console
 ## Ensure that script runs on Linux and Windows
 ## Log Messages and Program Output
