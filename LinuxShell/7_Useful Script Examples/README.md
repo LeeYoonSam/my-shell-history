@@ -191,6 +191,59 @@ Examples:
 - [Open Water Foundation git-check](https://github.com/OpenWaterFoundation/owf-app-geoprocessor-python/blob/master/build-util/git-util/git-check.sh)
 
 ## Echo colored text to console
+> 콘솔에 에코 컬러 텍스트
+
+예를 들어 경고 또는 오류 메시지를 강조 표시하기 위해 컬러 텍스트를 콘솔에 인쇄하는 것이 유용할 수 있습니다. echo 명령을 사용하여 특수 문자를 인쇄할 수 있습니다.
+
+- [How to change RGB colors in Git Bash for windows](https://stackoverflow.com/questions/21243172/how-to-change-rgb-colors-in-git-bash-for-windows)
+- [Unix escape sequences](https://en.wikipedia.org/wiki/ANSI_escape_code#Unix-like_systems)
+- [Yellow "33" in Linux can show as brown](https://unix.stackexchange.com/questions/192660/yellow-appears-as-brown-in-konsole)
+
+특수 문자를 인쇄하려면 echo -e를 사용해야 합니다. 
+
+쉘에 있는 내장 echo 명령은 -e 옵션을 지원하지 않을 수 있으며 시스템 프로그램과 같은 다른 echo 프로그램을 실행해야 할 수도 있습니다.
+
+따라서 먼저 사용할 echo 명령을 결정합니다.
+
+```sh
+# Determine which echo to use, needs to support -e to output colored text
+# - normally built-in shell echo is OK, but on Debian Linux dash is used, and it does not support -e
+echo2='echo -e'
+testEcho=`echo -e test`
+if [ "${testEcho}" = '-e test' ]; then
+    # The -e option did not work as intended.
+    # -using the normal /bin/echo should work
+    # -printf is also an option
+    echo2='/bin/echo -e'
+    # The following does not seem to work
+    #echo2='printf'
+fi
+```
+
+색상을 제어하는 ​​문자는 echo 문에서 이스케이프 문자로 출력됩니다. 
+
+다음과 같이 색상을 변수로 할당하는 것이 유용합니다.
+
+```sh
+# Strings to change colors on output, to make it easier to indicate when actions are needed
+# - Set the background to black to eensure that white background window will clearly show colors contrasting on black.
+# - Tried to use RGB but could not get it to work - for now live with "yellow" as it is
+actionColor='\e[0;40;33m' # user needs to do something, 40=background black, 33=yellow
+actionWarnColor='\e[0;40;31m' # serious issue, 40=background black, 31=red
+okColor='\e[0;40;32m' # status is good, 40=background black, 32=green
+colorEnd='\e[0m' # To switch back to default color
+```
+
+마지막으로 echo 문에서 특수 문자를 사용합니다. ${echo2}는 올바른 echo 명령을 실행하는 데 사용됩니다.
+
+```sh
+${echo2} "Number of up-to-date repositories: ${okColor}${upToDateRepoCount}${colorEnd}"
+```
+
+Examples:
+-[Open Water Foundation git-check](https://github.com/OpenWaterFoundation/owf-app-geoprocessor-python/blob/master/build-util/git-util/git-check.sh)
+
+
 ## Ensure that script runs on Linux and Windows
 ## Log Messages and Program Output
 ## Parsing command line options
