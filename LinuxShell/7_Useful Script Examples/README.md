@@ -245,6 +245,32 @@ Examples:
 
 
 ## Ensure that script runs on Linux and Windows
+> 스크립트가 Linux 및 Windows에서 실행되는지 확인
+
+Linux 쉘 스크립트는 Linux, Cygwin, Git Bash 등에서 실행되도록 작성할 수 있습니다.
+그러나 스크립트에 환경에 대한 잘못된 줄 끝 문자가 있을 수 있습니다.
+예를 들어 Git Bash를 사용하여 리포지토리를 복제하면 Windows에서 `CRLF` 문자가 사용됩니다.<br>
+줄 끝에 `LF`만 있는 POSIX Linux 환경인 Cygwin을 사용하여 스크립트를 실행하려고 하면 다음과 유사한 오류가 표시될 수 있습니다.
+
+```sh
+./copy-to-owf-amazon-s3.sh: line 5: $'\r': command not found
+./copy-to-owf-amazon-s3.sh: line 10: $'\r': command not found
+./copy-to-owf-amazon-s3.sh: line 41: syntax error: unexpected end of file
+```
+
+해결 방법은 다음과 같이 스크립트에 두 번째 줄을 추가하는 것입니다. 이렇게 하면 줄 끝의 캐리지 리턴이 무시됩니다. 스크립트는 Linux와 Windows 셸 환경 간에 이식 가능합니다.
+
+```sh
+#!/bin/sh
+(set -o igncr) 2>/dev/null && set -o igncr; # this comment is required
+# The above line ensures that the script can be run on Cygwin/Linux even with Windows CRNL
+#
+# ... rest of the script...
+```
+
+Examples:
+- [Open Water Foundation git-check.sh](https://github.com/OpenWaterFoundation/owf-util-git/blob/main/build-util/git-util/git-check.sh)
+
 ## Log Messages and Program Output
 ## Parsing command line options
 ### Parsing command line options with built-in getopts
