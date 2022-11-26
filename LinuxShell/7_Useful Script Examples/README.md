@@ -272,6 +272,179 @@ Examples:
 - [Open Water Foundation git-check.sh](https://github.com/OpenWaterFoundation/owf-util-git/blob/main/build-util/git-util/git-check.sh)
 
 ## Log Messages and Program Output
+> 로그 메시지 및 프로그램 출력
+
+프로그래밍 언어의 로깅 프레임워크와 유사하게 터미널 및/또는 로그 파일에 메시지를 인쇄하는 것이 종종 유용합니다. 로깅은 디버깅에 유용하고 스크립트가 실행될 때 사용자에게 피드백을 제공하는 데 유용합니다.
+
+아래 함수는 스크립트에 삽입할 수 있으며 다음과 유사하게 호출할 수 있습니다.
+
+```sh
+scriptFolder=$(cd $(dirname "$0") && pwd)
+scriptName=$(basename $scriptFolder)
+# Start a log file that will be used by the logging functions
+logFileStart ${scriptName} "${scriptFolder)/${scriptName}.log"
+
+# The following logs the message string passed to the function.
+# - use a space for empty lines because otherwise the logging function
+#   will hang waiting for input
+logInfo " "
+logInfo "Starting to do some work."
+
+# The following will log each `stdout` and `stderr` line piped to the function.
+someOtherProgram 2>&1 | logInfo
+```
+
+출력은 다음과 유사합니다.
+
+```sh
+[DEBUG] some debug message
+[INFO] some informational message
+[WARNING] some warning message
+[ERROR] some error message
+```
+
+삽입할 함수([logging-functions.txt](https://learn.openwaterfoundation.org/owf-learn-linux-shell/useful-scripts/resources/logging-functions.txt) 참조):
+
+```sh
+# Echo to stderr
+echoStderr() {
+  # - if necessary, quote the string to be printed
+  # - redirect stdout from echo to stderr
+  echo "$@" 1>&2
+  # Or, use an alternate echo as discussed in "Echo colored text to console" example
+  # ${echo2} "$@" 1>&2
+}
+
+# Print a DEBUG message
+# - prints to stderr and optionally appends to log file if ${logFile} is defined globally
+#   - see logFileStart() to start a log file
+# - call with parameters or pipe stdout and stderr to this function: 2>&1 | logDebug
+# - print empty lines with a space " " to avoid hanging the program waiting on stdin input
+logDebug() {
+  if [ -n "${1}" ]; then
+    if [ -n "${logFile}" ]; then
+      # Are using a log file
+      echoStderr "[DEBUG] $@" 2>&1 | tee --append $logFile
+    else
+      # Are NOT using a log file
+      echoStderr "[DEBUG] $@"
+    fi
+  else
+    while read inputLine; do
+      if [ -n "${logFile}" ]; then
+        # Are using a log file
+        echoStderr "[DEBUG] ${inputLine}" 2>&1 | tee --append $logFile
+      else
+        # Are NOT using a log file
+        echoStderr "[DEBUG] ${inputLine}"
+      fi
+    done
+  fi
+}
+
+# Print an ERROR message
+# - prints to stderr and optionally appends to log file if ${logFile} is defined globally
+#   - see logFileStart() to start a log file
+# - call with parameters or pipe stdout and stderr to this function: 2>&1 | logError
+# - print empty lines with a space " " to avoid hanging the program waiting on stdin input
+logError() {
+  if [ -n "${1}" ]; then
+    if [ -n "${logFile}" ]; then
+      # Are using a log file
+      echoStderr "[ERROR] $@" 2>&1 | tee --append $logFile
+    else
+      # Are NOT using a log file
+      echoStderr "[ERROR] $@"
+    fi
+  else
+    while read inputLine; do
+      if [ -n "${logFile}" ]; then
+        # Are using a log file
+        echoStderr "[ERROR] ${inputLine}" 2>&1 | tee --append $logFile
+      else
+        # Are NOT using a log file
+        echoStderr "[ERROR] ${inputLine}"
+      fi
+    done
+  fi
+}
+
+# Start a new logfile
+# - name of program that is being run is the first argument
+# - path to the logfile is the second argument
+# - echo a line to the log file to (re)start
+# - subsequent writes to the file using log*() functions will append
+# - the global variable ${logFile} will be set for use by log*() functions
+logFileStart() {
+  local newLogFile now programBeingLogged
+  programBeingLogged=$1
+  # Set the global logfile, in case it was not saved
+  if [ -n "${2}" ]; then
+    logFile=${2}
+  else
+    # Set the logFile to stderr if not specified, so it is handled somehow
+    logFile=/dev/stderr
+  fi
+  now=$(date '+%Y-%m-%d %H:%M:%S')
+  # Can't use logInfo because it only appends and want to restart the file
+  echo "Log file for ${programBeingLogged} started at ${now}" > ${logFile}
+}
+
+# Print an INFO message
+# - prints to stderr and optionally appends to log file if ${logFile} is defined globally
+#   - see logFileStart() to start a log file
+# - call with parameters or pipe stdout and stderr to this function: 2>&1 | logInfo
+# - print empty lines with a space " " to avoid hanging the program waiting on stdin input
+logInfo() {
+  if [ -n "${1}" ]; then
+    if [ -n "${logFile}" ]; then
+      # Are using a log file
+      echoStderr "[INFO] $@" 2>&1 | tee --append $logFile
+    else
+      # Are NOT using a log file
+      echoStderr "[INFO] $@"
+    fi
+  else
+    while read inputLine; do
+      if [ -n "${logFile}" ]; then
+        # Are using a log file
+        echoStderr "[INFO] ${inputLine}" 2>&1 | tee --append $logFile
+      else
+        # Are NOT using a log file
+        echoStderr "[INFO] ${inputLine}"
+      fi
+    done
+  fi
+}
+
+# Print an WARNING message
+# - prints to stderr and optionally appends to log file if ${logFile} is defined globally
+#   - see logFileStart() to start a log file
+# - call with parameters or pipe stdout and stderr to this function: 2>&1 | logWarning
+# - print empty lines with a space " " to avoid hanging the program waiting on stdin input
+logWarning() {
+  if [ -n "${1}" ]; then
+    if [ -n "${logFile}" ]; then
+      # Are using a log file
+      echoStderr "[WARNING] $@" 2>&1 | tee --append $logFile
+    else
+      # Are NOT using a log file
+      echoStderr "[WARNING] $@"
+    fi
+  else
+    while read inputLine; do
+      if [ -n "${logFile}" ]; then
+        # Are using a log file
+        echoStderr "[WARNING] ${inputLine}" 2>&1 | tee --append $logFile
+      else
+        # Are NOT using a log file
+        echoStderr "[WARNING] ${inputLine}"
+      fi
+    done
+  fi
+}
+```
+
 ## Parsing command line options
 ### Parsing command line options with built-in getopts
 ### Parsing command line options with getopt command
