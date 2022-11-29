@@ -446,6 +446,220 @@ logWarning() {
 ```
 
 ## Parsing command line options
+> 구문 분석 명령줄 옵션
+
+스크립트를 작성할 때 일반적인 작업은 명령줄 옵션을 구문 분석하는 것입니다. 옵션은 다음과 같은 다양한 형태를 취할 수 있습니다.
+
+옵션 | 설명
+--- | ---
+-a | 단일 문자 옵션
+-a xyz | 인수가 있는 단일 문자 옵션
+-abc | 단일 대시가 있는 긴 옵션
+-abc xyz | 인수가 있는 단일 대시가 있는 긴 옵션
+--aabc | 대시가 여러 개인 긴 옵션
+--aabc xyz | 인수가 있는 여러 개의 대시가 있는 긴 옵션
+--aabc=xyz | 여러 개의 대시가 있는 긴 옵션 및 등호를 사용한 할당
+
+현재 Linux 규칙은 단일 대시 단일 문자(`-a`) 또는 이중 대시 긴 옵션(`--abc`)을 사용하는 것입니다. 단일 대시 긴 옵션(`-abc`)은 규칙에 따라 피해야 합니다. 사용자 지정 코드로 명령줄 옵션을 반복하여 옵션을 구문 분석할 수 있습니다. 그러나 다음 섹션에서는 표준 Linux 셸 기능을 사용하여 옵션을 구문 분석하는 방법을 설명합니다.
+
 ### Parsing command line options with built-in getopts
+> 내장 getopts로 명령줄 옵션 구문 분석
+
+`sh` 내장 `getopts` 기능을 사용하여 명령줄 구문 분석을 구현할 수 있습니다. 이 접근 방식은 단일 문자 옵션만 지원합니다.
+
+- [getopts documentation](https://pubs.opengroup.org/onlinepubs/9699919799.2008edition/utilities/getopts.html)
+- [Using getopts inside a Bash function](https://stackoverflow.com/questions/16654607/using-getopts-inside-a-bash-function)
+
+예를 들어 다음과 유사한 함수를 만듭니다. 위의 두 번째 링크에서 설명한 것처럼 로컬 사용이 필요합니다. 기본 제공 `getopts` 명령에는 옵션 문자 뒤의 콜론이 후행 인수가 필요한지 여부를 나타내는 특정 구문이 있습니다. 예를 들어, 다음에서 `-i` 및 `-o` 인수는 파일 이름을 지정하는 데 사용됩니다. `optstring`의 시작 부분에 있는 콜론은 인수가 필요한 옵션이 오류를 처리하기 위해 실행되어야 하는 `:` case 문이 되어야 함을 나타냅니다.
+
+```sh
+# Parse the command line and set variables to control logic
+parseCommandLine() {
+    # Special case that nothing was provided on the command line so print usage
+    # - include this if it is desired to print usage by default
+    if [ "$#" -eq 0 ]; then
+        printUsage
+        exit 0
+    fi
+    local OPTIND opt h i o v
+    optstring=":hi:o:v"
+    while getopts $optstring opt; do
+        #echo "Command line option is $opt"
+        case $opt in
+            h) # -h  Print usage
+                printUsage
+                exit 0
+                ;;
+            i) # -i inputFile  Get the input file
+                inputFile=$OPTARG
+                ;;
+            o) # -o outputFile  Get the output file
+                outputFile=$OPTARG
+                ;;
+            v) # -v  Print the version
+                printVersion
+                exit 0
+                ;;
+            \?) # Unknown single-character option
+                echo ""
+                echo "Invalid option:  -$OPTARG" >&2
+                printUsage
+                exit 1
+                ;;
+            :) # Option is recognized but it is missing an argument
+                echo ""
+                echo "Option -$OPTARG requires an argument" >&2
+                printUsage
+                exit 1
+                ;;
+        esac
+    done
+    # Get a list of all command line options that do not correspond to dash options.
+    # - These are "non-option" arguments.
+    # - For example, one or more file or folder names that need to be processed.
+    # - If multiple values, they will be delimited by spaces.
+    # - Command line * will result in expansion to matching files and folders.
+    shift $((OPTIND-1))
+    additionalOpts=$*
+}
+```
+
+이 함수는 원래 명령줄 인수를 전달하여 호출해야 합니다.
+
+```sh
+parseCommandLine "$@"
+```
+
+Linux 명령줄에서 실행할 수 있는 전체 작업 예제를 참조하십시오(링크는 텍스트 파일을 표시하지만 컴퓨터에서 실행하기 위해 .sh 또는 확장자로 저장할 수 없습니다. 필요한 경우 sh parse-command-line-builtin- getopts.txt).
+
 ### Parsing command line options with getopt command
+> getopt 명령으로 명령줄 옵션 구문 분석
+
+내장된 getopts 구문은 긴 옵션을 처리할 수 없다는 점에서 제한적입니다. 이 제한은 getopts Linux 명령(셸에 내장되지 않고 대신 호출되는 명령)을 사용하여 극복할 수 있습니다.
+
+- [getopt man page](https://linux.die.net/man/1/getopt)
+- [TutorialsPoint getopt tutorial](https://www.tutorialspoint.com/unix_commands/getopt.htm)
+
+아래 코드는 getopt 명령을 사용하여 명령줄을 구문 분석하는 함수의 예입니다. 다음 사항에 유의하십시오.
+- `getopt` 명령은 인수가 없는 경우, 필수 인수 및 선택적 인수에 대해 짧은(`-a`) 및 긴(`--abc`) 인수를 처리할 수 있습니다.
+- 옵션에 선택적 인수가 있는 경우 `-o=argument` 또는 `--option=argument` 구문을 사용해야 합니다.
+- 단일 대시 롱 옵션(`-abc`) 처리는 명시적 기능이 아닙니다. b와 c가 인식되지 않는 단일 문자 옵션이라는 오류가 생성될 수 있습니다.
+- getopt 명령은 기본적으로 특수한 경우를 처리할 수 있도록 명령줄을 구문 분석하고 다시 만듭니다.
+    - 누락된 선택적 인수는 작은따옴표로 묶인 빈 문자열로 출력됩니다.
+    - `--option=argument`로 지정된 옵션은 공백으로 구분된 `--option` 인수로 출력됩니다.
+- `-h가` `--` 앞에 지정되면 `getopt` 도움말이 인쇄됩니다. `getopt` `--` 옵션 뒤에 구문 분석할 명령줄을 입력해야 합니다.
+- 옵션을 확인하는 데 사용되는 `case` 문은 선행 대시(들)와 함께 전체 옵션 값을 사용합니다. 이는 `case 문`에 대시가 사용되지 않는 내장 `getopts` 기능과 다릅니다.
+- 아래 코드는 `shift`를 사용하여 옵션 및 인수를 통해 구문 분석을 진행해야 합니다. `getopt`는 원래 명령줄을 더 간단한 구문으로 다시 형식화하고 잘못된 입력이 감지되면 오류를 생성하기 때문에 절대 안전합니다.
+- `getopt`가 오류를 생성하기 때문에 누락된 인수 또는 알 수 없는 인수와 같은 사용자 지정 오류 처리를 수행할 방법이 없습니다. `optstring`의 시작 부분에 콜론을 지정할 수 있는 내장 `getopts`와는 다릅니다.
+
+getopt 호출 자체는 아무 것도 인쇄하지 않습니다.
+```sh
+$ getopt --options "hi:o::v"
+```
+
+그러나 옵션을 전달하면 "nice" 명령줄이 출력됩니다. `--`는 명령줄의 끝을 나타내기 위해 출력되며 빈 문자열이 지정되지 않았기 때문에 출력 파일에 삽입되었습니다.
+
+```sh
+$ getopt --options "hi:o::v" -- -h -v -o
+ -h -v -o '' --
+```
+
+다음은 명령줄을 구문 분석하는 함수의 코드입니다.
+
+```sh
+# Parse the command line and set variables to control logic
+parseCommandLine() {
+    # Special case that nothing was provided on the command line so print usage
+    # - include this if it is desired to print usage by default
+    if [ "$#" -eq 0 ]; then
+        printUsage
+        exit 0
+    fi
+    # Indicate specification for single character options
+    # - 1 colon after an option indicates that an argument is required
+    # - 2 colons after an option indicates that an argument is optional, must use -o=argument syntax
+    optstring="hi:o::v"
+    # Indicate specification for long options
+    # - 1 colon after an option indicates that an argument is required
+    # - 2 colons after an option indicates that an argument is optional, must use --option=argument syntax
+    optstringLong="help,input-file:,output-file::,version"
+    # Parse the options using getopt command
+    # - the -- is a separator between getopt options and parameters to be parsed
+    # - output is simple space-delimited command line
+    # - error message will be printed if unrecognized option or missing parameter but status will be 0
+    # - if an optional argument is not specified, output will include empty string ''
+    GETOPT_OUT=$(getopt --options $optstring --longoptions $optstringLong -- "$@")
+    exitCode=$?
+    if [ $exitCode -ne 0 ]; then
+        echo ""
+        printUsage
+        exit 1
+    fi
+    # The following constructs the command by concatenating arguments
+    # - the $1, $2, etc. variables are set as if typed on the command line
+    # - special cases like --option=value and missing optional arguments are generically handled
+    #   as separate parameters so shift can be done below
+    eval set -- "$GETOPT_OUT"
+    # Loop over the options
+    # - the error handling will catch cases were argument is missing
+    # - shift over the known number of options/arguments
+    while true; do
+        #echo "Command line option is $opt"
+        case "$1" in
+            -h|--help) # -h or --help  Print usage
+                printUsage
+                exit 0
+                ;;
+            -i|--input-file) # -i inputFile or --input-file inputFile  Specify the input file
+                # Input file must be specified so $2 can be used
+                inputFile=$2
+                shift 2
+                ;;
+            -o|--output-file) # -o outputFile or --output-file outputFile  Specify the output file
+                case "$2" in
+                    "")  # No output file so use default (check elsewhere)
+                        outputFile="stdout"
+                        shift 2  # Because output file is an empty string $2=''
+                        ;;
+                    *) # Output file has been specified so use it
+                        outputFile=$2
+                        shift 2  # Because output file is $2
+                        ;;
+                esac
+                ;;
+            -v|--version) # -v or --version  Print the version
+                printVersion
+                exit 0
+                ;;
+            --) # No more arguments
+                shift
+                break
+                ;;
+            *) # Unknown option - will never get here because getopt catches up front
+                echo ""
+                echo "Invalid option $1." >&2
+                printUsage
+                exit 1
+                ;;
+        esac
+    done
+    # Get a list of all command line options that do not correspond to dash options.
+    # - These are "non-option" arguments.
+    # - For example, one or more file or folder names that need to be processed.
+    # - If multiple values, they will be delimited by spaces.
+    # - Command line * will result in expansion to matching files and folders.
+    shift $((OPTIND-1))
+    additionalOpts=$*
+}
+```
+
+이 함수는 원래 명령줄 인수를 전달하여 호출해야 합니다.
+
+```sh
+parseCommandLine "$@"
+```
+
+[Linux 명령줄에서 실행할 수 있는 전체 작업 예제](https://learn.openwaterfoundation.org/owf-learn-linux-shell/useful-scripts/resources/parse-command-line-getopt-command.txt)를 참조하십시오(링크는 텍스트 파일을 표시하지만 컴퓨터에서 실행하기 위해 .sh 또는 확장자로 저장할 수 없습니다. 필요한 경우 sh parse-command-line-getopt-로 실행하십시오. 명령.txt).
+
+
 ## Set Terminal Title
