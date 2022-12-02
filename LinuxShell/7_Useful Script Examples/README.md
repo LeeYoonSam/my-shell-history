@@ -663,3 +663,37 @@ parseCommandLine "$@"
 
 
 ## Set Terminal Title
+> 터미널 제목 설정
+
+터미널이 환경에 대해 구성되었음을 나타내기 위해 터미널 창의 제목을 설정하는 것이 유용할 수 있습니다.
+
+예를 들어 스크립트를 실행하여 `PATH` 및 기타 환경 변수를 구성할 수 있습니다. 터미널의 제목을 설정하려면 확장 문자와 함께 `echo` 명령을 사용하십시오.
+
+예를 들어 다음 스크립트는 터미널 제목을 설정하는 함수를 보여줍니다.
+```sh
+#!/bin/bash
+
+# example-termtitle
+
+# Function to set the title of the terminal for the configured environment
+# See:  https://askubuntu.com/questions/22413/how-to-change-gnome-terminal-title
+setTerminalTitle () {
+    local title
+    title=$1
+    echo -ne "\033]0;${1}\007"
+}
+
+# The function can also added to the $HOME/.bashrc file and then add an alias:
+# alias termtitle=setTerminalTitle
+# 
+# Then run this script on the command line with:
+#   example-termtitle title
+#   example-termtitle "title title with spaces"
+
+# Entry point into script
+
+if [ ! -z "$1" ]; then
+    # If an argument was provided, use it to set the terminal title
+    setTerminalTitle "$1"
+fi
+```
