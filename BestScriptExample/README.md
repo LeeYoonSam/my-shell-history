@@ -3,6 +3,7 @@
 - [첫 번째 BASH 프로그램 생성 및 실행](#첫-번째-bash-프로그램-생성-및-실행)
 - [echo 명령 사용](#echo-명령-사용)
 - [주석 사용](#주석-사용)
+- [여러 줄 주석 사용](#여러-줄-주석-사용)
 
 ---
 
@@ -51,4 +52,25 @@ echo -e "\nRemoving \t backslash \t characters\n"
 
 #Print the result
 echo $sum
+```
+
+# 여러 줄 주석 사용
+`bash`에서 여러 줄 주석을 다양한 방법으로 사용할 수 있습니다.
+
+간단한 방법은 다음 예제에 나와 있습니다. 
+
+`multiline-comment.sh`라는 새 bash를 만들고 다음 스크립트를 추가합니다. 
+
+여기서 `:` 및 ` ' ` 기호는 bash 스크립트에서 여러 줄 주석을 추가하는 데 사용됩니다. 
+
+다음 스크립트는 5의 제곱을 계산합니다.
+
+```sh
+#!/bin/bash
+: '
+The following script calculates
+the square value of the number, 5.
+'
+((area=5*5))
+echo $area
 ```
