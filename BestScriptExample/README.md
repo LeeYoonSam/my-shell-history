@@ -4,6 +4,7 @@
 - [echo 명령 사용](#echo-명령-사용)
 - [주석 사용](#주석-사용)
 - [여러 줄 주석 사용](#여러-줄-주석-사용)
+- [While 루프 사용](#while-루프-사용)
 
 ---
 
@@ -73,4 +74,15 @@ the square value of the number, 5.
 '
 ((area=5*5))
 echo $area
+```
+
+# While 루프 사용
+`while` 루프의 사용법을 알기 위해 `while_example.sh`라는 이름의 `bash` 파일을 만듭니다. 
+
+예제에서 `while` 루프는 5번 반복됩니다. 카운트 변수의 값은 각 단계에서 1씩 증가합니다. `count` 변수의 값이 5가 되면 `while` 루프가 종료됩니다.
+
+```sh
+#!/bin/bash
+valid=true
+
 ```
