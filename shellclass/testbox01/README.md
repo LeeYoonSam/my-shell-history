@@ -1,13 +1,4 @@
-# Shell Class 준비
-## [VirtualBox 설치](https://www.virtualbox.org/)
-> VirtualBox는 서버, 데스크탑 및 임베디드 사용을 대상으로 하는 x86 하드웨어용 범용 전체 가상화 프로그램입니다.
-
-## [Vagrant](https://developer.hashicorp.com/vagrant)
-> Vagrant는 가상 머신의 수명 주기를 관리하기 위한 명령줄 유틸리티입니다. 단일 일회용 및 일관된 환경 내에서 종속성과 해당 구성을 격리합니다.
-
-### Add a new box - centos7
-
-Virtual Box 추가
+# Vagrant Virtual Box 테스트
 
 ```sh
 vagrant box add jasonc/centos7
@@ -55,23 +46,4 @@ ping -c 3 10.9.8.7
 마지막 단계는 호스트 운영 체제 또는 물리적 컴퓨터를 재부팅하는 것입니다.
 - 가상 머신 사용을 완료했거나 가상 머신의 새 복사본으로 다시 시작하려는 경우 
     - run, vagrant, destroy
-
----
-
-<br/>
-
-**Vagrant Command**
-명령어 | 설명
---- | ---
-vagrant `up` | box 를 실행
-vagrant `status` | box 상태 보기
-vagrant `ssh` | Secure Shell 실행
-vagrant `halt` | 가상 머신을 종료, 이 명령을 실행하면 가상 머신 내에서 수행한 작업이 손실되지 않습니다. 가상 머신은 VirtualBox에 계속 존재합니다.
-vagrant `reload` | 가상 머신 새로고침
-vagrant `destroy` | 가상 머신 파괴
-
-
-**참고**
-- vagrant 에서 public box 를 생성하는것은 무료로 가능
-- 계정 필요
 
