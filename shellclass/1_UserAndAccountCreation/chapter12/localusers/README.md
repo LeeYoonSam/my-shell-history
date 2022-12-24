@@ -22,3 +22,12 @@ echo "WORD" # -> script
 echo 'WORD' # -> $WORD
 ```
 - 구체적이고 아무 것도 변경되지 않도록 하려면 작은따옴표를 사용하십시오.
+
+--- 
+ # 13. Special Variables, Pseudocode, Command Substitution, if Statement, Conditionals.
+
+**배울내용**
+- 쉘이 생성하는 몇 가지 특수 변수
+- 변수에 있는 명령의 출력
+- if 문
+
