@@ -21,3 +21,21 @@ echo "This is a shell ${WORD}"
 
 # Append text to the variable.
 echo "${WORD}ing is fun!"
+
+# Show how NOT to append text to a variable.
+# This doesn't work:
+echo "$WORDing is fun!"
+
+# Creat a new variable
+ENDING='ed'
+
+# Combine the two variables.
+echo "This is ${WORD}${ENDING}."
+
+# Changed the value stored in the ENDING variable. (Reassignment.)
+ENDING='ing'
+echo "${WORD}${ENDING} is fun!"
+
+# Reassign value to ENDING.
+ENDING='s'
+echo "You are going to write many ${WORD}${ENDING} in this class!"
