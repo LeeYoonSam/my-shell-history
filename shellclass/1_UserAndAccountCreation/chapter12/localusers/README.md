@@ -31,3 +31,18 @@ echo 'WORD' # -> $WORD
 - 변수에 있는 명령의 출력
 - if 문
 
+
+### Root User or not
+
+**General**
+```
+./luser_demo02.sh
+```
+
+**Root**
+```
+sudo ./luser_demo02.sh
+```
+
+## Linux Shell Scripting: A Project-Based Approach to Learning
+- `if` 문과 함께 사용하는 이 이중 괄호 구문은 `bash` 전용
