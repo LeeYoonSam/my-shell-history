@@ -1,5 +1,26 @@
 # Local Users
 
+## 시작시 공통으로 해야하는 작업
+- 가상머신을 시작하고 연결
+```shell
+cd shellclass
+cd localusers
+vagrnat up
+```
+- 폴더 이동 후 가상머신 시작 및 연결
+
+```shell
+vagrant ssh
+```
+- ssh 접속
+
+```shell
+cd /vagrant
+```
+- 이제 가상 머신 내부에 있으므로 Slash Vagrant의 공유 디렉토리에 시드할 것입니다.
+
+
+## Shell Script 표현식
 Shell Script 표현식 | 부르는 이름
 --- | ---
 \# | Sharp
@@ -59,20 +80,12 @@ sudo ./luser_demo02.sh
 - 종료 명령의 상태를 확인하여 주어진 명령이 실패했는지 또는 성공했는지 확인하는 방법
 - 스크립트의 종료 상태를 제어하는 ​​방법
 
-1. 가상머신을 시작하고 연결
-```shell
-cd shellclass
-cd localusers
-vagrnat up
-```
-- 폴더 이동 후 가상머신 시작 및 연결
+<br/>
+<br/>
 
-```shell
-vagrant ssh
-```
-- ssh 접속
+# 15. Reading Standard Input, Creating Accounts, Username Conventions, More Quoting.
 
-```shell
-cd /vagrant
-```
-- 이제 가상 머신 내부에 있으므로 Slash Vagrant의 공유 디렉토리에 시드할 것입니다.
+**배울 내용**
+- 스크립트를 실행하는 사람으로부터 입력을 받는 방법
+- Linux 시스템에서 계정을 만드는 방법
+
