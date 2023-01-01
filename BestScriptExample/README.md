@@ -1,10 +1,11 @@
 # [30 Bash Script Examples](https://linuxhint.com/30_bash_script_examples/#t1)
 
 - [첫 번째 BASH 프로그램 생성 및 실행](#첫-번째-bash-프로그램-생성-및-실행)
-- [echo 명령 사용](#echo-명령-사용)
-- [주석 사용](#주석-사용)
-- [여러 줄 주석 사용](#여러-줄-주석-사용)
-- [While 루프 사용](#while-루프-사용)
+- [echo 명령](#echo-명령-사용)
+- [주석](#주석-사용)
+- [여러 줄 주석](#여러-줄-주석-사용)
+- [While Loop](#while-루프-사용)
+- [For Loop](#for-loop-사용)
 
 ---
 
@@ -86,3 +87,25 @@ echo $area
 valid=true
 
 ```
+
+# For Loop 사용
+`for_example.sh` 스크립트 파일 생성
+아래 예제의 for loop는 10번 반복하고 변수 counter의 모든 값을 한 줄에 인쇄합니다.
+```sh
+#!/bin/bash
+for (( counter=10; counter>0; counter-- ))
+do
+    echo -n "$counter "
+done
+printf "\n"
+```
+
+출력
+```sh
+./for_example.sh
+> 10 9 8 7 6 5 4 3 2 1
+```
+
+### 참고
+- [for loop example](./for-loop)
+- [다양한 for loop 사용법](https://linuxhint.com/bash-for-loop-examples/)
