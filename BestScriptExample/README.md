@@ -85,8 +85,10 @@ echo $area
 ```sh
 #!/bin/bash
 valid=true
-
 ```
+
+### 참고
+- [while loop example](./while-loop)
 
 # For Loop 사용
 `for_example.sh` 스크립트 파일 생성
