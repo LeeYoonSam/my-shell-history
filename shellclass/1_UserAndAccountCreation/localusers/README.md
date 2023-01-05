@@ -89,3 +89,17 @@ sudo ./luser_demo02.sh
 - 스크립트를 실행하는 사람으로부터 입력을 받는 방법
 - Linux 시스템에서 계정을 만드는 방법
 
+## 참고
+- [luser-demo04.sh](./luser-demo04.sh)
+
+
+# 18. Random Data, Cryptographic Hash Functions, Text and String Manipulation.
+> 랜덤 데이터, 암호화 해시 함수, 텍스트 및 문자열 조작.
+
+**배울 내용**
+- 임의의 데이터를 생성하는 몇 가지 다른 방법
+- 임의 암호 생성 프로세스를 자동화하는 방법
+    - 사용자의 입력을 덜 요구하여 스크립트를 개선
+
+## 참고
+- [luser-demo05.sh](./luser-demo05.sh)
