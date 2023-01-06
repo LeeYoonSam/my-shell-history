@@ -250,3 +250,95 @@ $
 _
 ^
 ```
+
+## bash
+> GNU Bourne-Again SHell<br/>
+Bash는 표준 입력 또는 파일에서 읽은 명령을 실행하는 sh 호환 명령 언어 해석기입니다. Bash는 또한 Korn 및 C 셸(ksh 및 csh)의 유용한 기능을 통합합니다.<br/>
+Bash는 IEEE POSIX 사양(IEEE 표준 1003.1)의 Shell 및 Utilities 부분을 준수하도록 구현되었습니다. Bash는 기본적으로 POSIX를 준수하도록 구성할 수 있습니다.
+
+### 쉘 문법
+Shell GRAMMAR | explanation
+--- | ---
+PATH | 명령의 검색 경로입니다. 쉘이 명령을 찾는 콜론으로 구분된 디렉토리 목록입니다(아래 COMMAND EXECUTION 참조). PATH 값의 길이가 0인(null) 디렉토리 이름은 현재 디렉토리를 나타냅니다. Null 디렉터리 이름은 두 개의 인접한 콜론 또는 초기 또는 후행 콜론으로 나타날 수 있습니다. 기본 경로는 시스템에 따라 다르며 bash를 설치하는 관리자가 설정합니다. 일반적인 값은 ``/usr/gnu/bin:/usr/local/bin:/usr/ucb:/bin:/usr/bin''입니다.
+
+```sh
+echo ${PATH}
+>>> /usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/sbin:/home/vagrant/bin
+```
+
+### Bash Special Parameters
+> 쉘은 여러 매개변수를 특별히 취급합니다. 이러한 매개변수는 참조만 가능하고 할당할 수 없습니다.
+
+Special Parameters | explanation
+--- | ---
+`*` | 1부터 시작하여 위치 매개변수로 확장합니다. 큰따옴표 안에 확장이 발생하면 IFS 특수 변수의 첫 번째 문자로 구분된 각 매개변수 값이 있는 단일 단어로 확장됩니다. 즉, "$*"는 "$1c$2c..."와 동일하며, 여기서 c는 IFS 변수 값의 첫 번째 문자입니다. IFS가 설정되지 않은 경우 매개변수는 공백으로 구분됩니다. IFS가 null인 경우 중간 구분 기호 없이 매개 변수가 결합됩니다.     
+`@` | 1부터 시작하여 위치 매개변수로 확장합니다. 큰따옴표 안에 확장이 발생하면 각 매개변수가 별도의 단어로 확장됩니다. 즉, "$@"는 "$1" "$2"와 동일합니다. 단어 내에서 큰따옴표 확장이 발생하면 첫 번째 매개변수의 확장이 원래 단어의 시작 부분과 결합되고 확장이 마지막 매개변수는 원래 단어의 마지막 부분과 연결됩니다. 위치 매개변수가 없으면 "$@" 및 $@는 아무것도 확장되지 않습니다(즉, 제거됨).
+`#` | 10진수 위치 매개변수의 수로 확장됩니다.
+`?` | 가장 최근에 실행된 포그라운드 파이프라인의 종료 상태로 확장됩니다.
+`-` | set 내장 명령 또는 쉘 자체에 의해 설정된 플래그(예: -i 옵션)에 의해 호출 시 지정된 현재 옵션 플래그로 확장됩니다.
+`$` | 쉘의 프로세스 ID로 확장됩니다. () 서브쉘에서는 서브쉘이 아닌 현재 쉘의 프로세스 ID로 확장됩니다.
+`!` | 가장 최근에 실행된 백그라운드(비동기) 명령의 프로세스 ID로 확장됩니다.
+`0` | 쉘 또는 쉘 스크립트의 이름으로 확장됩니다. 이것은 쉘 초기화에서 설정됩니다. 명령 파일로 bash를 호출하면 $0이 해당 파일의 이름으로 설정됩니다. bash가 -c 옵션으로 시작되면 $0은 실행될 문자열 다음의 첫 번째 인수(있는 경우)로 설정됩니다. 그렇지 않으면 인수 0으로 지정된 대로 bash를 호출하는 데 사용되는 파일 이름으로 설정됩니다.
+`_` | 셸 시작 시 환경 또는 인수 목록에서 전달된 대로 실행 중인 셸 또는 셸 스크립트를 호출하는 데 사용되는 절대 경로 이름으로 설정합니다. 결과적으로 확장 후 이전 명령에 대한 마지막 인수로 확장됩니다. 또한 실행된 각 명령을 호출하는 데 사용되는 전체 경로 이름으로 설정하고 해당 명령으로 내보낸 환경에 배치합니다. 메일을 확인할 때 이 매개변수는 현재 확인 중인 메일 파일의 이름을 보유합니다.
+
+## man [command]
+> command 의 매뉴얼
+
+- /string 으로 단어 검색 가능
+
+
+## basename
+> 파일 이름에서 디렉토리 및 접미사 제거
+
+```sh
+basename /vagrant/luser-demo06.sh 
+>> luser-demo06.sh
+```
+- 기본 이름을 제공할 수 있도록 전달된 문자열의 디렉토리 부분을 제거합니다.
+
+## dirname
+> 파일 이름에서 마지막 구성 요소 제거
+
+```sh
+dirname /vagrant/luser-demo06.sh
+>> /vagrant
+```
+- 존재하지 않는 경로를 지정할 수 있으며 디렉토리처럼 보이는 부분을 반환합니다.
+
+## help [command] | head
+> command 에 대한 도움말에서 헤더만 표시
+
+```sh
+help for | head
+
+>>
+for: for NAME [in WORDS ... ] ; do COMMANDS; done
+    Execute commands for each member in a list.
+    
+    The `for' loop executes a sequence of commands for each member in a
+    list of items.  If `in WORDS ...;' is not present, then `in "$@"' is
+    assumed.  For each element in WORDS, NAME is set to that element, and
+    the COMMANDS are executed.
+    
+    Exit Status:
+    Returns the status of the last command executed.
+```
+
+## for 커맨드에서 사용하기
+```sh
+for X in Frank Claire Doug
+> do
+>   echo "Hi ${X}."
+> done
+Hi Frank.
+Hi Claire.
+Hi Doug.
+```
+
+`;` 을 사용해서 한줄로 처리
+```sh
+ for X in Frank Claire Doug; do   echo "Hi ${X}."; done
+Hi Frank.
+Hi Claire.
+Hi Doug.
+```
