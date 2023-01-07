@@ -225,3 +225,14 @@ Special Parameters | explanation
 
 ## 참고
 - [luser-demo06.sh](./luser-demo06.sh)
+
+# 20. The while Loop, Infinite Loops, Shifting, Sleeping
+
+**배울 내용**
+- 위치 매개변수를 계속 탐색하고 While loop 생성하는 방법
+
+## shift
+- `shift` 명령이 실제로 수행하는 작업은 목록에서 위치 매개변수를 `$1`로 제거하는 것입니다.
+- `$2`에 저장된 값이 `$1` `$3`으로 이동합니다.
+- `${}` 의 특수 매개 변수가 1씩 줄어듭니다.
+- `while` 루프가 처음 실행되고 `shift`가 실행되면 매개변수의 수가 줄어듭니다.
