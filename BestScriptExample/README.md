@@ -6,6 +6,7 @@
 - [여러 줄 주석](#여러-줄-주석-사용)
 - [While Loop](#while-루프-사용)
 - [For Loop](#for-loop-사용)
+- [Get User Input(사용자 입력 받기)](#get-user-input사용자-입력-받기)
 
 ---
 
@@ -111,3 +112,20 @@ printf "\n"
 ### 참고
 - [for loop example](./for-loop)
 - [다양한 for loop 사용법](https://linuxhint.com/bash-for-loop-examples/)
+
+
+# Get User Input(사용자 입력 받기)
+`read` 명령은 bash에서 사용자로부터 입력을 받는 데 사용됩니다.
+
+하나의 문자열 값을 사용자로부터 가져와 다른 문자열 값을 조합하여 표시합니다.
+
+```sh
+#!/bin/bash
+echo "Enter Your Name"
+read name
+echo "Welcome $name to LinuxHint"
+```
+
+### 참고
+- [Bash Script User Input](https://linuxhint.com/bash-script-user-input/)
+- [sample](./user-input)
