@@ -129,3 +129,45 @@ echo "Welcome $name to LinuxHint"
 ### 참고
 - [Bash Script User Input](https://linuxhint.com/bash-script-user-input/)
 - [sample](./user-input)
+
+
+# Using if statement (if 문 사용)
+단일 또는 여러 조건과 함께 `if` 조건을 사용할 수 있습니다.
+
+`if` 문의 시작 블록과 끝 블록은 `if`와 `fi`로 정의됩니다.
+
+bash에서 use if 문을 알기 위해 다음 스크립트로 `simple_if.sh`라는 파일을 만듭니다.
+
+여기서 10은 변수 n에 할당되고 `$n`의 값이 10보다 작으면 **한 자리 숫자입니다**가 출력되고, 그렇지 않으면 **두 자리 숫자입니다**가 출력됩니다.<br/>
+비교를 위해 여기서는 `-lt`를 사용합니다.<br/>
+다른 비교 키워드는 `-eq`는 같음, `-ne`은 같지 않음, `-gt`는 bash 스크립트보다 큼을 의미합니다.
+
+```sh
+#!/bin/bash
+n=10
+if [ $n -lt 10 ]
+then
+    echo "It is a one digit number"
+else
+    echo "It is a two digit number"
+fi
+```
+
+### 참고
+- [Using if statement](https://linuxhint.com/30_bash_script_examples/#t8)
+- [sample](./if-statement/simple_if.sh)
+
+
+# Using if statement with AND logic(AND 논리와 함께 if 문 사용)
+
+두 개 이상의 조건이 있는 `if` 문에서 서로 다른 유형의 논리 조건을 사용할 수 있습니다. 
+
+`AND` 논리를 사용하여 `if` 문에서 여러 조건을 정의하는 방법은 다음 예에 나와 있습니다. `&&`는 `if` 문의 `AND` 논리를 적용하는 데 사용됩니다. 
+
+다음 코드를 확인하기 위해 `if_with_AND.sh`라는 파일을 생성합니다. 
+
+여기에서 사용자 이름 및 비밀번호 변수의 값은 사용자로부터 가져와 `admin` 및 `secret`과 비교됩니다. 두 값이 모두 일치하면 **유효한 사용자**가 출력되고 그렇지 않으면 **잘못된 사용자**가 출력됩니다.
+
+### 참고
+- [Using if statement with AND logic](https://linuxhint.com/30_bash_script_examples/#t9)
+- [sample](./if-statement/if_with_AND.sh)
