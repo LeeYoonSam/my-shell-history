@@ -171,3 +171,27 @@ fi
 ### 참고
 - [Using if statement with AND logic](https://linuxhint.com/30_bash_script_examples/#t9)
 - [sample](./if-statement/if_with_AND.sh)
+
+
+# Using if statement with OR logic (OR 논리와 함께 if 문 사용)
+`||`는 `if` 조건에서 `OR` 논리를 정의하는 데 사용됩니다.<br/>
+`if` 문의 `OR` 논리 사용을 확인하기 위해 다음 코드로 `if_with_OR.sh`라는 파일을 생성합니다.<br/>
+여기서 n의 값은 사용자로부터 가져옵니다. 값이 15 또는 45이면 출력은 **You win the game**이고, 그렇지 않으면 출력은 **You lost the game**입니다.
+
+```sh
+#!/bin/bash
+
+echo 'Enter any number'
+read n
+
+if [[ $n -eq 15 || $n -eq 45 ]]
+then
+    echo 'You won the game'
+else
+    echo 'You loas the game'
+fi
+```
+
+### 참고
+- [Using if statement with OR logic](https://linuxhint.com/30_bash_script_examples/#t10)
+- [Sample](./if-statement/if_with_OR.sh)
