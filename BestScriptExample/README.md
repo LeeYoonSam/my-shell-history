@@ -195,3 +195,32 @@ fi
 ### 참고
 - [Using if statement with OR logic](https://linuxhint.com/30_bash_script_examples/#t10)
 - [Sample](./if-statement/if_with_OR.sh)
+
+
+# Using else if statement (else if 문 사용)
+`else if` 조건의 사용은 bash에서 다른 프로그래밍 언어와 약간 다릅니다.<br/>
+`elif`는 bash에서 `else if` 조건을 정의하는 데 사용됩니다. `elseif_example.sh`라는 파일을 만들고 다음 스크립트를 추가하여 bash 스크립트에 `else if`가 어떻게 정의되어 있는지 확인합니다.
+
+```sh
+#!/bin/bash
+
+echo 'Enter your lucky number'
+read n
+
+if [ $n -eq 101 ]
+then
+    echo 'You got 1st prize'
+elif [ $n -eq 510 ]
+then
+    echo 'You got 2nd prize'
+elif [ $n -eq 999 ]
+then
+    echo 'You got 3rd prize'
+else
+    echo 'Sorry, try for the next time'
+fi
+```
+
+### 참고
+- [Using else if statement](https://linuxhint.com/30_bash_script_examples/#t11)
+- [Sample](./if-statement/elseif_example.sh)
