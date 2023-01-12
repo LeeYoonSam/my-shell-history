@@ -92,8 +92,9 @@ sudo ./luser_demo02.sh
 ## 참고
 - [luser-demo04.sh](./luser-demo04.sh)
 
+# Password Generation and ShellScript Arguments
 
-# 18. Random Data, Cryptographic Hash Functions, Text and String Manipulation.
+## 18. Random Data, Cryptographic Hash Functions, Text and String Manipulation.
 > 랜덤 데이터, 암호화 해시 함수, 텍스트 및 문자열 조작.
 
 **배울 내용**
@@ -101,31 +102,31 @@ sudo ./luser_demo02.sh
 - 임의 암호 생성 프로세스를 자동화하는 방법
     - 사용자의 입력을 덜 요구하여 스크립트를 개선
 
-## 참고
+### 참고
 - [luser-demo05.sh](./luser-demo05.sh)
 
-# 19. Positional Parameters, Arguments, for Loops, Special Parameters
+## 19. Positional Parameters, Arguments, for Loops, Special Parameters
 
 **배울 내용**
 - 위치 매개변수와 for 루프
 
-## Parameter vs Argument
+### Parameter vs Argument
 명령줄에 인수(Argument)가 적용되면 매개변수(paramenter)에 저장된 값이 됩니다.
 
-### Parameter
+**Parameter**
 > 매개변수는 쉘 스크립트 내에서 사용되는 변수입니다.
 
-### Argument
+**Argument**
 > 인수는 쉘 스크립트로 전달되는 데이터입니다.
 
-## 앞으로 입력할 수 있도록 스크립트의 전체 경로를 제공하여 스크립트를 호출하는 방법
+### 앞으로 입력할 수 있도록 스크립트의 전체 경로를 제공하여 스크립트를 호출하는 방법
 ```sh
 /vagrant/luser-demo06.sh 
 >> You executed this command: /vagrant/luser-demo06.sh
 ```
 - 스크립트가 이와 같이 명시적으로 호출되면 `$0`에 저장됩니다.
 
-## 경로를 제어하려면 스크립트에서 경로를 조작하여 제어할 수 있습니다.
+### 경로를 제어하려면 스크립트에서 경로를 조작하여 제어할 수 있습니다.
 - 어떤 명령이 실행될지 알려주기 위해 `which`라는 명령을 사용합시다.
 ```sh
 which head
@@ -223,16 +224,58 @@ Special Parameters | explanation
 >> jason steve jan fred: cfe178ea51f0598b6b612e7fe3c549e248934794513b6c70
 ```
 
-## 참고
+### 참고
 - [luser-demo06.sh](./luser-demo06.sh)
 
-# 20. The while Loop, Infinite Loops, Shifting, Sleeping
+## 20. The while Loop, Infinite Loops, Shifting, Sleeping
 
 **배울 내용**
 - 위치 매개변수를 계속 탐색하고 While loop 생성하는 방법
 
-## shift
+### shift
 - `shift` 명령이 실제로 수행하는 작업은 목록에서 위치 매개변수를 `$1`로 제거하는 것입니다.
 - `$2`에 저장된 값이 `$1` `$3`으로 이동합니다.
 - `${}` 의 특수 매개 변수가 1씩 줄어듭니다.
 - `while` 루프가 처음 실행되고 `shift`가 실행되면 매개변수의 수가 줄어듭니다.
+
+
+# Conventions
+
+## 23. Advanced Standard Input, Standard Output, and Standard Error - Part I
+
+**배울 내용**
+- 다양한 유형의 입력 및 출력과 리디렉션 방법
+- 유형의 입력 및 출력을 제어
+
+### 3가지 `IO` 타입
+- Standard Input
+    - 키보드로 무언가를 입력하는 사용자로부터 입력
+    - `read` 명령은 표준 입력을 받아들이고 `read` 명령을 사용하여 정보를 수집합니다.
+    - 파이프를 사용하여 하나의 명령으로 생성된 출력을 표준 입력으로 사용
+- Standard Output
+    - 명령의 표준 출력을 파일로 리디렉션하여 시작
+    - 리디렉션 작업을 할 때 권한이 없으므로 권한 거부 오류가 발생하면 그대로 받아 들입니다.
+    - 명령의 출력을 다른 명령의 입력으로 가져오려는 경우 파이프를 사용합니다.
+    - 그러나 파일 내용을 명령으로 리디렉션하려는 경우 이 리디렉션을 사용할 수 있습니다.
+- Standard Error
+
+파일을 재정의하지 않고 파일을 추가하거나 덧붙이려면 어떻게 해야 합니까?
+- `>>` 기호를 사용합니다.
+
+```sh
+echo "another-line" >> password
+
+cat password
+>> new
+>> another-line
+```
+
+파이프와 출력 리디렉션을 사용
+```sh
+date | sha256sum | head -c10 >> password
+
+cat password 
+>> new
+>> another-line
+>> 5756525402
+```
