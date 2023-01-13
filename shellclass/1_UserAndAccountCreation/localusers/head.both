@@ -1,0 +1,6 @@
+==> /etc/passwd <==
+root:x:0:0:root:/root:/bin/bash
+
+==> /etc/hosts <==
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+head: cannot open `/fakefile' for reading: 그런 파일이나 디렉터리가 없습니다
