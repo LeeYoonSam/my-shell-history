@@ -92,7 +92,7 @@ sudo ./luser_demo02.sh
 ## 참고
 - [luser-demo04.sh](./luser-demo04.sh)
 
-# Password Generation and ShellScript Arguments
+# Section 4: Password Generation and ShellScript Arguments
 
 ## 18. Random Data, Cryptographic Hash Functions, Text and String Manipulation.
 > 랜덤 데이터, 암호화 해시 함수, 텍스트 및 문자열 조작.
@@ -239,7 +239,7 @@ Special Parameters | explanation
 - `while` 루프가 처음 실행되고 `shift`가 실행되면 매개변수의 수가 줄어듭니다.
 
 
-# Conventions
+# Section 5: Linux Programming Conventions
 
 ## 23. Advanced Standard Input, Standard Output, and Standard Error - Part I
 
@@ -442,3 +442,6 @@ head -n1 /etc/passwd /etc/hosts /fakefile |& cat -n
      6	head: cannot open `/fakefile' for reading: 그런 파일이나 디렉터리가 없습니다
 ```
 - `|&` 를 사용해도 같은 결과를 나타냅니다.
+
+
+# Section 6: Parsing Command Line Options
