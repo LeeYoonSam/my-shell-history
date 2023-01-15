@@ -128,7 +128,7 @@ echo "Welcome $name to LinuxHint"
 
 ### 참고
 - [Bash Script User Input](https://linuxhint.com/bash-script-user-input/)
-- [sample](./user-input)
+- [Example](./user-input)
 
 
 # Using if statement (if 문 사용)
@@ -155,7 +155,7 @@ fi
 
 ### 참고
 - [Using if statement](https://linuxhint.com/30_bash_script_examples/#t8)
-- [sample](./if-statement/simple_if.sh)
+- [Example](./if-statement/simple_if.sh)
 
 
 # Using if statement with AND logic(AND 논리와 함께 if 문 사용)
@@ -170,7 +170,7 @@ fi
 
 ### 참고
 - [Using if statement with AND logic](https://linuxhint.com/30_bash_script_examples/#t9)
-- [sample](./if-statement/if_with_AND.sh)
+- [Example](./if-statement/if_with_AND.sh)
 
 
 # Using if statement with OR logic (OR 논리와 함께 if 문 사용)
@@ -194,7 +194,7 @@ fi
 
 ### 참고
 - [Using if statement with OR logic](https://linuxhint.com/30_bash_script_examples/#t10)
-- [Sample](./if-statement/if_with_OR.sh)
+- [Example](./if-statement/if_with_OR.sh)
 
 
 # Using else if statement (else if 문 사용)
@@ -223,4 +223,30 @@ fi
 
 ### 참고
 - [Using else if statement](https://linuxhint.com/30_bash_script_examples/#t11)
-- [Sample](./if-statement/elseif_example.sh)
+- [Example](./if-statement/elseif_example.sh)
+
+
+# Using Case Statement (case 문 사용)
+`if-elseif-else` 문의 대안으로 `case` 문을 사용합니다. 이 문의 시작 블록과 끝 블록은 `case`와 `esac`으로 정의됩니다.
+
+```sh
+#!/bin/bash
+
+echo 'Enter your lucky number'
+read n
+
+case $n in
+    101)
+        echo echo 'You got 1st prize' ;;
+    510)
+        echo 'You got 2nd prize' ;;
+    999)
+        echo 'You got 3rd prize' ;;
+    *)
+        echo 'Sorry, try for the next time' ;;
+esac
+```
+
+### 참고
+- [Using Case Statement](https://linuxhint.com/30_bash_script_examples/#t12)
+- [Example](./case-statement/case_example.sh)
