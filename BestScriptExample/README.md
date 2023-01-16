@@ -250,3 +250,23 @@ esac
 ### 참고
 - [Using Case Statement](https://linuxhint.com/30_bash_script_examples/#t12)
 - [Example](./case-statement/case_example.sh)
+
+
+# Get Arguments from Command Line (커맨드라인에서 인수 가져오기)
+Bash 스크립트는 다른 프로그래밍 언어와 마찬가지로 명령줄 인수에서 입력을 읽을 수 있습니다.
+
+`$1` 및 `$2` 변수는 첫 번째 및 두 번째 명령줄 인수를 읽는 데 사용됩니다.
+
+`command_line.sh`라는 파일을 만들고 다음 스크립트를 추가합니다. 다음 스크립트에서 두 개의 인수 값을 읽고 총 인수 수와 인수 값을 출력으로 인쇄합니다.
+
+```sh
+#!/bin/bash
+echo "Total arguments : $#"
+echo "1st Argument : $1"
+echo "2nd Argument : $2"
+```
+
+### 참고
+- [Get Arguments from Command Line](https://linuxhint.com/30_bash_script_examples/#t13)
+- [Example](./commandline/command_line.sh)
+- [Command Line Arguemnts](./commandline)
