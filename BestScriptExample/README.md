@@ -270,3 +270,35 @@ echo "2nd Argument : $2"
 - [Get Arguments from Command Line](https://linuxhint.com/30_bash_script_examples/#t13)
 - [Example](./commandline/command_line.sh)
 - [Command Line Arguemnts](./commandline)
+
+
+# Get arguments from command line with names (이름이 있는 커맨드라인에서 인수 가져오기)
+이름이 있는 커맨드라인 인수를 읽는 방법은 다음 스크립트에 나와 있습니다.
+
+`command_line_names.sh`라는 파일을 만들고 다음 코드를 추가합니다. 
+
+여기에서 이 스크립트는 두 개의 인수 X와 Y를 읽고 X와 Y의 합계를 인쇄합니다.
+
+```sh
+#!/bin/bash
+
+for arg in "$@"
+do
+    index=$(echo $arg | cut -d = -f 1)
+    val=$(echo $arg | cut -d = -f 2)
+
+    case $index in
+        X) x=$val ;;
+        Y) y=$val ;;
+        *)
+    esac
+done
+
+((result=x+y))
+echo "X+Y=$result"
+```
+
+### 참고
+- [Get arguments from command line with names](https://linuxhint.com/30_bash_script_examples/#t13)
+- [Example](./commandline/command_line_names.sh)
+- [CommandLine - cut](../QuickReferences/SHELL_COMMAND.md/#cut)
