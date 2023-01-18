@@ -323,4 +323,25 @@ echo $string3
 
 ### 참고
 - [Combine String variables](https://linuxhint.com/30_bash_script_examples/#t15)
-- [Example](./commandline/command_line_names.sh)
+- [Example](./example-string/string_combine.sh)
+
+
+# Get substring of String (문자열 자르기)
+다른 프로그래밍 언어와 마찬가지로 bash에는 문자열 데이터에서 값을 잘라내는 내장 함수가 없습니다. 
+그러나 다음 스크립트에 표시된 bash에서 다른 방식으로 하위 문자열 작업을 수행할 수 있습니다. 
+
+스크립트를 테스트하려면 다음 코드를 사용하여 `substring.sh`라는 파일을 만듭니다. 
+
+```sh
+#!/bin/bash
+
+Str='Learn Linux from LinuxHint'
+SubStr=${Str:6:5}
+echo $SubStr
+```
+- 여기서 값 6은 하위 문자열이 시작되는 시작점을 나타내고 5는 하위 문자열의 길이를 나타냅니다.
+- `Str` 의 6번째 글자부터 연속된 5글자를 가져옵니다.
+
+### 참고
+- [Get substring of String](https://linuxhint.com/30_bash_script_examples/#t16)
+- [Example](./example-string/substring.sh)
