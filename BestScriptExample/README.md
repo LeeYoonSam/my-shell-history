@@ -299,6 +299,28 @@ echo "X+Y=$result"
 ```
 
 ### 참고
-- [Get arguments from command line with names](https://linuxhint.com/30_bash_script_examples/#t13)
+- [Get arguments from command line with names](https://linuxhint.com/30_bash_script_examples/#t14)
 - [Example](./commandline/command_line_names.sh)
 - [CommandLine - cut](../QuickReferences/SHELL_COMMAND.md/#cut)
+
+
+# Combine String variables (문자열 변수 결합)
+bash에서 문자열 변수를 쉽게 결합할 수 있습니다. 
+
+`string_combine.sh`라는 파일을 만들고 다음 스크립트를 추가하여 변수를 함께 배치하거나 `+` 연산자를 사용하여 bash에서 문자열 변수를 결합하는 방법을 확인합니다.
+
+
+```sh
+#!/bin/bash
+
+string1='Linux'
+string2='Hint'
+echo "$string1$string2"
+string3=$string1+$string2
+string3+=' is a good tutorial blog site'
+echo $string3
+```
+
+### 참고
+- [Combine String variables](https://linuxhint.com/30_bash_script_examples/#t15)
+- [Example](./commandline/command_line_names.sh)
