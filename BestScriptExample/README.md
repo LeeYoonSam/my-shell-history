@@ -128,7 +128,7 @@ echo "Welcome $name to LinuxHint"
 
 ### 참고
 - [Bash Script User Input](https://linuxhint.com/bash-script-user-input/)
-- [sample](./user-input)
+- [Example](./user-input)
 
 
 # Using if statement (if 문 사용)
@@ -155,7 +155,7 @@ fi
 
 ### 참고
 - [Using if statement](https://linuxhint.com/30_bash_script_examples/#t8)
-- [sample](./if-statement/simple_if.sh)
+- [Example](./if-statement/simple_if.sh)
 
 
 # Using if statement with AND logic(AND 논리와 함께 if 문 사용)
@@ -170,7 +170,7 @@ fi
 
 ### 참고
 - [Using if statement with AND logic](https://linuxhint.com/30_bash_script_examples/#t9)
-- [sample](./if-statement/if_with_AND.sh)
+- [Example](./if-statement/if_with_AND.sh)
 
 
 # Using if statement with OR logic (OR 논리와 함께 if 문 사용)
@@ -194,7 +194,7 @@ fi
 
 ### 참고
 - [Using if statement with OR logic](https://linuxhint.com/30_bash_script_examples/#t10)
-- [Sample](./if-statement/if_with_OR.sh)
+- [Example](./if-statement/if_with_OR.sh)
 
 
 # Using else if statement (else if 문 사용)
@@ -223,4 +223,125 @@ fi
 
 ### 참고
 - [Using else if statement](https://linuxhint.com/30_bash_script_examples/#t11)
-- [Sample](./if-statement/elseif_example.sh)
+- [Example](./if-statement/elseif_example.sh)
+
+
+# Using Case Statement (case 문 사용)
+`if-elseif-else` 문의 대안으로 `case` 문을 사용합니다. 이 문의 시작 블록과 끝 블록은 `case`와 `esac`으로 정의됩니다.
+
+```sh
+#!/bin/bash
+
+echo 'Enter your lucky number'
+read n
+
+case $n in
+    101)
+        echo echo 'You got 1st prize' ;;
+    510)
+        echo 'You got 2nd prize' ;;
+    999)
+        echo 'You got 3rd prize' ;;
+    *)
+        echo 'Sorry, try for the next time' ;;
+esac
+```
+
+### 참고
+- [Using Case Statement](https://linuxhint.com/30_bash_script_examples/#t12)
+- [Example](./case-statement/case_example.sh)
+
+
+# Get Arguments from Command Line (커맨드라인에서 인수 가져오기)
+Bash 스크립트는 다른 프로그래밍 언어와 마찬가지로 명령줄 인수에서 입력을 읽을 수 있습니다.
+
+`$1` 및 `$2` 변수는 첫 번째 및 두 번째 명령줄 인수를 읽는 데 사용됩니다.
+
+`command_line.sh`라는 파일을 만들고 다음 스크립트를 추가합니다. 다음 스크립트에서 두 개의 인수 값을 읽고 총 인수 수와 인수 값을 출력으로 인쇄합니다.
+
+```sh
+#!/bin/bash
+echo "Total arguments : $#"
+echo "1st Argument : $1"
+echo "2nd Argument : $2"
+```
+
+### 참고
+- [Get Arguments from Command Line](https://linuxhint.com/30_bash_script_examples/#t13)
+- [Example](./commandline/command_line.sh)
+- [Command Line Arguemnts](./commandline)
+
+
+# Get arguments from command line with names (이름이 있는 커맨드라인에서 인수 가져오기)
+이름이 있는 커맨드라인 인수를 읽는 방법은 다음 스크립트에 나와 있습니다.
+
+`command_line_names.sh`라는 파일을 만들고 다음 코드를 추가합니다. 
+
+여기에서 이 스크립트는 두 개의 인수 X와 Y를 읽고 X와 Y의 합계를 인쇄합니다.
+
+```sh
+#!/bin/bash
+
+for arg in "$@"
+do
+    index=$(echo $arg | cut -d = -f 1)
+    val=$(echo $arg | cut -d = -f 2)
+
+    case $index in
+        X) x=$val ;;
+        Y) y=$val ;;
+        *)
+    esac
+done
+
+((result=x+y))
+echo "X+Y=$result"
+```
+
+### 참고
+- [Get arguments from command line with names](https://linuxhint.com/30_bash_script_examples/#t14)
+- [Example](./commandline/command_line_names.sh)
+- [CommandLine - cut](../QuickReferences/SHELL_COMMAND.md/#cut)
+
+
+# Combine String variables (문자열 변수 결합)
+bash에서 문자열 변수를 쉽게 결합할 수 있습니다. 
+
+`string_combine.sh`라는 파일을 만들고 다음 스크립트를 추가하여 변수를 함께 배치하거나 `+` 연산자를 사용하여 bash에서 문자열 변수를 결합하는 방법을 확인합니다.
+
+
+```sh
+#!/bin/bash
+
+string1='Linux'
+string2='Hint'
+echo "$string1$string2"
+string3=$string1+$string2
+string3+=' is a good tutorial blog site'
+echo $string3
+```
+
+### 참고
+- [Combine String variables](https://linuxhint.com/30_bash_script_examples/#t15)
+- [Example](./example-string/string_combine.sh)
+
+
+# Get substring of String (문자열 자르기)
+다른 프로그래밍 언어와 마찬가지로 bash에는 문자열 데이터에서 값을 잘라내는 내장 함수가 없습니다. 
+그러나 다음 스크립트에 표시된 bash에서 다른 방식으로 하위 문자열 작업을 수행할 수 있습니다. 
+
+스크립트를 테스트하려면 다음 코드를 사용하여 `substring.sh`라는 파일을 만듭니다. 
+
+```sh
+#!/bin/bash
+
+Str='Learn Linux from LinuxHint'
+SubStr=${Str:6:5}
+echo $SubStr
+```
+- 여기서 값 6은 하위 문자열이 시작되는 시작점을 나타내고 5는 하위 문자열의 길이를 나타냅니다.
+- `Str` 의 6번째 글자부터 연속된 5글자를 가져옵니다.
+
+### 참고
+- [Get substring of String](https://linuxhint.com/30_bash_script_examples/#t16)
+- [Example](./example-string/substring.sh)
