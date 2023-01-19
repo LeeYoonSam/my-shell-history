@@ -445,3 +445,24 @@ head -n1 /etc/passwd /etc/hosts /fakefile |& cat -n
 
 
 # Section 6: Parsing Command Line Options
+
+## 27. Case Statements
+
+**배울 내용**
+- case 문을 사용하는 방법
+
+```sh
+type -a case
+case is a shell keyword
+```
+
+case 문은 주어진 변수의 값을 기반으로 결정을 내리는 완벽한 방법입니다.
+찾고 있는 특정 값 집합이 있는 경우 특히 그렇습니다.<br/>
+쉘이 내장되어 있기 때문에 사용 방법에 대한 정보를 내장된 `help`로 얻을 수 있습니다.
+
+```sh
+help case
+```
+패턴 일치를 기반으로 명령을 실행합니다.<br/>
+WORD 일치 PATTERN을 기반으로 COMMANDS를 선택적으로 실행합니다. `|` 는 여러 패턴을 구분하는 데 사용됩니다.
+
