@@ -400,3 +400,62 @@ who | cut -c 1-16,26-38
 ```
 - 현재 로그인한 사용자의 이름과 로그인 시간을 표시합니다.
 
+
+## function
+
+쉘 함수를 정의합니다.
+
+```sh
+function: function name { COMMANDS ; } or name () { COMMANDS ; }
+```
+
+이름이 NAME인 셸 함수를 만듭니다. 간단한 명령으로 호출되면 NAME은 호출하는 셸의 컨텍스트에서 COMMAND를 실행합니다. NAME이 호출되면 인수는 $1...$n으로 함수에 전달되고 함수의 이름은 $FUNCNAME에 있습니다.
+
+## logger
+> logger [options] [message]
+
+- 시스템 로그에 항목을 만듭니다. 
+- syslog(3) 시스템 로그 모듈에 대한 쉘 명령 인터페이스를 제공합니다.
+- 주로 로거에게 메시지를 제공하면 해당 메시지는 기본적으로 시스템 로그에 기록됩니다.
+- 메시지는 `var/log/messages` 파일로 이동합니다.
+
+```sh
+type -a logger
+logger is /usr/bin/logger
+```
+- logger는 실행 파일이므로 man을 실행하여 특정 정보를 얻을 수 있습니다.
+
+### Example
+```sh
+logger 'Hello from the command line!'
+sudo tail /var/log/messages
+
+>> Jan 18 21:01:01 localuser systemd: Removed slice User Slice of root.
+>> Jan 18 21:01:01 localuser systemd: Stopping User Slice of root.
+>> Jan 18 22:00:54 localuser vagrant: Hello from the command line!
+>> Jan 18 22:01:01 localuser systemd: Created slice User Slice of root.
+>> Jan 18 22:01:01 localuser systemd: Starting User Slice of root.
+>> Jan 18 22:01:01 localuser systemd: Started Session 5 of user root.
+>> Jan 18 22:01:01 localuser systemd: Starting Session 5 of user root.
+>> Jan 18 22:01:02 localuser systemd: Removed slice User Slice of root.
+>> Jan 18 22:01:02 localuser systemd: Stopping User Slice of root.
+>> Jan 18 22:01:48 localuser vagrant: Hello from the command line!
+```
+- 태그를 사용하지 않았기 때문에 username 기본으로 표시
+
+**태그(-t) 사용**
+```sh
+logger -t my-script 'Tagging on.'
+sudo tail /var/log/messages
+
+>> Jan 18 21:01:01 localuser systemd: Stopping User Slice of root.
+>> Jan 18 22:00:54 localuser vagrant: Hello from the command line!
+>> Jan 18 22:01:01 localuser systemd: Created slice User Slice of root.
+>> Jan 18 22:01:01 localuser systemd: Starting User Slice of root.
+>> Jan 18 22:01:01 localuser systemd: Started Session 5 of user root.
+>> Jan 18 22:01:01 localuser systemd: Starting Session 5 of user root.
+>> Jan 18 22:01:02 localuser systemd: Removed slice User Slice of root.
+>> Jan 18 22:01:02 localuser systemd: Stopping User Slice of root.
+>> Jan 18 22:01:48 localuser vagrant: Hello from the command line!
+>> Jan 18 22:05:47 localuser my-script: Tagging on.
+```
