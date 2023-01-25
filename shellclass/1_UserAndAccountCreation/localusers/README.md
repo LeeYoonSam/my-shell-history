@@ -498,3 +498,30 @@ Linux 시스템의 다른 스크립트나 명령과 마찬가지로 함수를 �
 즉, 해당 변수의 값은 해당 함수 내에서만 액세스할 수 있습니다.
 
 로컬 명령은 함수 내에서만 사용할 수 있습니다.
+
+
+## 29. Parsing Command Line Options with `getopts`, Part 1
+
+**배울 내용**
+- `getopts`에 내장된 셸을 사용하여 명령줄 옵션을 처리하는 방법
+
+```sh
+type -a getopts
+getopts is a shell builtin
+getopts is /usr/bin/getopts
+```
+
+- `getopt` ​는 `getopts`와 매우 유사하지만 고유한 특성 집합에 제한이 있습니다.
+
+
+```sh
+man getopts
+
+`getopts` optstring name [args]
+```
+- getopts는 쉘 프로시저에서 위치 매개변수를 구문 분석하는 데 사용됩니다. 
+- optstring은 인식할 옵션 문자를 포함합니다. 
+- 문자 다음에 콜론이 오는 경우 옵션에는 공백으로 구분되는 인수가 있어야 합니다.
+
+
+
