@@ -345,3 +345,29 @@ echo $SubStr
 ### 참고
 - [Get substring of String](https://linuxhint.com/30_bash_script_examples/#t16)
 - [Example](./example-string/substring.sh)
+
+
+# Add 2 numbers into a variable (변수에 숫자 2개 추가)
+다양한 방법으로 bash에서 산술 연산을 수행할 수 있습니다. 
+
+이중 괄호를 사용하여 bash에서 두 개의 정수를 추가하는 방법은 다음 스크립트에 나와 있습니다. 
+
+다음 코드를 사용하여 'add_numbers.sh'라는 파일을 만듭니다. 
+
+사용자로부터 두 개의 정수 값을 가져와 더한 결과를 인쇄합니다.
+
+```sh
+#!/bin/bash
+
+echo 'Enter first number'
+read x
+echo 'Enter second number'
+read y
+(( sum=x+y ))
+echo "The result of addition=$sum"
+```
+
+### 참고
+- [Add 2 numbers into a variable](https://linuxhint.com/30_bash_script_examples/#t17)
+- [Bash Arithmetic Operation](https://linuxhint.com/bash_arithmetic_operations/)
+- [Example](./example-string/add_numbers.sh)
