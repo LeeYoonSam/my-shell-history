@@ -367,7 +367,296 @@ read y
 echo "The result of addition=$sum"
 ```
 
+## Bash Arithmetic Operation
+
+### [Example – 1: Using `expr` Command](./example-arithmetic/expr.bash)
+bash에서 산술 연산을 수행하는 가장 오래된 명령은 `expr`입니다. 
+
+이 명령은 정수 값에만 사용할 수 있으며 출력을 터미널에 직접 인쇄합니다. 수학 연산을 수행하기 위해 `expr` 명령을 사용하려면 각 피연산자에 공백을 사용해야 합니다. 
+
+`expr` 명령의 사용법을 알기 위해 다음 스크립트로 `expr.bash`라는 `bash` 파일을 만듭니다.
+
+```sh
+#!/bin/bash
+
+# Works as the string
+expr '10 + 30'
+
+# Works as the string
+expr 10+30
+
+# Perform the addition
+expr 10 + 30
+
+# Find out the remainder value
+expr 30 % 9
+
+# Using expr with backtick
+myVal1=`expr 30 / 10`
+echo $myVal1
+
+# Using expr within command substitute
+myVal2=$( expr 30 - 10 )
+echo $myVal2
+```
+
+**Result**
+```sh
+bash expr.bash
+
+10 + 30
+10+30
+40
+3
+3
+20
+```
+- 출력은 각 숫자 값에 공백이 사용되고 expr 명령에 작은따옴표가 사용되지 않는 경우에만 산술 연산자가 작동했음을 보여줍니다. 
+- expr 명령의 출력을 변수에 할당하고 백틱 또는 명령 대체를 사용하여 나중에 변수를 인쇄할 수도 있습니다. 
+- 30/10은 백틱을 사용하여 계산하고 30-10은 명령 대체를 사용하여 계산합니다.
+
+### [Example – 2: Using `let` Command](./example-arithmetic/let.bash)
+`let`은 bash에서 산술 연산을 수행하는 또 다른 기본 제공 명령입니다. 
+
+`let` 명령은 값을 변수에 저장하지 않고는 터미널에 출력을 출력할 수 없습니다. 그러나 `let` 명령을 사용하여 `expr` 명령의 다른 제한 사항을 제거할 수 있습니다. 
+
+`let` 명령의 사용법을 알기 위해 다음 스크립트로 `let.bash`라는 bash 파일을 만듭니다.
+
+
+```sh
+#!/bin/bash
+
+# Multiplying 9 by 8
+let val1=9*8
+echo $val1
+
+# Dividing 8 by 3
+let "val2 = 8 / 3"
+echo $val2
+
+# Subtracting 3 from 9
+let val3=9-3
+echo $val3
+
+# Applying increment
+let val4=7
+let val4++
+echo $val4
+
+# Using argument value in arithmetic operation
+let "val5=50+$1"
+echo $val5
+```
+
+**Result**
+```sh
+bash let.bash 50
+72
+2
+6
+8
+100
+```
+- 출력은 `let` 명령이 `expr` 명령보다 더 유연함을 보여줍니다. 
+- 따옴표를 사용하거나 사용하지 않고 모든 산술 식을 평가할 수 있습니다. 그러나 어떤 수식에서도 공백을 사용할 수 없습니다. 
+- 증가 또는 감소 연산자는 `let` 명령에서 사용할 수 있습니다. 
+- `let` 명령을 사용하여 인수 값으로 산술 연산을 수행하는 방법은 예제의 마지막 부분에 나와 있습니다.
+
+### [Example – 3: Using Double Brackets](./example-arithmetic/dbl.bash)
+명령을 사용하지 않고 모든 산술 연산을 bash에서 수행할 수 있습니다. 
+
+여기서 이중 괄호는 산술 작업을 수행하는 데 사용되며, 이중 괄호를 사용하여 수식을 실행하는 것은 `expr` 또는 `let`과 같은 명령보다 더 유연합니다. 
+
+이중 괄호를 사용하여 산술 연산을 테스트하려면 다음 스크립트로 dbl.bash라는 bash 파일을 만듭니다.
+
+```sh
+#!/bin/bash
+
+# Calcualte the mathematical expression
+val1=$((10*5+15))
+echo $val1
+
+# Using post or pre increment/decrement operator
+((val1++))
+echo $val1
+val2=41
+((--val2))
+echo $val2
+
+# Using shorthand operator
+(( val2 += 60 ))
+echo $val2
+
+# Dividing 40 by 6
+(( val3 = 40/6 ))
+echo $val3
+```
+
+**Result**
+```sh
+bash dbl.bash
+65
+66
+40
+100
+6
+```
+- 출력은 이중 괄호가 공백이 있거나 없는 모든 수학적 표현식을 실행할 수 있으며 이중 괄호 표현식에서 증가/감소 및 속기 연산자를 사용할 수도 있음을 보여줍니다.
+
+### [Example – 4: Using ‘bc’ Command for Float or Double Numbers](./example-arithmetic/bc.bash))
+bash에서 산술 연산을 수행하는 위의 방법의 주요 제한 사항 중 하나는 `expr` 또는 `let` 또는 `이중 괄호 표현식`이 부동 소수점 또는 이중 숫자를 생성할 수 없다는 것입니다. 
+
+위 예제의 나눗셈 연산 결과는 정수입니다. 이 문제를 해결하기 위해 'bc' 명령을 사용할 수 있으며 Linux 운영 체제의 기본 계산기로 작동합니다. 
+
+산술 연산에서 'bc' 명령의 사용을 알기 위해 다음 스크립트로 bc.bash라는 bash 파일을 만듭니다.
+
+```sh
+#!/bin/bash
+
+# Dividing 55 by 3 bc only
+echo "55/3" | bc
+
+# Dividing 55 by 3 bc and -l option
+echo "55/3" | bc -l
+
+# Dividing 55 by 3 with bc and scale value
+echo "scale=2; 55/3" | bc
+```
+
+**Result**
+```sh
+bash bc.bash
+18
+18.33333333333333333333
+18.33
+```
+- 출력은 나눗셈 식을 실행할 때 간단한 `bc` 명령이 다른 옵션과 마찬가지로 정수 값을 생성함을 보여줍니다. 
+- `bc -l` 명령은 나눗셈의 정확한 출력을 생성하며 스케일 값을 사용하여 분수 부분을 제한할 수 있습니다. 
+여기서 scale=2가 사용됩니다. 따라서 출력에는 소수점 이하 2자리가 표시됩니다.
+
+
+### [Example-5: Using the printf Command for Float or Double Number](./example-arithmetic/.prn.bash)
+`printf` 명령은 분수 데이터로 작업하는 또 다른 방법입니다. 
+
+이 명령은 산술 연산 후 `bc` 명령보다 더 효율적으로 부동 소수점 값을 생성하는 데 사용할 수 있습니다. 
+
+이 명령은 숫자의 거듭제곱을 계산하는 데에도 사용할 수 있습니다. 
+
+다양한 산술 연산에 대한 `printf` 명령의 사용이 이 예제에 표시되었습니다. 
+
+다음 스크립트로 prn.bash라는 bash 파일을 만들어 두 숫자 나누기의 분수 출력에 대한 `printf` 명령의 사용을 확인합니다.
+
+```sh
+#!/bin/bash
+# Take the dividend value from the user
+read -p "Enter the dividend value: " n1
+# Take the divisor value from the user
+read -p "Enter the divisor value: " n2
+
+# Find the division using `echo` and `bc`
+echo "scale=2; $n1/$n2"|bc
+
+# Find the division using `printf`
+printf "%.2f\n" "$((10**2 * $n1/$n2))e-2"
+```
+
+**Result**
+bash prn.bash
+Enter the dividend value: 9
+Enter the divisor value: 4
+2.25
+2.25
+```sh
+```
+
+다음 출력은 피제수 값이 부동 소수점 숫자인 경우 `bc` 명령으로 생성된 나누기 값은 정확하지만 `printf` 명령에서 오류가 발생했음을 보여줍니다.
+
+```sh
+#!/bin/bash
+
+# Take the dividend value from the user
+read -p "Enter the dividend value: " n1
+# Take the divisor value from the user
+read -p "Enter the divisor value: " n2
+
+# Find the division using `printf`, `echo` and `bc`
+printf "%.2f\n" `echo $n1/$n2|bc -l`
+```
+
+**Result**
+```sh
+bash prn2.bash
+Enter the dividend value: 7.5
+Enter the divisor value: 2
+3.75
+```
+- 다음 스크립트를 사용하여 `prn2.bash`라는 bash 파일을 생성하여 피제수 값이 부동 소수점 숫자일 때 올바른 분수 출력을 위한 `printf` 명령의 사용을 알 수 있습니다.
+
+### [Example-6: Using the awk Command for Arithmetic Operation](./example-arithmetic/awk.bash)
+
+`awk` 명령을 사용하는 것은 부동 소수점 숫자에 대한 출력을 적절하게 생성할 수 있는 산술 연산을 수행하는 또 다른 방법입니다. 
+
+형식화 없이 `awk` 명령을 사용하는 산술 연산과 형식화를 이 예제에 표시했습니다. 
+
+다음 스크립트를 사용하여 `awk.bash`라는 bash 파일을 생성하여 산술 연산을 위한 `awk` 명령 사용을 확인합니다.
+
+
+```sh
+#!/bin/bash
+
+# Initialize the dividend value
+n1=90
+# Initialize the divisor value
+n2=43
+
+# Print the output without formating
+awk "BEGIN {print $n1/$n2}"
+
+# Print the output with formatting
+awk "BEGIN {printf \"%.2f\n\", $n1/$n2}"
+```
+
+**Result**
+```sh
+bash awk.bash
+2.09302
+2.09
+```
+- 출력은 `awk` 명령이 적절한 분수 출력을 생성할 수 있음을 보여줍니다.
+
+### [Example-7: Calculate the Percentage of a Value](./example-arithmetic/percentage.bash)
+특정 기준의 백분율 값을 계산해야 하는 경우가 있습니다. 
+
+백분율은 bash에서 `printf` 명령과 `echo` 명령을 사용하여 계산할 수 있습니다. 
+
+전체 학생 수와 총 합격 학생 수를 기준으로 시험에서 합격한 학생의 비율을 알아내야 한다고 가정합니다. 
+
+이 문제에 대한 해결책이 이 예제에 나와 있습니다. `printf` 명령을 사용하여 합격한 학생의 백분율 값을 계산하는 다음 스크립트로 bash 파일을 만듭니다.
+
+
+```sh
+#!/bin/bash
+
+# Take the total number of students from the user
+read -p 'Total number of students: ' total_std
+
+# Take the total number of passed students from the user
+read -p 'Total number of passed students: ' passed_std
+
+# Calculate the percentage of passed students
+printf "The percentage of passed students: %.2f%%\n" "$((10**3 * 100 * $passed_std/$total_std))e-3"
+```
+
+**Result**
+```sh
+bash percentage.bash
+Total number of students: 10
+Total number of passed students: 7
+The percentage of passed students: 70.00%
+```
+
+
 ### 참고
 - [Add 2 numbers into a variable](https://linuxhint.com/30_bash_script_examples/#t17)
 - [Bash Arithmetic Operation](https://linuxhint.com/bash_arithmetic_operations/)
-- [Example](./example-string/add_numbers.sh)
+- [Example](./example-arithmetic/add_numbers.sh)
