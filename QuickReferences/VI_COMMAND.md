@@ -1,5 +1,19 @@
 # VI
 
+## vi 설정
+vi 에서 편집시 tab 들여쓰기 설정 방법
+
+- .vimrc 가 없을수 있으므로 `vi .vimrc` 로 새로 파일을 만들어서 아래 옵션 추가
+
+**.vimrc**
+```
+filetype plugin indent on
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+```
+
 ## 자주쓰는 명령어 모음
 > 명령모드 (esc 눌렀을때, vi 처음 들어갔을때)
 1. 파일의 끝으로 이동할때는 - G
