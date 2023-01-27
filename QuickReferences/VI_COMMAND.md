@@ -14,6 +14,10 @@ set softtabstop=4
 set expandtab
 ```
 
+### 참고
+- [vim 에서 tab 을 space 4개로 처리하게 설정하기](https://www.lesstif.com/system-admin/vim-tab-space-4-18220149.html)
+- [Secrets of tabs in vim](https://tedlogan.com/techblog3.html)
+
 ## 자주쓰는 명령어 모음
 > 명령모드 (esc 눌렀을때, vi 처음 들어갔을때)
 1. 파일의 끝으로 이동할때는 - G
