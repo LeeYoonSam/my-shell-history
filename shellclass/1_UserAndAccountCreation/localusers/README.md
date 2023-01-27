@@ -90,7 +90,7 @@ sudo ./luser_demo02.sh
 - Linux 시스템에서 계정을 만드는 방법
 
 ## 참고
-- [luser-demo04.sh](./luser-demo04.sh)
+- [Script](./luser-demo04.sh)
 
 # Section 4: Password Generation and ShellScript Arguments
 
@@ -103,7 +103,7 @@ sudo ./luser_demo02.sh
     - 사용자의 입력을 덜 요구하여 스크립트를 개선
 
 ### 참고
-- [luser-demo05.sh](./luser-demo05.sh)
+- [Script](./luser-demo05.sh)
 
 ## 19. Positional Parameters, Arguments, for Loops, Special Parameters
 
@@ -225,7 +225,8 @@ Special Parameters | explanation
 ```
 
 ### 참고
-- [luser-demo06.sh](./luser-demo06.sh)
+- [Script](./luser-demo06.sh)
+
 
 ## 20. The while Loop, Infinite Loops, Shifting, Sleeping
 
@@ -238,6 +239,8 @@ Special Parameters | explanation
 - `${}` 의 특수 매개 변수가 1씩 줄어듭니다.
 - `while` 루프가 처음 실행되고 `shift`가 실행되면 매개변수의 수가 줄어듭니다.
 
+### 참고
+- [Script](./luser-demo07.sh)
 
 # Section 5: Linux Programming Conventions
 
@@ -443,6 +446,8 @@ head -n1 /etc/passwd /etc/hosts /fakefile |& cat -n
 ```
 - `|&` 를 사용해도 같은 결과를 나타냅니다.
 
+### 참고
+- [Script](./luser-demo08.sh)
 
 # Section 6: Parsing Command Line Options
 
@@ -466,6 +471,8 @@ help case
 패턴 일치를 기반으로 명령을 실행합니다.<br/>
 WORD 일치 PATTERN을 기반으로 COMMANDS를 선택적으로 실행합니다. `|` 는 여러 패턴을 구분하는 데 사용됩니다.
 
+### 참고
+- [Script](./luser-demo09.sh)
 
 ## 28. Functions
 
@@ -499,6 +506,8 @@ Linux 시스템의 다른 스크립트나 명령과 마찬가지로 함수를 �
 
 로컬 명령은 함수 내에서만 사용할 수 있습니다.
 
+### 참고
+- [Script](./luser-demo10.sh)
 
 ## 29. Parsing Command Line Options with `getopts`, Part 1
 
@@ -523,5 +532,7 @@ man getopts
 - optstring은 인식할 옵션 문자를 포함합니다. 
 - 문자 다음에 콜론이 오는 경우 옵션에는 공백으로 구분되는 인수가 있어야 합니다.
 
+### 참고
+- [Script](./luser-demo11.sh)
 
 
