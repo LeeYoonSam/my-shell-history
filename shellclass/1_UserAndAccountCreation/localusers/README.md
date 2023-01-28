@@ -536,3 +536,78 @@ man getopts
 - [Script](./luser-demo11.sh)
 
 
+## 30. Parsing Command Line Options with getopts, Part 2
+
+```sh
+NUM=$(( 1 + 2 ))
+echo $NUM
+> 3
+
+NUM=$(( 10 - 1 ))
+echo $NUM
+> 9
+
+NUM=$(( 2 * 4 ))
+echo $NUM
+> 8
+
+NUM=$(( 6 / 4 ))
+echo $NUM
+> 1
+```
+- Bash는 이중 괄호 안의 산술 표현식을 평가하고 다음을 반환하거나 그 자리에 결과로 대체합니다.
+- Bash는 반올림을 수행하지 않습니다. 실제로 Bash는 부동 소수점 산술을 지원하지 않습니다.
+
+소수가 포함된 숫자로 작업해야 하는 경우 Basic Calculator를 나타내는 BC와 같은 프로그램의 외부 함수를 사용해야 합니다.
+
+```sh
+type -a bc
+bc is /usr/bin/bc
+```
+
+### yum 을 통해서 bc 를 설치
+```sh
+sudo yum install -y bc
+```
+- 설치되어 있을수도 있고 설치되어 있지 않을수도 있습니다.
+
+**사용법**
+```sh
+bc -h
+usage: bc [options] [file ...]
+  -h  --help         print this usage and exit
+  -i  --interactive  force interactive mode
+  -l  --mathlib      use the predefined math routines
+  -q  --quiet        don't print initial banner
+  -s  --standard     non-standard bc constructs are errors
+  -w  --warn         warn about non-standard bc constructs
+  -v  --version      print version information and exit
+```
+
+BC로 부동 소수점 연산을 수행하려면 `mathlib`, `-l` 옵션을 켜야 합니다.
+
+```sh
+echo '6 / 4' | bc -l
+1.50000000000000000000
+```
+
+### `math`에 대한 논의를 마무리하기 전에 `math` 연산을 수행하는 다른 두 가지 방법
+
+**let**
+
+첫 번째 방법은 내장된 `let` bash를 사용하는 것입니다.
+
+```sh
+type -a let
+let is a shell builtin
+
+help let | less
+```
+- [let](/QuickReferences/SHELL_COMMAND.md#let)
+
+
+**expr**
+
+`EXPR` 명령은 주어진 표현식을 처리한 다음 그 결과를 표준 출력으로 보냅니다.
+
+- [EXPR](/QuickReferences/SHELL_COMMAND.md#expr)

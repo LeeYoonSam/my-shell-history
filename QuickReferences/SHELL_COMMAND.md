@@ -92,6 +92,13 @@ USER_NAME=$(id -un)
 ```
 - 명령의 출력을 보내고 `USER_NAME` 변수에 저장
 
+## Arguments - ${}
+- All args count: ${#}
+- All args: ${@}
+- First arg: ${1}
+- Second arg: ${2}
+- Third arg: ${3}
+
 ## ${?}
 > Barish는 설정하는 몇 가지 특수 변수가 있으며 이러한 특수 변수 중 하나는 `${?}` 입니다.
 
@@ -458,4 +465,51 @@ sudo tail /var/log/messages
 >> Jan 18 22:01:02 localuser systemd: Stopping User Slice of root.
 >> Jan 18 22:01:48 localuser vagrant: Hello from the command line!
 >> Jan 18 22:05:47 localuser my-script: Tagging on.
+```
+
+## let
+
+산술식을 평가합니다.
+
+각 `ARG`를 산술식으로 평가합니다. 
+
+0으로 나누기가 트랩되고 오류로 표시되지만 오버플로 검사 없이 고정 너비 정수에서 평가가 수행됩니다. 
+
+다음 연산자 목록은 동등 우선 순위 연산자 수준으로 그룹화됩니다. 
+
+수준은 내림차순으로 나열됩니다.
+
+이 let 구문은 이중 괄호를 사용하는 것과 거의 같은 역할을 합니다.
+```sh
+let NUM='2+3'
+echo $NUM
+> 5
+
+let NUM++
+echo $NUM
+> 6
+```
+
+## EXPR
+EXPR 명령은 주어진 표현식을 처리한 다음 그 결과를 표준 출력으로 보냅니다.
+
+```sh
+type -a expr
+expr is /usr/bin/expr
+```
+
+```sh
+expr 1+1
+> 1+1
+
+expr 1 + 1
+> 2
+```
+- 연산자 사이에 공백을 넣어야 정확한 계산 결과가 나옵니다.
+
+할당을 수행하기 위해 다른 명령과 마찬가지로 명령 대체를 사용합니다.
+```sh
+NUM=$(expr 2 + 3)
+echo $NUM
+> 5
 ```
