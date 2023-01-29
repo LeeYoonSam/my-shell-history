@@ -38,6 +38,25 @@ type -a read
     기본적으로 새 사용자에 대한 그룹도 생성됩니다(-g, -N, -U 및 USERGROUPS_ENAB 참조).
 ```
 
+```sh
+[vagrant@localuser ~]$ sudo useradd woz
+[vagrant@localuser ~]$ sudo passwd woz
+woz 사용자의 비밀 번호 변경 중
+새  암호:
+잘못된 암호: 암호는 8 개의 문자 보다 짧습니다
+새  암호 재입력:
+passwd: 모든 인증 토큰이 성공적으로 업데이트 되었습니다.
+[vagrant@localuser ~]$ 
+[vagrant@localuser ~]$ 
+[vagrant@localuser ~]$ su woz
+암호:
+[woz@localuser vagrant]$ 
+```
+- useradd 명령을 사용해서 `woz` 유저를 추가
+- passwd 를 사용해서 `woz` 비밀번호 변경
+- 암호입력시 경고를 무시하고 짧게 지정해도 변경이 가능
+- su woz 로 사용자 로그인
+
 ## userdel
 ```sh
 이름
@@ -725,3 +744,21 @@ tar -zcvf catvideos.tgz catvideos/
 tar -zxvf /home/vagrant/catvideos.tgz
 ```
 - tgz 파일 압축 해제
+
+## chage
+
+```sh
+이름
+    chage - 사용자 비밀번호 만료 정보 변경
+
+개요
+    변경 [옵션] LOGIN
+
+설명
+    chage 명령은 암호 변경과 마지막 암호 변경 날짜 사이의 일 수를 변경합니다. 이 정보는 시스템에서 사용자가 암호를  변경해야 하는 시기를 결정하는 데 사용됩니다.
+```
+
+### 옵션
+옵션 | 설명
+--- | ---
+`-E` | 1970년 1월 1일 이후 사용자 계정에 더 이상 액세스할 수 없는 날짜 또는 일수를 설정합니다.<br/> 날짜는 YYYY-MM-DD 형식(또는 해당 지역에서 더 일반적으로 사용되는 형식)으로 표시될 수도 있습니다. 계정이 잠긴 사용자는 시스템을 다시 사용하기 전에 시스템 관리자에게 문의해야 합니다.<br/>EXPIRE_DATE로 숫자 -1을 전달하면 계정 만료 날짜가 제거됩니다.

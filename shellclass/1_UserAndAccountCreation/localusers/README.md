@@ -853,3 +853,106 @@ catvideos/obi-wan-catnobi.mp4
 - 옵션 앞에 `-` 를 생략해도 사용 할수 있습니다.
 - 이것은 오늘날까지도 여전히 지원되는 오래된 유형의 구문입니다.
 - 오래된 유형의 구문을 사용하면 다소 혼란스러워지므로 tar를 다른 구문과 동일하게 취급하십시오.
+
+
+## 34. Deleting and Disabling Linux Accounts, Part 4 of 4 (Disabling Accounts)
+> 계정을 실제로 삭제하지 않고 비활성화하거나 잠그는 방법에 대해 알아보겠습니다.
+
+장기 휴가를 가거나 결근하는 사람이 있다고 가정해 보겠습니다.
+그들이 돌아올 때 자신의 계정을 사용하기를 원합니다.
+그러나 시스템에 존재하는 모든 계정에 대해 누군가 해당 계정에 침입할 가능성이 있다는 것도 알고 있습니다.
+이 사람은 오랫동안 자리를 비울 것이기 때문에 계정에 액세스할 수 없는 사람이 계정을 사용하고 있는지 아무도 실제로 알아차리지 못할 수 있습니다.
+따라서 보안상의 이유로 해당 계정을 잠그기로 결정했다고 가정해 보겠습니다.
+
+이를 수행하는 가장 좋은 방법은 실제로 `chage` 명령을 사용하거나 연령을 변경하는 것입니다.
+
+### chage 를 사용해서 사용자 계정 만료 설정 및 해제
+
+**계정 만료 설정**
+```sh
+[vagrant@localuser ~]$ su woz
+암호:
+[woz@localuser vagrant]$ 
+
+[woz@localuser vagrant]$ exit
+exit
+
+[vagrant@localuser ~]$ sudo chage -E 0 woz
+
+[vagrant@localuser ~]$ su - woz
+암호:
+계정이 만료되었습니다: 시스템 관리자에게 알려 주십시오
+su: 사용자 계정 만료
+[vagrant@localuser ~]$ 
+```
+- `sudo chage -E 0 woz` 만료시점을 0으로 설정
+- 이후 로그인시 계정이 만료되었습니다 만료 메시지 표시
+
+**계정 만료 해제**
+```sh
+[vagrant@localuser ~]$ sudo chage -E -1 woz
+
+[vagrant@localuser ~]$ su - woz
+암호:
+마지막 로그인: 일  1월 29 07:00:54 EST 2023 일시 pts/0
+마지막 로그인 실패: 일  1월 29 07:04:30 EST 2023 일시 pts/0 
+마지막 로그인 후 1 번의 로그인 시도가 실패하였습니다.  
+```
+- `sudo chage -E -1 woz` 만료시점을 -1로 변경해서 해제
+
+### 계정잠금
+계정을 잠그는 일부 오래된 방법에는 `-l` 옵션을 사용하여 이와 같은 암호를 입력하는 것이 포함됩니다.
+
+passwd는 계정을 잠그고 잠금을 해제하려면 계정 이름에 대해 암호를 사용하면 됩니다.
+
+```sh
+[vagrant@localuser ~]$ sudo passwd -l woz
+woz 사용자의 비밀 번호 잠금
+passwd: 성공
+
+[vagrant@localuser ~]$ sudo passwd -u woz
+woz 사용자의 비밀 번호 잠금 해제 중
+passwd: 성공
+```
+
+이제 이와 같은 암호 명령으로 계정을 잠그더라도 사용자가 `ssh` 키로 인증하는 것을 막지 않습니다.
+특히 `ssh` 키를 기본 인증 방법으로 점점 더 많이 사용하고 있기 때문에 이는 알아야 할 매우 중요합니다.
+따라서 `ssh` 키를 전혀 사용하지 않는 경우 이는 수행할 것이라고 생각하는 작업을 수행하지 않습니다.
+
+이렇게 사용하는 대신 `chage`를 사용하십시오.
+
+또 다른 방법은 쉘을 실제로 쉘이 아닌 것으로 설정하거나 단순히 시스템에서 사용 가능한 쉘을 보기 위해 종료하는 것으로 설정하는 것입니다.
+
+`/etc/shells` 파일을 볼 수 있으므로 `/etc/shells`에서 이를 수행하고 여기서 로그인 사용자 및 로그 없음을 볼 수 있습니다. 그리고 이론적으로 누군가가 로그인하는 것을 방지합니다.
+
+usermod 명령으로 로그인을 알 수 있도록 woz user의 쉘을 설정합니다.
+```sh
+[vagrant@localuser ~]$ sudo usermod -s /sbin/nologin woz
+```
+- `-s`는 셸을 지정하고 로그인을 알리고 이를 설정합니다.
+- 쉘로 설정하면 시스템에서 즉시 로그아웃됩니다.
+
+방금 설명한 것처럼 대화형 로그인에 대해 작동하지만 대화형 로그인이 필요하지 않거나 포트 포워딩과 같은 셸이 필요하지 않은 `SSH`를 사용하여 여전히 일부 작업을 수행할 수 있습니다.
+
+따라서 다시 `-E 0` 옵션이 있는 `chage` 명령을 사용하여 실제로 계정을 비활성화합니다.
+
+우리는 오늘 여기 명령줄에서 많은 시간을 보냈습니다. 그래서 오늘 본 것 중 일부를 사용하여 사용자 계정을 삭제하는 빠른 셸 스크립트를 작성해 봅시다.
+
+```sh
+[vagrant@localuser vagrant]$ tail -1 /etc/passwd
+good:x:1004:1005:hello my name is good:/home/good:/bin/bash
+
+[vagrant@localuser vagrant]$ sudo ./luser-demo12.sh good
+The account good was deleted.
+
+[vagrant@localuser vagrant]$ id good
+id: good: no such user
+
+[vagrant@localuser vagrant]$ sudo ./luser-demo12.sh good
+userdel: 'good' 사용자가 없습니다
+The account good was NOT deleted.
+```
+
+### 참고
+- [chage](/QuickReferences/SHELL_COMMAND.md#chage)
+- [Script](./luser-demo12.sh)
