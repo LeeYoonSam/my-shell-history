@@ -611,3 +611,158 @@ help let | less
 `EXPR` 명령은 주어진 표현식을 처리한 다음 그 결과를 표준 출력으로 보냅니다.
 
 - [EXPR](/QuickReferences/SHELL_COMMAND.md#expr)
+
+
+## 31. Deleting and Disabling Linux Accounts, Part 1 of 4 (Finding Files)
+
+**배울 내용**
+- Linux 시스템에서 사용자를 비활성화, 삭제 및 보관하는 방법
+
+```sh
+type -a userdel
+> -bash: type: userdel: not found
+
+which userdel
+> /usr/bin/which: no userdel in (/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/usr/sbin:/home/vagrant/bin)
+ 
+locate userdel
+>
+/usr/sbin/luserdel
+/usr/sbin/userdel
+/usr/share/bash-completion/completions/userdel
+/usr/share/man/de/man8/userdel.8.gz
+/usr/share/man/fr/man8/userdel.8.gz
+/usr/share/man/it/man8/userdel.8.gz
+/usr/share/man/ja/man8/userdel.8.gz
+/usr/share/man/man1/luserdel.1.gz
+/usr/share/man/man8/userdel.8.gz
+/usr/share/man/pl/man8/userdel.8.gz
+/usr/share/man/ru/man8/userdel.8.gz
+/usr/share/man/sv/man8/userdel.8.gz
+/usr/share/man/tr/man8/userdel.8.gz
+/usr/share/man/zh_CN/man8/userdel.8.gz
+/usr/share/man/zh_TW/man8/userdel.8.gz
+```
+- 실제 userdel 이 위치한곳
+
+`locate`가 실시간 데이터를 사용하지 않는다는 것을 증명하기 위해 `userdel` 이라는 파일을 만든다음 `locate` 로 찾습니다.
+
+그래서 홈 디렉토리에서 `touch userdel` 을 합니다.
+
+### touch
+> 존재하지 않거나 파일이 존재하는 경우 파일을 터치하고 타임 스탬프를 업데이트합니다.
+
+```sh
+touch userdel
+
+ls -l userdel
+> -rw-r--r-- 1 vagrant vagrant 0  1월 28 06:30 userdel
+```
+
+`touch` 명령을 사용하여 홈 디렉토리를 업데이트하고 DB 업데이트를 실행하는 방법은 전체 파일 시스템을 검색하는 것이며 `vagrant`와 같은 일반 사용자로서 모든 단일 파일에 대한 권한이 없기 때문에 루트 권한이 필요합니다.
+
+```sh
+touch userdel
+sudo updatedb
+locate userdel
+>
+/home/vagrant/userdel
+/usr/sbin/luserdel
+/usr/sbin/userdel
+/usr/share/bash-completion/completions/userdel
+/usr/share/man/de/man8/userdel.8.gz
+/usr/share/man/fr/man8/userdel.8.gz
+/usr/share/man/it/man8/userdel.8.gz
+/usr/share/man/ja/man8/userdel.8.gz
+/usr/share/man/man1/luserdel.1.gz
+/usr/share/man/man8/userdel.8.gz
+/usr/share/man/pl/man8/userdel.8.gz
+/usr/share/man/ru/man8/userdel.8.gz
+/usr/share/man/sv/man8/userdel.8.gz
+/usr/share/man/tr/man8/userdel.8.gz
+/usr/share/man/zh_CN/man8/userdel.8.gz
+/usr/share/man/zh_TW/man8/userdel.8.gz
+```
+- 이 작업이 완료되면 userdel을 찾을 수 있으며 출력 맨 위에 표시됩니다.
+
+한 걸음 뒤로 물러서서 먼저 `locate` 명령을 사용하고 실제로 바이너리 또는 실행 파일을 찾고 있기 때문에 `bin` 디렉토리에 있는 항목만 포함하도록 검색을 제한하겠습니다.
+
+이제 `locate` 명령의 표준 출력을 가져와서 `grep` 명령에 대한 표준 입력으로 보냅니다.
+
+`grep` 명령은 패턴과 일치하는 항목을 표시하고 나머지는 모두 버립니다.
+
+```sh
+locate userdel | grep bin
+/usr/sbin/luserdel
+/usr/sbin/userdel
+```
+
+때로는 찾고 있는 파일이 권한이 있는 위치에 있지 않은 경우가 있습니다. `locate` 명령은 해당 권한을 존중합니다.
+
+```sh
+locate .bashrc
+> /etc/skel/.bashrc
+> /home/vagrant/.bashrc
+
+sudo locate .bashrc
+>
+/etc/skel/.bashrc
+/home/albert/.bashrc
+/home/good/.bashrc
+/home/lemon/.bashrc
+/home/vagrant/.bashrc
+/home/yoonsam/.bashrc
+/root/.bashrc
+```
+- 같은 locate .bashrc 명령을 sudo 를 사용한것과 안한것의 차이
+- vagrant 사용자로서 우리는 예를 들어 루트의 홈 디렉토리 내부를 볼 수 있는 권한이 없습니다.
+
+여기서 요점은 파일을 일반 일반 사용자로 볼 수 있는 권한이 없기 때문에 파일을 찾기 위해 루트 권한을 사용해야 하는 경우가 있다는 것입니다.
+- [sudo !!](/QuickReferences/SHELL_COMMAND.md#L517)
+
+**시스템에서 userdel 이 존재하는지 찾는 과정**
+```sh
+ls -ld /*bin
+> lrwxrwxrwx. 1 root root 7  2월 19  2018 /bin -> usr/bin
+> lrwxrwxrwx. 1 root root 8  2월 19  2018 /sbin -> usr/sbin
+
+ls -l /usr/bin/userdel
+> ls: cannot access /usr/bin/userdel: 그런 파일이나 디렉터리가 없습니다
+
+ls -l /usr/sbin/userdel
+> -rwxr-x---. 1 root root 80360 11월  5  2016 /usr/sbin/userdel
+```
+- bin 에서 userdel 을 찾았을때 에러가 발생하는지 파일을 찾을수 있는지 확인합니다.
+- system admin 명령은 일반적으로 sbin 디렉토리에서 찾을 수 있습니다.
+- 모든 사용자가 실행할 수 있는 일반 명령은 bin 디렉토리에서 찾을 수 있습니다.
+
+```sh
+find / -name userdel
+```
+
+`find` 명령으로 찾을수있지만 권한 오류가 많이 발생합니다.
+### 해결 방법
+1. 모든 오류 메시지를 dev null로 보내는 것입니다. 그래서 우리는 그것들을 볼 필요가 없습니다.
+
+```sh
+find / -name userdel 2>/dev/null
+>
+/home/vagrant/userdel
+/usr/sbin/userdel
+/usr/share/bash-completion/completions/userdel
+```
+- 이제 오류 메시지가 dev null로 리디렉션되었기 때문에 화면에 표시되지 않습니다.
+- 리디렉션된 에러를 제외한 `userdel` 이름과 일치하는 항목이 모두 남습니다.
+
+2. sudo 를 사용
+
+우리가 찾고 있는 파일이 실제로 루트 권한이 필요한 어딘가에 있다면 어떨까요?
+이 특별한 경우에는 `sudo` 명령을 루트로 실행하려고 합니다.
+
+```sh
+sudo find / -name userdel
+>
+/home/vagrant/userdel
+/usr/sbin/userdel
+/usr/share/bash-completion/completions/userdel
+```

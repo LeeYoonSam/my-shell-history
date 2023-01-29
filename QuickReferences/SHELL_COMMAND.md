@@ -513,3 +513,48 @@ NUM=$(expr 2 + 3)
 echo $NUM
 > 5
 ```
+
+## `!!`
+- 가장 최근에 실행한 명령을 실행
+
+```sh
+locate .bashrc
+> /etc/skel/.bashrc
+> /home/vagrant/.bashrc
+
+!!
+locate .bashrc
+> /etc/skel/.bashrc
+> /home/vagrant/.bashrc
+```
+- `locate .bashrc` 를 실행 후 다시 `!!`를 실행하면 `locate .bashrc` 명령이 다시 실행됩니다.
+
+
+루트 권한으로 가장 최근 명령을 실행하려면 이렇게 사용하면 됩니다.
+```sh
+sudo !!
+sudo locate .bashrc
+>
+/etc/skel/.bashrc
+/home/albert/.bashrc
+/home/good/.bashrc
+/home/lemon/.bashrc
+/home/vagrant/.bashrc
+/home/yoonsam/.bashrc
+/root/.bashrc
+```
+- `sudo` 와 함게 `!!`를 실행하면 `sudo locate .bashrc` 명령으로 sudo + 최근 명령이 실행됩니다.
+
+## `! + 글자`
+- 실행한 명령중 `글자`로 시작하는 명령을 다시 실행
+
+```sh
+locate .bashrc
+> /etc/skel/.bashrc
+> /home/vagrant/.bashrc
+
+!l
+locate .bashrc
+> /etc/skel/.bashrc
+> /home/vagrant/.bashrc
+```
