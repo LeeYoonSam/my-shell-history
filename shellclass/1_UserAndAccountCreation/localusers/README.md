@@ -766,3 +766,10 @@ sudo find / -name userdel
 /usr/sbin/userdel
 /usr/share/bash-completion/completions/userdel
 ```
+
+## 32. Deleting and Disabling Linux Accounts, Part 2 of 4 (The userdel command)
+> userdel 을 사용해서 사용자를 삭제하는 방법을 배웁니다.
+- `-r` 옵션으로 홈디렉토리까지 삭제
+
+### 참고
+- [userdel](/QuickReferences/SHELL_COMMAND.md#userdel)

@@ -23,7 +23,113 @@ type -a read
 - 원하는 경우 다양한 종료 상태를 사용할 수 있습니다.
 
 ## useradd
-> 새로운 사용자를 생성하거나 새로운 사용자의 기본 정보를 수정합니다.
+```sh
+이름
+    useradd - 새 사용자를 생성하거나 기본 새 사용자 정보를 업데이트합니다.
+
+개요
+    useradd [옵션] 로그인
+    사용자 추가 -D
+    useradd -D [옵션]
+
+설명
+    -D 옵션 없이 호출하면 useradd 명령은 명령줄에 지정된 값과 시스템의 기본값을 사용하여 새 사용자 계정을 만듭니다. 명령줄 옵션에 따라 useradd 명령은 시스템 파일을 업데이트하고 새 사용자의 홈 디렉토리를 만들고 초기 파일을 복사할 수도 있습니다.
+
+    기본적으로 새 사용자에 대한 그룹도 생성됩니다(-g, -N, -U 및 USERGROUPS_ENAB 참조).
+```
+
+## userdel
+```sh
+이름
+    userdel - 사용자 계정 및 관련 파일 삭제
+
+개요
+    userdel [옵션] 로그인
+
+설명
+    userdel 명령은 사용자 이름 LOGIN을 참조하는 모든 항목을 삭제하여 시스템 계정 파일을 수정합니다. 명명된 사용자가 있어야 합니다.
+```
+
+옵션 | 설명
+--- | ---
+`-f` | force의 약자로 사용자가 로그인되어 있어도 계정을 제거하고 삭제도 합니다.
+`-r` | 사용자의 홈 디렉토리를 제거
+
+### Example
+```sh
+[vagrant@localuser ~]$ tail /etc/passwd
+nfsnobody:x:65534:65534:Anonymous NFS User:/var/lib/nfs:/sbin/nologin
+postfix:x:89:89::/var/spool/postfix:/sbin/nologin
+chrony:x:998:996::/var/lib/chrony:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+vagrant:x:1000:1000:vagrant:/home/vagrant:/bin/bash
+vboxadd:x:997:1::/var/run/vboxadd:/bin/false
+yoonsam:x:1001:1002:Lee Yoon Sam:/home/yoonsam:/bin/bash
+albert:x:1002:1003:YoonSam:/home/albert:/bin/bash
+lemon:x:1003:1004::/home/lemon:/bin/bash
+good:x:1004:1005:hello my name is good:/home/good:/bin/bash
+
+[vagrant@localuser ~]$ id albert
+uid=1002(albert) gid=1003(albert) groups=1003(albert)
+
+[vagrant@localuser ~]$ sudo userdel albert
+[vagrant@localuser ~]$ id albert
+id: albert: no such user
+
+[vagrant@localuser ~]$ ls -l /home
+합계 20
+drwx------  2    1002    1003 4096 12월 31 02:43 albert
+drwx------  2 good    good    4096  1월 14 03:35 good
+drwx------  2 lemon   lemon   4096  1월  8 06:57 lemon
+drwx------. 3 vagrant vagrant 4096  1월 28 06:54 vagrant
+drwx------  2 yoonsam yoonsam 4096 12월 30 02:18 yoonsam
+```
+- userdel 을 옵션없이 사용하면 사용자는 제거되지만 파일은 남게 됩니다.
+- 사용자 파일이 제거된 후에 액세스하려는 경우 유용할 수 있습니다.
+
+```sh
+cat /etc/login.defs
+#
+# Min/max values for automatic uid selection in useradd
+#
+UID_MIN                  1000
+UID_MAX                 60000
+# System accounts
+SYS_UID_MIN               201
+SYS_UID_MAX               999
+```
+- UID MIN, MAX 
+    - 자동 uid 선택 및 사용자 추가에 대한 최소 및 최대 값입니다.
+    - 따라서 Linux 시스템에서 첫 번째 사용자를 생성하면 사용자 ID가 1000이 됩니다.
+    - 다음에 계정을 추가할 때 숫자가 1씩 증가합니다.
+- SYS_UID MIN, MAX
+    - 시스템 계정 또는 시스템 계정으로 간주되는 최대 사용자 ID가 999임을 의미합니다.
+    - 매우 중요한 계정을 삭제하지 않으려면 먼저 UID를 확인하는 것이 좋습니다.
+    - 1000 미만이면 서버에서 필요할 수 있는 서비스를 운영할 수 있으므로 수행 중인 작업에 주의해야 합니다.
+
+```sh
+[vagrant@localuser ~]$ tail /etc/passwd
+rpcuser:x:29:29:RPC Service User:/var/lib/nfs:/sbin/nologin
+nfsnobody:x:65534:65534:Anonymous NFS User:/var/lib/nfs:/sbin/nologin
+postfix:x:89:89::/var/spool/postfix:/sbin/nologin
+chrony:x:998:996::/var/lib/chrony:/sbin/nologin
+sshd:x:74:74:Privilege-separated SSH:/var/empty/sshd:/sbin/nologin
+vagrant:x:1000:1000:vagrant:/home/vagrant:/bin/bash
+vboxadd:x:997:1::/var/run/vboxadd:/bin/false
+yoonsam:x:1001:1002:Lee Yoon Sam:/home/yoonsam:/bin/bash
+lemon:x:1003:1004::/home/lemon:/bin/bash
+good:x:1004:1005:hello my name is good:/home/good:/bin/bash
+
+[vagrant@localuser ~]$ sudo userdel -r lemon
+
+[vagrant@localuser ~]$ id -u lemon
+id: lemon: no such user
+
+[vagrant@localuser ~]$ ls -l /home/lemon
+ls: cannot access /home/lemon: 그런 파일이나 디렉터리가 없습니다
+```
+- `-r` 옵션은 홈 디렉토리와 그 홈 디렉토리 내에 있던 모든 파일을 제거합니다.
+
 
 ## test
 > 조건식을 평가 합니다.<br/>
