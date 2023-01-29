@@ -773,3 +773,83 @@ sudo find / -name userdel
 
 ### 참고
 - [userdel](/QuickReferences/SHELL_COMMAND.md#userdel)
+
+## 33. Deleting and Disabling Linux Accounts, Part 3 of 4 (Archives with tar)
+> 필요할 경우를 대비하여 사용자의 홈 디렉토리를 보관하거나 저장하는 방법을 알아보겠습니다.
+
+이를 수행하는 한 가지 방법은 `tar` 명령을 사용하는 것입니다.
+
+`tar` 명령은 원래 테이프 아카이브를 의미했지만 테이프뿐만 아니라 모든 저장 장치에 파일을 아카이브하는 데 사용할 수도 있습니다.
+
+### `taz` 압축 및 해제
+
+### tgz 압축
+```sh
+[vagrant@localuser ~]$ tar -zcvf catvideos.tgz catvideos/ 
+catvideos/
+catvideos/padme-amikitty.mp4
+catvideos/darthpaw.mp4
+catvideos/admiral-catbar.mp4
+catvideos/luke-claw-walker.mp4
+catvideos/obi-wan-catnobi.mp4
+
+[vagrant@localuser ~]$ ll
+합계 8
+drwxrwxr-x 2 vagrant vagrant 4096  1월 29 05:38 catvideos
+-rw-rw-r-- 1 vagrant vagrant  262  1월 29 05:40 catvideos.tgz
+-rw-rw-r-- 1 vagrant vagrant    0  1월 28 06:40 userdel
+```
+
+### gzip 압축해제
+```sh
+[vagrant@localuser ~]$ mkdir restore
+[vagrant@localuser ~]$ cd restore/
+[vagrant@localuser restore]$ tar -zxvf ../catvideos.tgz 
+catvideos/
+catvideos/padme-amikitty.mp4
+catvideos/darthpaw.mp4
+catvideos/admiral-catbar.mp4
+catvideos/luke-claw-walker.mp4
+catvideos/obi-wan-catnobi.mp4
+
+[vagrant@localuser restore]$ ls -l
+합계 4
+drwxrwxr-x 2 vagrant vagrant 4096  1월 29 05:38 catvideos
+
+[vagrant@localuser restore]$ ls -l catvideos/
+합계 0
+-rw-rw-r-- 1 vagrant vagrant 0  1월 29 05:37 admiral-catbar.mp4
+-rw-rw-r-- 1 vagrant vagrant 0  1월 29 05:37 darthpaw.mp4
+-rw-rw-r-- 1 vagrant vagrant 0  1월 29 05:38 luke-claw-walker.mp4
+-rw-rw-r-- 1 vagrant vagrant 0  1월 29 05:38 obi-wan-catnobi.mp4
+-rw-rw-r-- 1 vagrant vagrant 0  1월 29 05:38 padme-amikitty.mp4
+```
+
+권한이 있는지 확인하려면 먼저 sudo를 사용하거나 루트 사용자가 되어야 합니다.
+예를 들어 시스템의 거의 모든 구성 파일이 들어 있는 `/etc` 디렉토리의 내용을 백업한다고 가정해 보겠습니다.
+
+`/etc`에는 일반 사용자가 액세스할 수 없는 일부 파일이 있기 때문에 루트 권한이 필요합니다.
+
+이제 홈 디렉토리로 돌아가 sudo tar -z를 수행해 봅시다.
+
+```sh
+[vagrant@localuser ~]$ sudo tar -zcf etc.tgz /etc
+tar: Removing leading `/' from member names
+```
+- `tar`는 멤버 이름에서 선행 슬래시를 제거한다고 말합니다.
+
+예를 들어, 이것을 다른 하위 디렉토리로 추출한 다음 해당 아카이브 또는 해당 백업과 해당 아카이브 또는 해당 백업을 현재 있는 것과 바로 비교하는 대신 해당 아카이브 또는 해당 백업의 내용을 현재 디스크에 있는 것과 비교하고 싶을 수 있습니다.
+
+여기에서 `tar`는 선행 슬래시로 표시된 절대 경로를 제거하고 아카이브 내 상대 경로를 남길 것입니다.
+```sh
+[vagrant@localuser ~]$ tar zcvf catvideos.tgz catvideos/
+catvideos/
+catvideos/padme-amikitty.mp4
+catvideos/darthpaw.mp4
+catvideos/admiral-catbar.mp4
+catvideos/luke-claw-walker.mp4
+catvideos/obi-wan-catnobi.mp4
+```
+- 옵션 앞에 `-` 를 생략해도 사용 할수 있습니다.
+- 이것은 오늘날까지도 여전히 지원되는 오래된 유형의 구문입니다.
+- 오래된 유형의 구문을 사용하면 다소 혼란스러워지므로 tar를 다른 구문과 동일하게 취급하십시오.

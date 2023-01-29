@@ -664,3 +664,64 @@ locate .bashrc
 > /etc/skel/.bashrc
 > /home/vagrant/.bashrc
 ```
+
+## `$!`
+이전 명령줄의 맨 마지막 인수를 사용합니다.
+
+```sh
+[vagrant@localuser restore]$ echo 'hello' > catvideos/darthpaw.mp4 
+[vagrant@localuser restore]$ cat !$
+cat catvideos/darthpaw.mp4
+hello
+```
+
+## tar
+
+```sh
+type -a tar
+tar is /usr/bin/tar
+```
+
+```sh
+EXAMPLES
+    tar -cf archive.tar foo bar
+        # 파일 foo와 bar에서 archive.tar를 만듭니다.
+
+    tar -tvf archive.tar
+        # archive.tar에 있는 모든 파일을 자세히 나열합니다.
+
+    tar -xf archive.tar
+        # archive.tar에서 모든 파일을 추출합니다.
+```
+
+**gzip 압축**
+```sh
+gzip catvideos.tar
+
+> catvideos.tar.gz
+```
+- `gzip` 명령은 원본 파일을 압축하고 **.gz**를 추가합니다.
+- `tar.gz`로 끝나는 파일이 보이면 압축된 아카이브입니다.
+
+**압축 해제**
+```sh
+gunzip catvideos.tar.zg
+```
+- gzip 압축 해제 명령
+- catvideos.tar 로 복구 됩니다.
+
+**tar 옵션으로 gzip 압축**
+```sh
+tar -zcvf catvideos.tar.gz catvideos/
+```
+- tar -z 옵션을 사용해서 gzip 으로 바로 압축 할수 있습니다.
+
+```sh
+tar -zcvf catvideos.tgz catvideos/
+```
+- tar.gz 를 tgz 로 사용
+
+```sh
+tar -zxvf /home/vagrant/catvideos.tgz
+```
+- tgz 파일 압축 해제
