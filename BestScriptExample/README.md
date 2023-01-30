@@ -655,8 +655,34 @@ Total number of passed students: 7
 The percentage of passed students: 70.00%
 ```
 
-
 ### 참고
 - [Add 2 numbers into a variable](https://linuxhint.com/30_bash_script_examples/#t17)
 - [Bash Arithmetic Operation](https://linuxhint.com/bash_arithmetic_operations/)
 - [Example](./example-arithmetic/add_numbers.sh)
+
+
+# Create a Function (함수 만들기)
+간단한 함수를 만들고 함수를 호출하는 방법은 다음 스크립트에 나와 있습니다. 
+`function_example.sh`라는 파일을 만들고 다음 코드를 추가합니다. 
+bash 스크립트에서 대괄호를 사용하지 않고 이름만으로 함수를 호출할 수 있습니다.
+
+```sh
+#!/bin/bash
+
+function F1()
+{
+    echo 'I like bash programming'
+}
+
+F1
+```
+
+**출력**
+```sh
+./function_example.sh
+> I like bash programming
+```
+
+### 참고
+- [Create a Function](https://linuxhint.com/30_bash_script_examples/#t18)
+- [Example](./example-function/function_example.sh)
