@@ -677,7 +677,7 @@ function F1()
 F1
 ```
 
-**출력**
+**Output**
 ```sh
 ./function_example.sh
 > I like bash programming
@@ -686,3 +686,36 @@ F1
 ### 참고
 - [Create a Function](https://linuxhint.com/30_bash_script_examples/#t18)
 - [Example](./example-function/function_example.sh)
+
+# Use Function Parameters
+
+## Create function with Parameters (매개변수로 함수 만들기)
+
+Bash는 함수 선언 시 함수 매개변수나 인수를 선언할 수 없습니다. 그러나 다른 변수를 사용하여 함수에서 매개변수를 사용할 수 있습니다. 
+
+함수 호출 시 두 개의 값이 전달되면 `$1` 및 `$2` 변수가 값을 읽는 데 사용됩니다. 
+
+`function_parameter.sh`라는 파일을 만들고 다음 코드를 추가합니다. 
+여기서 `Rectangle_Area` 함수는 매개변수 값을 기반으로 직사각형의 면적을 계산합니다.
+
+```sh
+#!/bin/bash
+
+Rectangle_Area() {
+    area=$(($1 * $2))
+    echo "Area is : $area"
+}
+
+Rectangle_Area 10 20
+```
+
+**Output**
+```sh
+./function_parameter.sh
+> Area is : 200
+```
+
+
+### 참고
+- [Use Function Parameters](https://linuxhint.com/30_bash_script_examples/#t19)
+- [Example](./example-function/function_parameter.sh)
