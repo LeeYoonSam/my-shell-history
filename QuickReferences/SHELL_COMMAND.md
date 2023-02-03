@@ -419,7 +419,7 @@ Special Parameters | explanation
 - /string 으로 단어 검색 가능
 
 
-## basename
+## basename - 파일관리
 > 파일 이름에서 디렉토리 및 접미사 제거
 
 ```sh
@@ -428,7 +428,7 @@ basename /vagrant/luser-demo06.sh
 ```
 - 기본 이름을 제공할 수 있도록 전달된 문자열의 디렉토리 부분을 제거합니다.
 
-## dirname
+## dirname - 파일관리
 > 파일 이름에서 마지막 구성 요소 제거
 
 ```sh
@@ -456,7 +456,88 @@ for: for NAME [in WORDS ... ] ; do COMMANDS; done
     Returns the status of the last command executed.
 ```
 
-## for 커맨드에서 사용하기
+### grep - 문자열 출력
+> 리눅스에서 `grep` 명령어는 특정 파일에서 지정한 문자열이나 정규표현식을 포함한 행을 출력해주는 명령어입니다. <br/>
+> 특히 `tail`이나 `ls` 등 다양한 명령어와 조합하여 응용되는 경우가 많아서 이 `grep`명령어는 리눅스에서 능숙하게 사용할 줄 알아야 하는 기본 명령어입니다.
+
+```shell
+grep [옵션][패턴][파일명]
+```
+
+**문자열로 찾기**
+```shell
+# 특정 파일에서 'error' 문자열 찾기
+grep 'error' 파일명
+
+# 여러개의 파일에서 'error' 문자열 찾기
+grep 'error' 파일명1 파일명2
+
+# 현재 디렉토리내에 있는 모든 파일에서 'error' 문자열 찾기
+grep 'error' *
+
+# 특정 확장자를 가진 모든 파일에서 'error' 문자열 찾기
+grep 'error' *.log
+```
+- grep명령어를 사용하시면 특정 파일에서 내가 원하는 문자열이 있는 라인을 찾을 수 있습니다.
+
+**정규표현식으로 찾기**
+```shell
+# 특정 파일에서 문자열이 포함된 행을 찾는다.
+grep '^[ab]' 파일명 
+
+# 특정 파일에서 a로 시작하는 모든 단어를 찾는다.
+grep 'a*' 파일명 
+
+# 특정 파일에서 a로 시작하고 z로 끝나는 5자리 단어를 찾는다.
+grep 'a...z' 파일명 
+
+# 특정 파일에서 a,b,c로 시작하는 단어를 모두 찾는다.
+grep [a-c] 파일명
+
+# 특정 파일에서 apple 또는 Apple로 시작하는 단어를 모두 찾는다.
+grep [aA]pple 파일명 
+
+# 특정 파일에서 a나 b로 시작되는 모든 행을 찾는다.
+grep '^[ab]' 파일명 
+
+# 특정 파일에서 apple로 시작되고 0나 9의 숫자로 끝나로 시작되는 모든 행을 찾는다.
+grep 'apple'[0-9] 파일명
+```
+
+**자주사용하는 옵션**
+```
+-c : 일치하는 행의 수를 출력한다.
+-i : 대소문자를 구별하지 않는다.
+-v : 일치하지 않는 행만 출력한다.
+-n : 포함된 행의 번호를 함께 출력한다.
+-l : 패턴이 포함된 파일의 이름을 출력한다.
+-w : 단어와 일치하는 행만 출력한다.
+-x : 라인과 일치하는 행만 출력한다.
+-r : 하위 디렉토리를 포함한 모든 파일에서 검색한다.
+-m 숫자 : 최대로 표시될 수 있는 결과를 제한한다.
+-E : 찾을 패턴을 정규 표현식으로 찾는다.
+-F : 찾을 패턴을 문자열로 찾는다.
+```
+
+**실시간 로그 보기 (tail + grep)**
+```shell
+tail -f mylog.log | grep 192.168.15.86
+```
+- `grep`은 다른 명령어와 조합해서 사용하는 경우도 많습니다. 대부분 개발자들이 실시간 로그 체크를 할 때는 tail과 grep 명령어 조합으로 로그파일에서 자신이 원하는 키워드만 추출하고는 합니다. 위의 명령어대로 사용하시면 mylog파일을 실시간으로 액세스하고 IP주소가 192.168.49.16인 행만 추출할 수 있겠습니다.
+
+**특정 파일에서 여러개 문자열 찾기**
+```shell
+cat mylog.txt | grep 'Apple' | grep 'Banana'
+```
+- | 파이프를 사용하면 `grep`명령어를 여러 개 사용하여 특정 파일에서 여러 개의 문자열을 찾을 수 있을 수도 있습니다. 위의 명령어대로 입력한다면 mylog.txt 파일에서 Apple과 Banana이 있는 문자열들을 찾을 수 있겠습니다.
+
+**grep 한 결과 값 txt 파일로 저장하기**
+```shell
+grep -n 'Apple' mylog.txt > result.txt
+```
+- grep한 결과가 길면 터미널에서 확인이 어렵기 때문에 txt파일로 저장하여 확인하고는 합니다. 위의 명령어대로 입력한다면 mylog.txt 파일에서 Apple이 있는 문자열들을 result.txt 파일에 저장하실 수 있습니다.
+
+## for 커맨드에서 사용하기 - loop
 ```sh
 for X in Frank Claire Doug
 > do
@@ -495,15 +576,20 @@ while [[ true ]]
 ```
 - `Ctrl + C`는 명령에 인터럽트 신호를 보내 중단시킵니다.
 
-## shift
+## shift - 문자열 조작
 > 위치 매개변수를 이동합니다.
 
 위치 매개변수 $N+1,$N+2 ...를 $1,$2 ...로 이름을 변경합니다. N이 지정되지 않으면 1로 간주됩니다.
 
 종료 상태: N이 음수이거나 $#보다 크지 않으면 성공을 반환합니다.
 
-## cut
-`cut` 유틸리티는 각 파일에서 각 행의 선택된 부분(목록에 지정된 대로)을 잘라내어 표준 출력에 기록합니다. 
+## cut - 문자열 조작
+> cut 명령어는 file 이나 표준 입력에서 받은 문자열을 잘라내서 새로운 문자열을 만드는 명령어입니다.  
+
+```sh
+type -a cut
+cut is /usr/bin/cut
+```
 
 파일 인수가 지정되지 않았거나 파일 인수가 단일 대시(`-`)인 경우 `cut`은 표준 입력에서 읽습니다. 
 
@@ -511,7 +597,263 @@ while [[ true ]]
 
 열 및 필드 번호 매기기는 1부터 시작합니다.
 
+### Option
+| Option | Description | 
+| --- | --- | 
+| `-b`, --bytes | 바이트를 기준으로 잘라냅니다. |
+| `-c`, --characters | 문자열을 기준으로 잘라냅니다. |
+| `-d`, --delimiter |	지정한 문자를 구분자로 사용합니다. (기본 TAB) |
+| `-f`, --fields	| 필드를 기준으로 잘라냅니다.	|
+| `-z`, --zero-terminated |	라인의 구분자를 개행문자가 아닌 NUL 을 사용합니다. |
+
 ### Example
+```sh
+cut -c 1 /etc/passwd
+r
+b
+d
+a
+l
+s
+...
+```
+- passwd 에 있는 내용의 첫번째 글자만 추출
+
+```sh
+cut -c 1-4 /etc/passwd
+root
+bin:
+daem
+adm:
+lp:x
+sync
+...
+```
+- 1-4 번째 글자만 추출
+
+```sh
+cut -c 4- /etc/passwd
+t:x:0:0:root:/root:/bin/bash
+:x:1:1:bin:/bin:/sbin/nologin
+mon:x:2:2:daemon:/sbin:/sbin/nologin
+:x:3:4:adm:/var/adm:/sbin/nologin
+x:4:7:lp:/var/spool/lpd:/sbin/nologin
+c:x:5:0:sync:/sbin:/bin/sync
+...
+```
+- 4번째 이후 글자모두 추출
+
+```sh
+cut -c -4 /etc/passwd
+root
+bin:
+daem
+adm:
+lp:x
+sync
+...
+```
+- 4번째 이전 글자까지 추출
+
+쉼표로 구분하여 여러 개별 문자를 선택할 수 있습니다.
+```sh
+cut -c 1,3,5 /etc/passwd
+ro:
+bnx
+deo
+amx
+l::
+sn:
+```
+- 첫 번째, 세 번째 및 다섯 번째 문자를 인쇄 합니다.
+- `5,3,1` | `3,1,5` 등 순서가 변경되어도 동일하게 출력 합니다.
+
+### 범위를 사용하는 방법
+문자를 자르기 위해 `-c` 옵션을 사용했지만 `-b` 옵션을 사용해서 `/etc/passwd` 파일에 있는 모든 줄의 첫 번째 바이트를 표시하기 위해 바이트 단위로 잘라냅니다.
+```sh
+cut -b 1 /etc/passwd
+r
+b
+d
+a
+l
+s
+...
+```
+- `cut -c 1 /etc/passwd` 와 같은 결과 입니다.
+
+**멀티 바이트**
+예를 들어 UTF 8 문자는 다중 바이트 문자입니다.
+```
+[vagrant@localuser vagrant]$ echo "한글" | cut -c 1
+한
+[vagrant@localuser vagrant]$ echo "한글" | cut -b 1
+?
+```
+- c, b 옵션에 대한 값이 달라졌습니다.
+
+기본적으로 필드별로 줄을자를 수 있습니다.
+
+`-f`는 탭에서 분할 합니다.
+
+탭 앞에 있는 모든 항목은 첫 번째 필드로 간주됩니다.
+
+첫 번째 탭 뒤와 두 번째 탭 앞의 모든 항목은 두 번째 필드로 간주되는 식입니다.
+
+`cut`은 필드라는 용어를 사용하지만 원하는 경우 이를 열로 생각할 수 있습니다.
+
+echo 명령을 사용하여 일부 탭과 ​​제한된 데이터를 생성하겠습니다.
+
+`echo`에 대한 `-e` 옵션을 사용하면 탭, 문자, 새 줄 생성 등과 같은 일부 작업을 수행할 수 있는 일부 백슬래시 이스케이프를 사용할 수 있습니다.
+
+```sh
+[vagrant@localuser vagrant]$ echo -e 'one\ttwo\tthree'
+one	two	three
+[vagrant@localuser vagrant]$ echo -e 'one\ttwo\tthree' | cut -f 1
+one
+[vagrant@localuser vagrant]$ echo -e 'one\ttwo\tthree' | cut -f 2
+two
+[vagrant@localuser vagrant]$ echo -e 'one\ttwo\tthree' | cut -f 3
+three
+```
+
+탭으로 구분되지 않은 데이터가 있는 경우 어떻게 됩니까?
+
+CSV 또는 쉼표로 구분된 값 파일을 다루고 있다고 가정해 보겠습니다.
+
+```sh
+[vagrant@localuser vagrant]$ echo 'one,two,three' | cut -d ',' -f 3
+three
+[vagrant@localuser vagrant]$ echo 'one,two,three' | cut -d ',' -f 2
+two
+[vagrant@localuser vagrant]$ echo 'one,two,three' | cut -d ',' -f 1
+one
+
+[vagrant@localuser vagrant]$ echo 'one,two,three' | cut -d , -f 1
+one
+```
+- `-d` 옵션에서 구분자에 따옴표 없이 입력이 가능합니다.
+
+```sh
+[vagrant@localuser vagrant]$ echo 'one\two\three' | cut -d \ -f 1
+cut: 구획 문자는 단일 문자여야 합니다
+Try 'cut --help' for more information.
+```
+- 특수 문자를 그대로 사용하면 동작하지 않습니다.
+
+```sh
+[vagrant@localuser vagrant]$ echo 'one\two\three' | cut -d '\' -f 1
+one
+[vagrant@localuser vagrant]$ echo 'one\two\three' | cut -d \\ -f 1
+one
+```
+- 이러한 경우를 대비해서 항상 '' 를 사용하는것을 추천 합니다.
+- 기호 앞에 `\` 를 한번 더 써주면 인식을 합니다.
+
+```sh
+[vagrant@localuser vagrant]$ cut -d ':' -f 1,3 /etc/passwd
+root:0
+bin:1
+daemon:2
+adm:3
+lp:4
+sync:5
+```
+- `/etc/passwd` 출력을 `:` 로 구분하고 그 결과의 1,3번째 를 출력 합니다.
+- ex) `root:x:0:0:root:/root:/bin/bash` -> 1-root, 2-x, 3-0, 4-0, 5-root, 6-/root...
+
+### CSV 샘플 테스트
+```sh
+[vagrant@localuser vagrant]$ echo 'first, last' > people.csv
+[vagrant@localuser vagrant]$ echo 'John, Smitt' >> people.csv
+[vagrant@localuser vagrant]$ echo 'firstly, mclasty' >> people.csv
+[vagrant@localuser vagrant]$ echo 'Mr. firstly,mclasty' >> people.csv
+
+[vagrant@localuser vagrant]$ cat people.csv
+first, last
+John, Smitt
+firstly, mclasty
+Mr. firstly,mclasty
+
+[vagrant@localuser vagrant]$ cut -d ',' -f 1 people.csv
+first
+John
+firstly
+Mr. firstly
+```
+
+첫 번째는 잘라낼 데이터를 보내기 전에 헤더를 제거하거나 잘라낸 후 제거하는 것입니다.
+```sh
+[vagrant@localuser vagrant]$ grep first people.csv
+first, last
+firstly, mclasty
+Mr. firstly,mclasty
+```
+헤더만 일치하도록 검색 범위를 좁히겠습니다.
+
+정규 표현식에 대해 더 이상 배우지 않는다면 최소한 이 두 가지 매우 중요한 정규 표현식을 마음대로 사용할 수 있을 것입니다.
+
+첫 번째 정규식은 `^(carrot)` 기호입니다.
+- 줄의 시작 부분과 일치합니다.
+- 문자가 아닌 위치와 일치합니다.
+
+따라서 처음으로 시작하는 모든 줄을 일치시키려면 이렇게 `^(carrot)`을 먼저 사용하십시오.
+```sh
+[vagrant@localuser vagrant]$ grep '^first' people.csv
+first, last
+firstly, mclasty
+```
+- 올바른 문자를 사용하지 않으면 반환되는 결과가 달라집니다.
+
+두 번째 정규식은 `$(달러)` 기호입니다.
+- 문자가 아닌 위치인 두 개의 일치 항목에서 줄의 끝과 일치합니다.
+
+따라서 T로 끝나는 줄을 모두 찾으려면 이 grep t 달러 기호를 사용할 수 있습니다.
+```sh
+[vagrant@localuser vagrant]$ grep 't$' people.csv
+first, last
+John, Smitt
+```
+
+이제 우리는 파일의 헤더를 분리했지만 운 좋게도 `grep`에 일치를 반전시키는 편리한 옵션이 있다는 점을 제외하고는 모든 것이 필요합니다.
+
+```sh
+[vagrant@localuser vagrant]$ grep -v '^first, last$' people.csv
+John, Smitt
+firstly, mclasty
+Mr. firstly,mclasty
+```
+- `first` 로 시작하고 `last` 로 끝나지 않는것
+- `-v` 옵션을 사용하면 그립이 제공된 패턴과 일치하지 않는 선을 표시합니다.
+
+```sh
+[vagrant@localuser vagrant]$ grep -v '^first, last$' people.csv | cut -d ',' -f 1
+John
+firstly
+Mr. firstly
+```
+
+나는 cut이 출력을 먼저 변경하고 헤더도 변경하기 때문에 이것을 그다지 좋아하지 않습니다.
+그러나 우리가 이것을 할 수 있도록 작동합니다.
+```sh
+[vagrant@localuser vagrant]$ cut -d ',' -f 1 people.csv
+first
+John
+firstly
+Mr. firstly
+```
+그것이 우리가 헤더를 포함하는 것을 얻는 것입니다.
+
+```sh
+[vagrant@localuser vagrant]$ cut -d ',' -f 1 people.csv | grep -v '^first$'
+John
+firstly
+Mr. firstly
+```
+- 헤더를 제거하고 `cut`은 단일 문자만 처리합니다.
+
+
+### 번외
 ```sh
 echo X=45 | cut -d = -f 1
 > X
@@ -533,7 +875,7 @@ who | cut -c 1-16,26-38
 - 현재 로그인한 사용자의 이름과 로그인 시간을 표시합니다.
 
 
-## function
+## function - 함수
 
 쉘 함수를 정의합니다.
 
@@ -543,7 +885,7 @@ function: function name { COMMANDS ; } or name () { COMMANDS ; }
 
 이름이 NAME인 셸 함수를 만듭니다. 간단한 명령으로 호출되면 NAME은 호출하는 셸의 컨텍스트에서 COMMAND를 실행합니다. NAME이 호출되면 인수는 $1...$n으로 함수에 전달되고 함수의 이름은 $FUNCNAME에 있습니다.
 
-## logger
+## logger - 로그
 > logger [options] [message]
 
 - 시스템 로그에 항목을 만듭니다. 
@@ -592,7 +934,7 @@ sudo tail /var/log/messages
 >> Jan 18 22:05:47 localuser my-script: Tagging on.
 ```
 
-## let
+## let - 계산
 
 산술식을 평가합니다.
 
@@ -615,7 +957,7 @@ echo $NUM
 > 6
 ```
 
-## EXPR
+## EXPR - 계산
 EXPR 명령은 주어진 표현식을 처리한 다음 그 결과를 표준 출력으로 보냅니다.
 
 ```sh
@@ -694,7 +1036,7 @@ cat catvideos/darthpaw.mp4
 hello
 ```
 
-## tar
+## tar - 파일 압축
 
 ```sh
 type -a tar
@@ -745,7 +1087,7 @@ tar -zxvf /home/vagrant/catvideos.tgz
 ```
 - tgz 파일 압축 해제
 
-## chage
+## chage - 유저 계정
 
 ```sh
 이름
@@ -762,3 +1104,39 @@ tar -zxvf /home/vagrant/catvideos.tgz
 옵션 | 설명
 --- | ---
 `-E` | 1970년 1월 1일 이후 사용자 계정에 더 이상 액세스할 수 없는 날짜 또는 일수를 설정합니다.<br/> 날짜는 YYYY-MM-DD 형식(또는 해당 지역에서 더 일반적으로 사용되는 형식)으로 표시될 수도 있습니다. 계정이 잠긴 사용자는 시스템을 다시 사용하기 전에 시스템 관리자에게 문의해야 합니다.<br/>EXPIRE_DATE로 숫자 -1을 전달하면 계정 만료 날짜가 제거됩니다.
+
+## awk - 문자열 조작
+```sh
+[vagrant@localuser vagrant]$ echo 'L1C1          L1C2' > lines
+[vagrant@localuser vagrant]$ echo '    L2C1 L2C2     ' >> lines
+[vagrant@localuser vagrant]$ echo '   L3C1      L3C2' >> lines
+[vagrant@localuser vagrant]$ echo -e 'L4C1\tL4C2' >> lines
+[vagrant@localuser vagrant]$ cat lines
+L1C1          L1C2
+    L2C1 L2C2     
+   L3C1      L3C2
+L4C1	L4C2
+```
+- 여기에 실제로 있는 파일은 4줄이 있는 파일이고 각 줄은 다양한 길이의 공백으로 구분된 두 개의 열로 구성되어 있습니다. 공백은 공백 및/또는 탭입니다.
+
+단일 문자로만 분할할 수 있기 때문에 cut으로 이 데이터를 이해하는 것은 정말 어려울 것입니다.
+
+공간을 분할하더라도 행마다 열을 구분하는 공간의 수가 다르기 때문에 원하는 결과를 얻지 못할 것입니다.
+또한 탭이 있는 줄을 처리하지 않습니다.
+
+그러나 `awk`에서는 모든 것이 정말 잘 수행됩니다.
+```sh
+[vagrant@localuser vagrant]$ awk '{print $1, $2}' lines
+L1C1 L1C2
+L2C1 L2C2
+L3C1 L3C2
+L4C1 L4C2
+```
+- 기본적으로 `awk`의 필드 구분 기호는 공백이거나 다른 방법이 더 정확할 수 있습니다.
+- `awk`는 공백이 아닌 문자를 기본적으로 필드로 간주합니다.
+
+예를 들어 `awk`는 각 줄의 시작과 끝에서 불필요한 공백을 쉽게 처리합니다.
+
+### `awk` 활용 사례
+- 둘 이상의 문자로 구성된 구분 기호를 사용하는 것입니다.
+- 공백으로 구분된 필드를 처리하는 것입니다.
