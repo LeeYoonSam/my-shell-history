@@ -1140,3 +1140,26 @@ L4C1 L4C2
 ### `awk` 활용 사례
 - 둘 이상의 문자로 구성된 구분 기호를 사용하는 것입니다.
 - 공백으로 구분된 필드를 처리하는 것입니다.
+
+## netstat
+> 네트워크 연결, 라우팅 테이블, 인터페이스 통계, 마스커레이드 연결 및 멀티캐스트 구성원 인쇄
+
+```sh
+[vagrant@localuser vagrant]$ sudo netstat -nutlp
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      902/sshd            
+tcp        0      0 127.0.0.1:25            0.0.0.0:*               LISTEN      1049/master         
+tcp6       0      0 :::22                   :::*                    LISTEN      902/sshd            
+tcp6       0      0 ::1:25                  :::*                    LISTEN      1049/master         
+udp        0      0 0.0.0.0:38246           0.0.0.0:*                           712/dhclient        
+udp        0      0 127.0.0.1:323           0.0.0.0:*                           626/chronyd         
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           712/dhclient        
+udp6       0      0 :::51852                :::*                                712/dhclient        
+udp6       0      0 ::1:323                 :::*                                626/chronyd         
+
+[vagrant@localuser vagrant]$ sudo netstat -nutlp | grep 22
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      902/sshd            
+tcp6       0      0 :::22                   :::*                    LISTEN      902/sshd            
+[vagrant@localuser vagrant]$ 
+```
