@@ -463,6 +463,37 @@ for: for NAME [in WORDS ... ] ; do COMMANDS; done
 ```shell
 grep [옵션][패턴][파일명]
 ```
+```sh
+이름
+    grep, egrep, fgrep - 패턴과 일치하는 줄 인쇄
+
+개요
+    grep [OPTIONS] PATTERN [FILE...]
+    grep [OPTIONS] [-e PATTERN | -f FILE] [FILE...]
+
+설명
+    grep은 지정된 PATTERN과 일치하는 행을 찾기 위해 명명된 입력 파일(또는 파일이 명명되지 않았거나 단일 하이픈 빼기(-)가 파일 이름으로 제공된 경우 표준 입력)을 검색합니다. 기본적으로 grep은 일치하는 행을 인쇄합니다.
+
+    또한 egrep 및 fgrep의 두 가지 변형 프로그램을 사용할 수 있습니다. egrep은 grep -E와 동일합니다. fgrep은 grep -F와 같습니다.
+    egrep 또는 fgrep으로 직접 호출하는 것은 더 이상 사용되지 않지만 이를 사용하는 기록 애플리케이션이 수정되지 않은 상태로 실행될 수 있도록 제공됩니다.
+```
+
+### Option
+| Option | Description | 
+| --- | --- | 
+| -c | 일치하는 행의 수를 출력한다. |
+| -i | 대소문자를 구별하지 않는다. |
+| -v | 일치하지 않는 행만 출력한다. |
+| -n | 포함된 행의 번호를 함께 출력한다. |
+| -l | 패턴이 포함된 파일의 이름을 출력한다. |
+| -w | 단어와 일치하는 행만 출력한다. |
+| -x | 라인과 일치하는 행만 출력한다. |
+| -r | 하위 디렉토리를 포함한 모든 파일에서 검색한다. |
+| -m 숫자 | 최대로 표시될 수 있는 결과를 제한한다. |
+| -E | 찾을 패턴을 정규 표현식으로 찾는다. |
+| -F | 찾을 패턴을 문자열로 찾는다. |
+
+### Example
 
 **문자열로 찾기**
 ```shell
@@ -502,21 +533,6 @@ grep '^[ab]' 파일명
 
 # 특정 파일에서 apple로 시작되고 0나 9의 숫자로 끝나로 시작되는 모든 행을 찾는다.
 grep 'apple'[0-9] 파일명
-```
-
-**자주사용하는 옵션**
-```
--c : 일치하는 행의 수를 출력한다.
--i : 대소문자를 구별하지 않는다.
--v : 일치하지 않는 행만 출력한다.
--n : 포함된 행의 번호를 함께 출력한다.
--l : 패턴이 포함된 파일의 이름을 출력한다.
--w : 단어와 일치하는 행만 출력한다.
--x : 라인과 일치하는 행만 출력한다.
--r : 하위 디렉토리를 포함한 모든 파일에서 검색한다.
--m 숫자 : 최대로 표시될 수 있는 결과를 제한한다.
--E : 찾을 패턴을 정규 표현식으로 찾는다.
--F : 찾을 패턴을 문자열로 찾는다.
 ```
 
 **실시간 로그 보기 (tail + grep)**
@@ -1141,7 +1157,7 @@ L4C1 L4C2
 - 둘 이상의 문자로 구성된 구분 기호를 사용하는 것입니다.
 - 공백으로 구분된 필드를 처리하는 것입니다.
 
-## netstat
+## netstat - 네트워크
 > 네트워크 연결, 라우팅 테이블, 인터페이스 통계, 마스커레이드 연결 및 멀티캐스트 구성원 인쇄
 
 ```sh
@@ -1163,3 +1179,232 @@ tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      
 tcp6       0      0 :::22                   :::*                    LISTEN      902/sshd            
 [vagrant@localuser vagrant]$ 
 ```
+
+## sort - 정렬
+
+```sh
+NAME
+       sort - 텍스트 파일 줄 정렬
+
+SYNOPSIS
+       sort [OPTION]... [FILE]...
+       sort [OPTION]... --files0-from=F
+
+DESCRIPTION
+       모든 file(들)의 정렬된 연결을 표준 출력에 씁니다.
+```
+
+### Option
+| Option | Description | 
+| --- | --- | 
+| -r, --reverse | 비교 결과를 반전 시킵니다. |
+| -n, --numeric-sort | 문자열 수의 값에 따라 비교 |
+| -c, --check, --check=diagnose-first | 정렬된 입력을 확인하십시오; 정렬하지 않음 |
+| -u, --unique | -c를 사용하여 엄격한 순서를 확인합니다. -c가 없으면 동일한 실행의 첫 번째만 출력 |
+| -k, --key=KEYDEF | 키를 통해 정렬; KEYDEF는 위치와 유형을 제공합니다. |
+| -t, --field-separator=SEP | 비공백에서 공백 전환 대신 SEP 사용 |
+
+### Example
+```sh
+[vagrant@localuser ~]$ sort /etc/passwd
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+bin:x:1:1:bin:/bin:/sbin/nologin
+chrony:x:998:996::/var/lib/chrony:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+dbus:x:81:81:System message bus:/:/sbin/nologin
+...
+```
+- 알파벳순으로 정렬
+
+```sh
+sort /etc/passwd | less
+adm:x:3:4:adm:/var/adm:/sbin/nologin
+bin:x:1:1:bin:/bin:/sbin/nologin
+chrony:x:998:996::/var/lib/chrony:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+dbus:x:81:81:System message bus:/:/sbin/nologin
+...
+```
+
+정렬 순서를 반대로 하려면 `-r` 옵션을 사용하십시오.
+```sh
+sort -r /etc/passwd | less
+yoonsam:x:1001:1002:Lee Yoon Sam:/home/yoonsam:/bin/bash
+vboxadd:x:997:1::/var/run/vboxadd:/bin/false
+vagrant:x:1000:1000:vagrant:/home/vagrant:/bin/bash
+systemd-network:x:192:192:systemd Network Management:/:/sbin/nologin
+sync:x:5:0:sync:/sbin:/bin/sync
+...
+```
+
+**숫자 기준 정렬**
+```sh
+[vagrant@localuser ~]$ cut -d ':' -f 3 /etc/passwd | sort -n
+0
+1
+2
+3
+4
+...
+
+[vagrant@localuser ~]$ cut -d ':' -f 3 /etc/passwd | sort -nr
+65534
+1002
+1001
+1000
+...
+```
+- `-n` 숫자에 따른 정렬 + `-r` 로 결과를 반전
+
+```sh
+cut -d ':' -f 3 /etc/passwd | sort -nu
+0
+1
+2
+3
+4
+...
+```
+- 값이 중복되지 않도록 유니크한 값만 출력
+
+**sort -t -k 사용**
+```sh
+[vagrant@localuser ~]$ cat /etc/passwd | sort -t ':' -k 3 -n
+root:x:0:0:root:/root:/bin/bash
+bin:x:1:1:bin:/bin:/sbin/nologin
+daemon:x:2:2:daemon:/sbin:/sbin/nologin
+...
+```
+- `-t ':'` 공백 전환을 `:` 로 변경
+- `-k 3` 3번째 컬럼으로 비교해서 정렬
+
+## du - 디스크 사용량
+```sh
+이름
+    du - 파일 공간 사용량 추정
+
+개요
+    du [OPTION]... [FILE]...
+    du [OPTION]... --files0-from=F
+
+설명
+    디렉터리에 대해 재귀적으로 각 FILE의 디스크 사용량을 요약합니다.
+    긴 옵션에 대한 필수 인수는 짧은 옵션에도 필수입니다.
+```
+
+### Option
+| Option | Description | 
+| --- | --- | 
+| -h, --human-readable | 사람이 읽을 수 있는 형식의 인쇄 크기(예: 1K 234M 2G) |
+
+### Example
+**`/var`에서 얼마나 많은 공간이 사용되고 있는지 봅시다.**
+
+```sh
+[vagrant@localuser ~]$ sudo du /var
+4	/var/nis
+4	/var/db/sudo/lectured
+8	/var/db/sudo
+20	/var/db
+4	/var/local
+4	/var/gopher
+...
+```
+- 첫 번째 열은 디스크 사용량을 나타내는 숫자이며 기본적으로 이 숫자는 킬로바이트 단위입니다.
+- 두 번째 열은 특정 양의 스토리지를 사용하고 있는 관련 디렉토리입니다.
+
+이제 숫자 정렬을 수행하여 가장 많은 공간을 사용하는 디렉터리 및 포워드 `/var`를 찾습니다.
+```sh
+[vagrant@localuser ~]$ sudo du /var | sort -n
+0	/var/lib/nfs/rpc_pipefs
+0	/var/lib/nfs/rpc_pipefs/cache
+0	/var/lib/nfs/rpc_pipefs/gssd
+0	/var/lib/nfs/rpc_pipefs/gssd/clntXX
+0	/var/lib/nfs/rpc_pipefs/lockd
+...
+```
+
+크기와 킬로바이트를 보고 싶지 않은 경우 `-h` 옵션을 사용하면 사람이 읽을 수 있는 형식으로 크기를 인쇄할 수 있습니다.
+```sh
+[vagrant@localuser ~]$ sudo du -h /var
+4.0K	/var/nis
+4.0K	/var/db/sudo/lectured
+...
+1.7M	/var/cache/man
+1.7M	/var/cache
+109M	/var
+...
+```
+
+
+## uniq - 중복 제거
+```sh
+이름
+    uniq - 반복되는 줄 보고 또는 생략
+
+개요
+    uniq [OPTION]... [INPUT [OUTPUT]]
+
+설명
+    INPUT(또는 표준 입력)에서 인접한 일치 라인을 필터링하여 OUTPUT(또는 표준 출력)에 기록합니다.
+    옵션이 없으면 일치하는 줄이 첫 번째 항목에 병합됩니다.
+    긴 옵션에 대한 필수 인수는 짧은 옵션에도 필수입니다.
+```
+
+### Option
+| Option | Description | 
+| --- | --- | 
+| -c, --count | 발생횟수를 행의 접두사로 표시 |
+
+### Exmaple
+```sh
+[vagrant@localuser ~]$ netstat -nutl | grep ':' | awk '{print $4}' | awk -F ':' '{print $NF}' | sort -n | uniq -c
+      2 22
+      2 25
+      1 68
+      2 323
+      1 25480
+      1 42484
+```
+
+
+## wc - 파일 문자 정보
+```sh
+이름
+    wc - 각 파일에 대한 개행 문자, 단어 및 바이트 수를 인쇄합니다.
+
+개요
+    wc [OPTION]... [FILE]...
+    wc [OPTION]... --files0-from=F
+
+설명
+    각 FILE에 대한 개행, 단어 및 바이트 수를 인쇄하고 둘 이상의 FILE이 지정된 경우 전체 라인을 인쇄합니다. FILE이 없거나 FILE이 -이면 표준 입력을 읽습니다. 단어는 공백으로 구분된 길이가 0이 아닌 일련의 문자입니다. 아래 옵션은 인쇄할 개수를 선택하는 데 사용할 수 있으며, 항상 줄수, 단어 수, 문자 수, 바이트 수, 최대 줄 길이의 순서로 표시됩니다.
+```
+
+### Option
+| Option | Description | 
+| --- | --- | 
+| -c, --bytes | 바이트 수를 출력 |
+| -l, --lines | 개행 횟수를 출력 |
+| -w, --words | 단어 수를 출력 |
+
+### Example
+```sh
+[vagrant@localuser ~]$ wc /etc/passwd
+  26   41 1227 /etc/passwd
+```
+- 첫 번째 열은 파일의 줄 수
+- 두 번째 열은 단어 수
+- 세 번째 열은 문자 수
+- 공백으로 제한되는 0이 아닌 길이의 문자 시퀀스로 단어를 간주합니다.
+
+대시 w를 사용하여 wc가 단어 수를 표시하도록 할 수 있습니다.
+```sh
+[vagrant@localuser ~]$ wc -l /etc/passwd
+26 /etc/passwd
+[vagrant@localuser ~]$ wc -w /etc/passwd
+41 /etc/passwd
+[vagrant@localuser ~]$ wc -c /etc/passwd
+1227 /etc/passwd
+```
+

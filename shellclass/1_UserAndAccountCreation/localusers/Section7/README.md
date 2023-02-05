@@ -362,4 +362,211 @@ TCP V 4를 얻을 수 있는 한 가지 방법은 net stat 옵션에 대시를 �
 ```
 
 ### 참고
--[Script](/shellclass/1_UserAndAccountCreation/localusers/luser-demo13.sh)
+- [Script](../luser-demo13.sh)
+
+
+# 39. Sort and Uniq
+
+**배울 내용**
+- `sort`, `unique commands` 를 사용하여 데이터를 정렬하는 방법
+
+파일 내용을 사전순으로 정렬하려면 sort 명령을 사용할 수 있습니다.
+
+이전 레슨에서 `netstat` 명령을 사용하여 열린 포트를 표시하는 부분을 다시 살펴보겠습니다.
+
+```sh
+[vagrant@localuser ~]$ netstat -nutl | grep ':' | awk '{print $4}' | awk -F ':' '{print $NF}' | sort -nu
+22
+25
+68
+323
+25480
+42484
+```
+- `sort -nu` 를 사용해서 유니크한 값만 출력되도록 정렬
+
+```sh
+[vagrant@localuser ~]$ netstat -nutl | grep ':' | awk '{print $4}' | awk -F ':' '{print $NF}' | sort -n | uniq
+22
+25
+68
+323
+25480
+42484
+```
+- sort -n | uniq 를 사용해서 유니크한 값을 출력 할수도 있습니다.
+
+```sh
+[vagrant@localuser ~]$ netstat -nutl | grep ':' | awk '{print $4}' | awk -F ':' '{print $NF}' | uniq
+22
+25
+22
+25
+42484
+323
+68
+25480
+323
+```
+- 연속된 값을 기준으로 처리하기 때문에 uniq 는 정렬이 된 상태로 사용해야 정상적으로 작동합니다.
+
+**uniq -c 옵션으로 몇번 중복되었는지 표시**
+```sh
+[vagrant@localuser ~]$ netstat -nutl | grep ':' | awk '{print $4}' | awk -F ':' '{print $NF}' | sort -n | uniq -c
+      2 22
+      2 25
+      1 68
+      2 323
+      1 25480
+      1 42484
+```
+- 첫 번째 열은 행이 출력에 나타난 횟수이고 그 다음에는 행 또는 출력 자체가 옵니다.
+
+프로그램이 생성하는 syslog 메시지의 수를 알고 싶다고 가정하고 다음과 같은 작업을 수행할 수 있습니다.
+```sh
+sudo cat /var/log/messages
+Jan 29 06:32:01 localuser rsyslogd: [origin software="rsyslogd" swVersion="8.24.0" x-pid="610" x-info="http://www.rsyslog.com"] rsyslogd was HUPed
+Jan 29 06:32:05 localuser systemd: Removed slice User Slice of root.
+Jan 29 06:32:05 localuser systemd: Stopping User Slice of root.
+Jan 29 07:00:54 localuser su: (to woz) vagrant on pts/0
+Jan 29 07:01:01 localuser systemd: Created slice User Slice of root.
+...
+```
+- 다섯 번째 필드에는 애플리케이션 이름 또는 Syslog에 기록 중인 프로그램 이름이 포함됩니다.
+
+```sh
+[vagrant@localuser ~]$ sudo cat /var/log/messages | awk '{print $5}'
+rsyslogd:
+systemd:
+systemd:
+su:
+systemd:
+...
+```
+- 5번째 필드만 출력
+
+```sh
+[vagrant@localuser ~]$ sudo cat /var/log/messages | awk '{print $5}' | sort | uniq -c
+     58 NetworkManager[627]:
+     58 NetworkManager[629]:
+     58 NetworkManager[631]:
+      8 chronyd[624]:
+      8 chronyd[626]:
+     11 chronyd[631]:
+     12 dbus-daemon:
+      4 dbus[619]:
+      4 dbus[620]:
+      4 dbus[621]:
+      5 dhclient[686]:
+      5 dhclient[707]:
+      5 dhclient[712]:
+     18 journal:
+      6 kdumpctl:
+   1067 kernel:
+   ...
+```
+- `sort` 로 정렬하고 `uniq -c` 로 중복을 제거하고 몇번 중복되었는지 표시
+
+bash 셸을 사용하는 계정 수를 알고 싶다고 가정해 보겠습니다.
+
+먼저 grep 명령을 사용하여 패턴 bash와 일치하는 줄을 표시할 수 있습니다.
+```sh
+[vagrant@localuser ~]$ grep bash /etc/passwd
+root:x:0:0:root:/root:/bin/bash
+vagrant:x:1000:1000:vagrant:/home/vagrant:/bin/bash
+yoonsam:x:1001:1002:Lee Yoon Sam:/home/yoonsam:/bin/bash
+nice:x:1002:1003::/home/nice:/bin/bash
+```
+
+시스템에 수백 개의 계정이 있고 그 순간 시각적으로 보고 인식할 수 있는 것보다 훨씬 더 많은 출력이 있다고 가정해 보겠습니다.
+
+그런 다음 원하는 것은 WC가 출력의 줄 수를 계산하도록 하는 것입니다.
+
+`grep` 명령과 `wc -l` 옵션을 사용하여 라인수를 출력 합니다.
+```sh
+[vagrant@localuser ~]$ grep bash /etc/passwd | wc -l
+4
+```
+
+`grep -c` 를 사용해서 일치하는 행의 수를 출력합니다.
+```sh
+[vagrant@localuser ~]$ grep -c bash /etc/passwd
+4
+```
+
+특정 URL을 몇 번이나 방문했는지 알고 싶다고 가정해 보겠습니다.
+```sh
+[vagrant@localuser vagrant]$ cat access_log
+29.48.17.65 - - [21/Dec/2017:10:19:53 -0800] "GET /apps/cart.jsp?appID=8345 HTTP/1.0" 200 5040 "http://www.mcdermott.com/" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/5360 (KHTML, like Gecko) Chrome/13.0.853.0 Safari/5360"
+140.181.105.145 - - [21/Dec/2017:10:21:55 -0800] "GET /posts/posts/explore HTTP/1.0" 200 5017 "http://rempel.com/author/" "Mozilla/5.0 (compatible; MSIE 5.0; Windows NT 5.2; Trident/4.1)"
+...
+```
+- 액세스 로그에 " 안에 url 이 포함되어 있습니다.
+
+```sh
+[vagrant@localuser vagrant]$ cut -d '"' -f 2 access_log 
+GET /apps/cart.jsp?appID=8345 HTTP/1.0
+GET /posts/posts/explore HTTP/1.0
+GET /explore HTTP/1.0
+DELETE /posts/posts/explore HTTP/1.0
+...
+```
+- " 을 구분자로 나누고 2번째 필드를 출력
+- 이제 하나의 공백으로 구분된 세 개의 데이터 열이 남아 있는 것처럼 보입니다.
+
+두 번째 열에는 URL이 있으며 잘라내기 명령으로도 이 작업을 수행할 수 있도록 이를 빼내겠습니다.
+```sh
+[vagrant@localuser vagrant]$ cut -d '"' -f 2 access_log | cut -d ' ' -f 2
+/apps/cart.jsp?appID=8345
+/posts/posts/explore
+/explore
+/posts/posts/explore
+...
+```
+
+### awk 를 사용해서 똑같은 출력 만들기
+```sh
+[vagrant@localuser vagrant]$ awk '{print $7}' access_log 
+/apps/cart.jsp?appID=8345
+/posts/posts/explore
+/explore
+/posts/posts/explore
+/wp-admin
+...
+```
+
+이제 각 URL이 방문한 횟수를 세고 싶습니다.
+`uniq` 명령으로 그렇게 할 수 있다는 것을 알고 있습니다. 그리고 먼저 정렬된 고유한 데이터를 제공해야 한다는 것도 알고 있습니다.
+
+```sh
+[vagrant@localuser vagrant]$ cut -d '"' -f 2 access_log | cut -d ' ' -f 2 | sort | uniq -c
+   1229 /app/main/posts
+      1 /apps/cart.jsp?appID=10000
+      1 /apps/cart.jsp?appID=1003
+      1 /apps/cart.jsp?appID=1005
+      1 /apps/cart.jsp?appID=1015
+      ...
+```
+- sort 로 정렬하고 uniq -c 로 호출횟수를 표시합니다.
+
+```sh
+[vagrant@localuser vagrant]$ cut -d '"' -f 2 access_log | cut -d ' ' -f 2 | sort | uniq -c | sort -n
+      1 /apps/cart.jsp?appID=10000
+      1 /apps/cart.jsp?appID=1003
+      1 /apps/cart.jsp?appID=1005
+      ...
+```
+
+이제 가장 많이 방문한 상위 3개의 URL만 표시하고 싶다고 가정해 보겠습니다.
+```sh
+[vagrant@localuser vagrant]$ cut -d '"' -f 2 access_log | cut -d ' ' -f 2 | sort | uniq -c | sort -n | tail -3
+   1259 /posts/posts/explore
+   1265 /explore
+   1271 /wp-admin
+```
+
+### 참고
+- [sort](/QuickReferences/SHELL_COMMAND.md#sort---정렬)
+- [du](/QuickReferences/SHELL_COMMAND.md#du---디스크-사용량)
+- [uniq](/QuickReferences/SHELL_COMMAND.md#uniq---중복-제거)
+- [Script](../luser-demo14.sh)
