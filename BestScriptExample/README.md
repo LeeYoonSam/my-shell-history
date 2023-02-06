@@ -719,3 +719,40 @@ Rectangle_Area 10 20
 ### 참고
 - [Use Function Parameters](https://linuxhint.com/30_bash_script_examples/#t19)
 - [Example](./example-function/function_parameter.sh)
+
+
+# Pass Return Value from Script(스크립트에서 반환 값 전달)
+Bash 함수는 숫자 값과 문자열 값을 모두 전달할 수 있습니다. 
+
+함수에서 문자열 값을 전달하는 방법은 다음 예제에 나와 있습니다. 
+
+`function_return.sh`라는 파일을 만들고 다음 코드를 추가합니다. 
+
+함수 `greeting()`은 문자열 값을 변수 `val`에 반환하며 나중에 다른 문자열과 결합하여 인쇄합니다.
+
+```sh
+#!/bin/bash
+
+function greeting() {
+    str="Hello, $name"
+    echo $str
+}
+
+echo 'Enter your name'
+read name
+
+val=$(greeting)
+echo "Return value of the function is $val"
+```
+
+### 출력
+```sh
+./function_return.sh
+Enter your name
+albert
+Return value of the function is Hello, albert
+```
+
+### 참고
+- [Pass Return Value from Script](https://linuxhint.com/30_bash_script_examples/#t20)
+- [Example](./example-function/function_return.sh)
