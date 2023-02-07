@@ -753,6 +753,129 @@ albert
 Return value of the function is Hello, albert
 ```
 
+## [How to Return a String from Bash Functions](https://linuxhint.com/return-string-bash-functions/)
+
+### Use of BASH function that returns a value (값을 반환하는 BASH 함수 사용)
+Bash 함수는 다른 표준 프로그래밍 언어처럼 값을 반환할 수 없고, 반환 문을 지원하지만 반환 값을 읽는 데는 다른 구문을 사용합니다.  
+
+다양한 방법으로 bash 함수에서 값을 가져올 수 있습니다. 
+
+이 튜토리얼에서는 다양한 유형의 bash 구문을 사용하여 bash 함수에서 호출자에게 문자열 데이터를 전달하는 방법을 배웁니다. 
+
+bash 함수에서 문자열 또는 숫자 값을 반환하는 방법을 이해합니다.
+
+### [Example-1: Using Global Variable](./example-function/func1.sh)
+`Bash` 함수는 전역 변수를 사용하여 문자열 값을 반환할 수 있습니다. 
+
+다음 예제에서는 전역 변수인 `retval`이 사용됩니다. 
+
+함수 호출 전후에 이 전역 변수에 문자열 값이 할당되고 출력됩니다. 
+전역 변수의 값은 함수를 호출한 후에 변경됩니다. 
+
+이것은 bash 함수에서 문자열 값을 반환하는 방법입니다.
+```sh
+#!/bin/bash
+
+function f1() {
+    retval='I like programming'
+}
+
+retval='I hate programming'
+echo $retval
+f1
+echo $retval
+```
+
+**Output**
+```sh
+./func1.sh
+I hate programming
+I like programming
+```
+
+### [Example-2: Using Function Command](./example-function/func2.sh)
+`bash` 함수의 반환값을 받아 호출 시 변수에 저장할 수 있습니다.
+
+다음 예제에서는 로컬 변수인 `retval`이 사용되며, `f2` 함수에 의해 반환되는 로컬 변수의 값은 나중에 출력되는 전역 변수인 `getval`에 할당됩니다.
+
+```sh
+#!/bin/bash
+
+function f2() {
+    local retval='Using BASH function'
+    echo "$retval"
+}
+
+getval="$(f2)"
+echo $getval
+```
+
+**Output**
+```sh
+./func2.sh
+Using BASH function
+```
+
+### [Example-3: Using Variable](./example-function/func3.sh)
+다음 예제에서는 함수의 인자 변수에 따라 함수의 반환값이 설정됩니다. 
+
+여기서는 함수 호출 시 인수 변수 `getval1`을 사용하여 함수 `f3`에 값을 전달하고, 조건문을 확인한 후 반환값을 할당하고 출력합니다.
+
+```sh
+#!/bin/bash
+
+function f3() {
+    local arg1=$1
+
+    if [[ $arg1 != '' ]]
+    then
+        retval='BASH function with variable'
+    else
+        echo 'No Argument'
+    fi
+}
+
+getval1='Bash Function'
+f3 $getval1
+echo $retval
+getval2=$(f3)
+echo $getval2
+```
+
+**Output**
+```sh
+./func3.sh
+BASH function with variable
+No Argument
+```
+
+### [Example-4: Using Return Statement](./example-function/func4.sh)
+대부분의 표준 프로그래밍 언어는 반환문을 사용하여 함수에서 값을 반환합니다. 
+위의 예에서는 반환문을 사용하지 않고 함수 값을 반환합니다. 
+
+다음 예제에서는 반환문을 사용하여 함수 `f4`에서 숫자 값을 반환합니다.  
+
+여기서 `$?` 는 반환문을 사용하여 함수가 반환한 값 35를 읽는 데 사용됩니다.
+
+```sh
+#!/bin/bash
+
+function f4() {
+    echo 'Bash Return Statement'
+    return 35
+}
+
+f4
+echo "Return value of the function is $?"
+```
+
+**Output**
+```sh
+./func4.sh
+Bash Return Statement
+Return value of the function is 35
+```
+
 ### 참고
 - [Pass Return Value from Script](https://linuxhint.com/30_bash_script_examples/#t20)
 - [Example](./example-function/function_return.sh)
