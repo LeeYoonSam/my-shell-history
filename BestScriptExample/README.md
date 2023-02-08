@@ -879,3 +879,32 @@ Return value of the function is 35
 ### 참고
 - [Pass Return Value from Script](https://linuxhint.com/30_bash_script_examples/#t20)
 - [Example](./example-function/function_return.sh)
+
+# Make directory
+Bash는 `mkdir` 명령을 사용하여 새 디렉터리를 생성합니다. 
+
+`make_directory.sh`라는 파일을 생성하고 다음 코드를 추가하여 사용자로부터 새 디렉토리 이름을 가져옵니다. 
+
+디렉터리 이름이 현재 위치에 존재하지 않으면 디렉터리를 생성하고, 그렇지 않으면 오류를 표시합니다.
+
+```sh
+```
+
+**Output**
+```sh
+$ ./make_directory.sh
+Enter directory name
+
+$ ls
+hi                make_directory.sh
+
+# 같은 이름으로 시도
+./make_directory.sh
+Enter directory name
+hi
+mkdir: hi: File exists
+```
+
+### 참고
+- [Make directory](https://linuxhint.com/30_bash_script_examples/#t21)
+- [Example](./example-file/make_directory.sh)
