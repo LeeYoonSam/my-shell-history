@@ -1121,7 +1121,16 @@ tar -zxvf /home/vagrant/catvideos.tgz
 --- | ---
 `-E` | 1970년 1월 1일 이후 사용자 계정에 더 이상 액세스할 수 없는 날짜 또는 일수를 설정합니다.<br/> 날짜는 YYYY-MM-DD 형식(또는 해당 지역에서 더 일반적으로 사용되는 형식)으로 표시될 수도 있습니다. 계정이 잠긴 사용자는 시스템을 다시 사용하기 전에 시스템 관리자에게 문의해야 합니다.<br/>EXPIRE_DATE로 숫자 -1을 전달하면 계정 만료 날짜가 제거됩니다.
 
+---
+
 ## awk - 문자열 조작
+
+### Option
+Option | Description
+--- | ---
+`-F fs` | 필드 구분자 fs, 입력 필드 구분 기호(FS 사전 정의 변수의 값)에 fs를 사용합니다.
+
+### Example
 ```sh
 [vagrant@localuser vagrant]$ echo 'L1C1          L1C2' > lines
 [vagrant@localuser vagrant]$ echo '    L2C1 L2C2     ' >> lines
@@ -1156,6 +1165,8 @@ L4C1 L4C2
 ### `awk` 활용 사례
 - 둘 이상의 문자로 구성된 구분 기호를 사용하는 것입니다.
 - 공백으로 구분된 필드를 처리하는 것입니다.
+
+---
 
 ## netstat - 네트워크
 > 네트워크 연결, 라우팅 테이블, 인터페이스 통계, 마스커레이드 연결 및 멀티캐스트 구성원 인쇄
@@ -1408,3 +1419,30 @@ daemon:x:2:2:daemon:/sbin:/sbin/nologin
 1227 /etc/passwd
 ```
 
+---
+
+## geoiplookup - IP 주소 또는 호스트 이름을 사용하여 국가 조회
+```sh
+이름
+    geoiplookup - IP 주소 또는 호스트 이름을 사용하여 국가 조회
+
+개요
+    geoiplookup [-d 디렉터리] [-f 파일명] [-v] <ip주소|호스트명>
+
+설명
+    geoiplookup은 GeoIP 라이브러리와 데이터베이스를 사용하여 IP 주소 또는 호스트 이름의 출처 국가를 찾습니다.
+```
+
+### Example
+
+**IP 로 국가 조회**
+```sh
+[vagrant@localuser vagrant]$ geoiplookup 80.60.233.195
+GeoIP Country Edition: NL, Netherlands
+```
+
+**IP 로 국가 조회 후 국가 이름만 사용하도록 awk 활용**
+```sh
+[vagrant@localuser vagrant]$ geoiplookup 80.60.233.195 | awk -F ', ' '{print $2}'
+Netherlands
+```

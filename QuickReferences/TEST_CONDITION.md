@@ -28,9 +28,10 @@ $* &emsp;&emsp;	All of current command's parameters (not preserving whitespace a
 -z &emsp;&emsp;	String is zero length	| `if [ -z "$foo" ]`
 -n &emsp;&emsp;	String is not zero length	| `if [ -n "$foo" ]`
 -nt &emsp;&emsp;	Newer Than	| `if [ "$file1" -nt "$file2" ]`
--d &emsp;&emsp;	Is a Directory	| `if [ -d /bin ]`
--f &emsp;&emsp;	Is a File	| `if [ -f /bin/ls ]`
--r &emsp;&emsp;	Is a readable file	| `if [ -r /bin/ls ]`
--w &emsp;&emsp;	Is a writable file	| `if [ -w /bin/ls ]`
--x &emsp;&emsp;	Is an executable file	| `if [ -x /bin/ls ]`
+-d FILE &emsp;&emsp;	Is a Directory	| `if [ -d /bin ]`
+-e FILE &emsp;&emsp;    Is a FILE exists. | `if [ -e /bin ]`
+-f FILE &emsp;&emsp;	Is a File	| `if [ -f /bin/ls ]`
+-r FILE &emsp;&emsp;	Is a readable file	| `if [ -r /bin/ls ]`
+-w FILE &emsp;&emsp;	Is a writable file	| `if [ -w /bin/ls ]`
+-x FILE &emsp;&emsp;	Is an executable file	| `if [ -x /bin/ls ]`
 ( ... ) &emsp;&emsp;	Function definition	| `function myfunc() { echo hello }`
