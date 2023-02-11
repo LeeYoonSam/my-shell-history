@@ -570,3 +570,199 @@ DELETE /posts/posts/explore HTTP/1.0
 - [du](/QuickReferences/SHELL_COMMAND.md#du---디스크-사용량)
 - [uniq](/QuickReferences/SHELL_COMMAND.md#uniq---중복-제거)
 - [Script](../luser-demo14.sh)
+
+
+# 42. Sed (Stream Editor)
+
+**배울 내용**
+- 스트림을 잘 편집하는 데 사용되는 해당 명령의 가장 중요한 기능을 사용하는 방법
+
+스트림이라는 용어가 익숙하지 않으실 수도 있지만, `IO` 리디렉션이나 파이핑을 수행했다면 스트림을 사용하고 있는 것입니다.
+
+스트림은 파이프를 통해 한 프로세스에서 다른 프로세스로 이동하거나 리디렉션을 통해 한 파일에서 다른 파일로 또는 한 장치에서 다른 장치로 이동하는 데이터로 생각할 수 있습니다.
+
+따라서 표준 입력은 표준 입력 스트림, 표준 출력은 표준 출력 스트림, 표준 오류는 표준 오류 스트림으로 생각할 수 있습니다.
+
+그런데 이러한 데이터 스트림은 일반적으로 텍스트 데이터입니다.
+
+`sed` 명령은 입력 스트림에서 기본 텍스트 변환을 수행하는 데 사용됩니다.
+
+예를 들어 일부 텍스트를 다른 텍스트로 대체하고, 줄을 제거하고, 주어진 줄 뒤에 텍스트를 추가하고, 특정 줄 앞에 텍스트를 삽입하는 데 사용할 수 있으며, Vim, Emacs, Nano와 같은 다른 편집기와는 다르게 프로그래밍 방식으로 사용됩니다.
+
+가장 일반적으로 사용되는 것은 찾기 및 바꾸기의 명령줄 버전으로 작동하는 것입니다.
+
+### 언제 사용하면 좋을지
+예를 들어 새 웹사이트를 지속적으로 배포하면서 웹사이트 이름만 제외하고 동일한 구성을 사용하는 경우 모든 표준 구성과 웹사이트 이름 자리 표시자를 포함하는 템플릿 파일을 만드는 것이 좋습니다.
+
+그런 다음 배포할 준비가 되면 `sed`를 사용하여 모든 자리 표시자를 실제 웹사이트 이름으로 간단히 바꿀 수 있습니다.
+
+- 대체 기능을 사용할 수 있는 또 다른 예로는 한 서버에서 다른 서버로 마이그레이션하거나 한 서버의 복원을 사용하여 다른 새 서버를 만들 때입니다.
+    - 이 예에서는 `/etc/hosts` 및 `/etc/hostname`과 같은 `etc` 디렉토리 파일에 있는 모든 파일에 대해 이전 호스트명을 찾아서 새 호스트명으로 바꿔야 하며, 시스템 구성에 따라 다른 호스트명이 있을 수도 있습니다.
+
+- 특정 서비스에 대한 구성을 한 호스트에서 다른 호스트로 복사할 때, 특히 클러스터에서 작업하는 경우 이 작업을 수행하게 될 수 있습니다.
+    - 한 호스트에서 클러스터에 추가할 새 호스트로 구성을 복사하기만 하면 됩니다.
+    - 일반적으로 구성 파일에서 호스트 이름을 변경해야 하며, 해당 호스트 이름이 해당 구성에 여러 번 나타나는 경우 이 작업을 위해 `sed`를 사용하면 특히 유용할 수 있습니다.
+
+`sed` 대체 명령을 사용하여 `sed`가 포함된 일부 줄을 제거하거나 삭제하고 싶다고 가정해 보겠습니다.
+
+'모든 사람에게 거짓말을 하고 있다'는 문구를 삭제하려면 다른 문구가 아닌 해당 문구와 일치하는 검색 패턴을 찾아야 합니다.
+따라서 이 단어는 삭제하려는 줄에만 나타나므로 이 검색 패턴을 사용할 수 있습니다.
+
+검색 패턴은 `this`이고 명령은 `d`입니다.
+```sh
+[vagrant@localuser vagrant]$ cat love.txt
+I love sed.
+This is line 2.
+I love sed with all of my heart
+I love sed and my wife loves me. Also, my wife loves the cat.
+
+[vagrant@localuser vagrant]$ sed '/This/d' love.txt
+I love sed.
+I love sed with all of my heart
+I love sed and my wife loves me. Also, my wife loves the cat.
+```
+- 여기서 명확히 하기 위해 구문은 구분 기호이며 기본적으로 슬래시를 구분 기호로 사용하고 그 뒤에 검색 패턴과 닫는 구분 기호를 사용합니다.
+- `d`는 일치하는 줄을 삭제하라고 지시합니다.
+- `This` 라는 텍스트가 포함되어 있는 라인을 삭제 합니다.
+
+```sh
+[vagrant@localuser vagrant]$ sed '/love/d' love.txt
+This is line 2.
+```
+- `love` 가 들어가는 텍스트의 라인을 삭제 합니다.
+
+
+### 줄이 많은 구성 파일로 작업할 때 주석을 제거
+
+**comment 삭제**
+
+```sh
+[vagrant@localuser vagrant]$ sed '/^#/d' config
+User apache
+
+Group apache
+```
+- 검색 패턴은 실제로 정규식의 정규 표현식이라는 점을 기억하세요.
+- `#` 으로 시작하는(`^`, carrot) 줄을 삭제(`d`)
+
+**빈줄 제거**
+```sh
+[vagrant@localuser vagrant]$ sed '/^$/d' config
+User apache
+# Group to run service as.
+Group apache
+```
+- `^(당근 기호)`는 줄의 시작 부분과 일치합니다.
+- `$(달러 기호)`는 줄의 끝과 일치합니다.
+- 줄의 시작 바로 뒤에 다른 방식으로 말한 줄의 끝이 있는 경우.
+- `^$`는 빈 줄과 일치합니다.
+
+여러 명령어 또는 표현식을 사용하려면 이들을 `결합`해야 합니다.
+
+`;(세미콜론)`으로 결합 할 수 있습니다.
+```sh
+[vagrant@localuser vagrant]$ sed '/^#/d ; /^$/d' config
+User apache
+Group apache
+```
+
+추가로 **apach** 를 **httpd**로 변경해서 결합 보겠습니다.
+```sh
+[vagrant@localuser vagrant]$ sed '/^#/d ; /^$/d ; s/apache/httpd/' config
+User httpd
+Group httpd
+```
+- `;` 으로 구분해서 패턴을 추가하면 조합을 할수 있습니다.
+
+위 명령을 여러 번 실행하는 또 다른 방법
+
+주로 대본이나 다른 사람의 작품에서 우연히 보게 될 경우를 대비해 보여드리고자 합니다.
+따라서 이 작업을 수행하는 다른 방법은 실행할 각 명령에 대해 여러 옵션을 사용하는 것입니다.
+
+```sh
+[vagrant@localuser vagrant]$ sed -e '/^#/d' -e '/^$/d' -e 's/apache/httpd/' config
+User httpd
+Group httpd
+```
+- `-e` 옵션을 사용해서 패턴을 하나씩 입력하는 방식
+
+```sh
+[vagrant@localuser vagrant]$ echo '/^$/d' > script.sed
+[vagrant@localuser vagrant]$ echo '/^#/d' > script.sed
+[vagrant@localuser vagrant]$ echo '/^$/d' >> script.sed
+[vagrant@localuser vagrant]$ echo 's/apache/httpd/' >> script.sed
+[vagrant@localuser vagrant]$ cat script.sed
+/^#/d
+/^$/d
+s/apache/httpd/
+[vagrant@localuser vagrant]$ sed -f script.sed config
+User httpd
+Group httpd
+```
+- 패턴을 라인단위로 입력한 파일을 생성 후 `sed -f` 옵션을 사용해서 파일로 패턴 검색하는 방식
+
+주소와 주소 결정자를 사용하여 해당 명령이 어떤 줄에서 실행될지 결정하는 방법을 살펴보겠습니다.
+
+주소가 지정되지 않으면 모든 줄에서 명령이 수행됩니다.
+
+주소는 `sed` 명령 앞에 지정됩니다.
+
+가장 간단한 주소는 회선 번호입니다.
+
+다음은 파일의 두 번째 줄에 대해서만 실행되는 예제입니다.
+```sh
+[vagrant@localuser vagrant]$ cat config
+# User to run service as.
+User apache
+
+# Group to run service as.
+Group apache
+
+[vagrant@localuser vagrant]$ sed '2 s/apache/httpd/' config
+# User to run service as.
+User httpd
+
+# Group to run service as.
+Group apache
+```
+- apache의 검색 패턴은 두 번째 줄에서만 httpd 로 대체되었습니다.
+- `2s/apache/httpd/` 처럼 붙여서 써도 같은 결과가 나옵니다. 
+
+`Group`이라는 단어가 포함된 줄에서만 `apache` 를 `httpd` 로 바꾸고 싶다고 가정해 보겠습니다.
+```sh
+[vagrant@localuser vagrant]$ sed '/Group/ s/apache/httpd/' config
+# User to run service as.
+User apache
+
+# Group to run service as.
+Group httpd
+```
+
+쉼표로 구분하여 주소 사양을 지정하여 범위를 지정할 수도 있습니다.
+```sh
+[vagrant@localuser vagrant]$ sed '1,3 s/run/execute/' config
+# User to execute service as.
+User apache
+
+# Group to run service as.
+Group apache
+[vagrant@localuser vagrant]$ sed '1,4 s/run/execute/' config
+# User to execute service as.
+User apache
+
+# Group to execute service as.
+Group apache
+[vagrant@localuser vagrant]$ 
+[vagrant@localuser vagrant]$ 
+[vagrant@localuser vagrant]$ 
+[vagrant@localuser vagrant]$ sed '/# User/, /^$/ s/run/execute/' config
+# User to execute service as.
+User apache
+
+# Group to run service as.
+Group apache
+```
+- `# User`로 시작하는 줄과 다음 빈 줄 사이에 있는 모든 실행 인스턴스가 텍스트 실행으로 교환된 것을 볼 수 있습니다.
+
+### 참고
+- [sed](/QuickReferences/SHELL_COMMAND.md#sed-stream-editor---입력-스트림에서-기본-텍스트-변환을-수행)

@@ -1446,3 +1446,358 @@ GeoIP Country Edition: NL, Netherlands
 [vagrant@localuser vagrant]$ geoiplookup 80.60.233.195 | awk -F ', ' '{print $2}'
 Netherlands
 ```
+
+---
+
+# sed (Stream Editor) - 입력 스트림에서 기본 텍스트 변환을 수행
+
+```sh
+[vagrant@localuser vagrant]$ type -a sed
+sed is /usr/bin/sed
+```
+- `sed` 명령은 셸이 내장된 것이 아니라 독립 실행형 유틸리티 입니다.
+
+```sh
+NAME
+    sed - 텍스트 필터링 및 변환을 위한 스트림 편집기
+
+SYNOPSIS
+    sed [옵션]... {스크립트-온리-아이에프-노-다른-스크립트} [입력-파일]...
+
+설명
+     sed는 스트림 편집기입니다.  스트림 편집기는 입력 스트림(파일 또는 파이프라인의 입력)에서 기본적인 텍스트 변환을 수행하는 데 사용됩니다.  동안 스크립트 편집을 허용하는 편집기(예: ed)와 몇 가지 면에서 유사하지만, sed는 입력에 대해 한 번만 통과하여 작동하므로 결과적으로 더 효율적입니다.  그러나 다른 유형의 편집기와 특히 구별되는 점은 파이프라인에서 텍스트를 필터링할 수 있다는 점입니다.
+```
+
+### Option
+Option | Description
+--- | ---
+
+### Example
+
+```sh
+[vagrant@localuser vagrant]$ echo 'Dwight is the assistant regional manager.' > manager.txt
+[vagrant@localuser vagrant]$ cat manager.txt 
+Dwight is the assistant regional manager.
+```
+- 일반 텍스트 파일 생성
+
+이를 위해 대체 명령을 사용하며 대체 명령은 문자로 표시됩니다.
+
+```sh
+[vagrant@localuser vagrant]$ sed 's/assistant/assistant to the/' manager.txt
+Dwight is the assistant to the regional manager.
+
+[vagrant@localuser vagrant]$ cat manager.txt 
+Dwight is the assistant regional manager.
+```
+- `s` 뒤에는 슬래시 다음에 대체하려는 텍스트를 입력하고 다시 슬래시를 사용합니다.
+- 참고로 슬래시는 구분 기호 역할을 하며 슬래시 사이의 텍스트를 검색 패턴이라고 합니다. 이 검색 패턴은 실제로 정규 표현식이므로 원하는 경우 매우 고급 검색을 수행할 수 있습니다.
+- 이 경우에는 sed를 사용하여 일부 텍스트를 찾아서 바꾸는 개념을 보여주기 위해 간단하게 설명하겠습니다.
+- 다음으로 이전에 지정한 텍스트를 대체할 텍스트를 입력합니다.
+- `assistant`를 `assistant to the`로 변경하고 싶으므로 이렇게 입력합니다.
+- 마지막으로 어떤 파일을 입력으로 사용할지 알립니다. (manager.txt)
+- 원본 파일은 수정되지 않습니다.
+
+```sh
+[vagrant@localuser vagrant]$ echo 'I love my wife.' > love.txt
+[vagrant@localuser vagrant]$ cat love.txt
+I love my wife.
+[vagrant@localuser vagrant]$ sed 's/wife/sed/' love.txt
+I love my sed.
+[vagrant@localuser vagrant]$ sed 's/MY WIFE/sed/' love.txt
+I love my wife.
+```
+- 소문자/대문자를 구분하며 일치하지 않을 경우 아무런 일도 일어나 않습니다.
+
+**대소문자 구분하지 않게 처리**
+```sh
+[vagrant@localuser vagrant]$ sed 's/MY WIFE/sed/i' love.txt
+I love sed.
+```
+- 대소문자를 무시하라고 했기 때문에 텍스트가 바뀌어서 다음과 같이 보입니다.
+
+```sh
+[vagrant@localuser vagrant]$ echo 'This is line 2.' >> love.txt
+[vagrant@localuser vagrant]$ cat love.txt
+I love my wife.
+This is line 2.
+[vagrant@localuser vagrant]$ echo 'I love my wife with all of my heart' >> love.txt
+[vagrant@localuser vagrant]$ cat love.txt
+I love my wife.
+This is line 2.
+I love my wife with all of my heart
+[vagrant@localuser vagrant]$ sed 's/my wife/sed/' love.txt
+I love sed.
+This is line 2.
+I love sed with all of my heart
+```
+- 파일에서 한 줄을 읽고 해당 줄에 대해 따옴표로 묶인 설정된 명령을 실행하는 것입니다. 그런다음 다음 줄로 이동하여 파일 끝에 도달할 때까지 동일한 작업을 수행합니다.
+
+
+```sh
+[vagrant@localuser vagrant]$ echo 'I love my wife and my wife loves me. Also, my wife loves the cat.' >> love.txt
+[vagrant@localuser vagrant]$ cat love.txt 
+I love my wife.
+This is line 2.
+I love my wife with all of my heart
+I love my wife and my wife loves me. Also, my wife loves the cat.
+[vagrant@localuser vagrant]$ sed 's/my wife/sed/' love.txt
+I love sed.
+This is line 2.
+I love sed with all of my heart
+I love sed and my wife loves me. Also, my wife loves the cat.
+```
+- 줄단위로 변경을 처리하는데 제일 처음 찾아서 교체 한 후 종료가 됩니다.
+
+이 동작을 재정의하려면 `g 플래그`를 사용해야 합니다.
+`g`는 글로벌 교체에서와 같이 글로벌을 염색하는 것으로 생각할 수 있습니다.
+```sh
+[vagrant@localuser vagrant]$ sed 's/my wife/sed/g' love.txt
+I love sed.
+This is line 2.
+I love sed with all of my heart
+I love sed and sed loves me. Also, sed loves the cat.
+```
+
+검색 패턴의 두 번째 발생 항목을 바꾸려면 숫자 `2`를 플래그로 사용합니다.
+```sh
+[vagrant@localuser vagrant]$ sed 's/my wife/sed/2' love.txt
+I love my wife.
+This is line 2.
+I love my wife with all of my heart
+I love my wife and sed loves me. Also, my wife loves the cat.
+```
+
+이를 수행하는 한 가지 방법은 설정 명령의 출력을 파일로 리디렉션하는 것입니다.
+```sh
+[vagrant@localuser vagrant]$ sed 's/my wife/sed/g' love.txt > my-new-love.txt
+[vagrant@localuser vagrant]$ cat my-new-love.txt 
+I love sed.
+This is line 2.
+I love sed with all of my heart
+I love sed and sed loves me. Also, sed loves the cat.
+```
+
+**파일을 변경하기 전에 백업 사본 만들기 (-i.bak)**
+```sh
+[vagrant@localuser vagrant]$ sed -i.bak 's/my wife/sed/' love.txt
+[vagrant@localuser vagrant]$ ls
+love.txt    love.txt.bak    ...
+
+[vagrant@localuser vagrant]$ cat love.txt
+I love sed.
+This is line 2.
+I love sed with all of my heart
+I love sed and my wife loves me. Also, my wife loves the cat.
+
+[vagrant@localuser vagrant]$ cat love.txt.bak
+I love my wife.
+This is line 2.
+I love my wife with all of my heart
+I love my wife and my wife loves me. Also, my wife loves the cat.
+```
+- `-i.bak` 에 공백이 들어가면 에러가 발생합니다.
+- 실제 파일이 변경되고 `.bak` 파일로 백업 사본이 생성됩니다.
+
+**변경이 일치하는 줄만 백업을 생성 (w)**
+```sh
+[vagrant@localuser vagrant]$ sed 's/love/like/gw like.txt' love.txt
+I like sed.
+This is line 2.
+I like sed with all of my heart
+I like sed and my wife likes me. Also, my wife likes the cat.
+
+[vagrant@localuser vagrant]$ cat like.txt
+I like sed.
+I like sed with all of my heart
+I like sed and my wife likes me. Also, my wife likes the cat.
+```
+- `w` 플래그를 사용해서 변경이 일치하는 줄만 `life.txt` 파일에 저장 합니다.
+
+명령 파이프라인은 원하는 방식으로 데이터를 표시하기 위해 필요한 만큼의 명령을 함께 묶을 수 있기 때문에 매우 강력합니다.
+
+**특수문자 처리(`\`)**
+```sh
+[vagrant@localuser vagrant]$ echo '/home/jason' | sed 's/\/home\/jason/\/export\/users\/jasonc/'
+/export/users/jasonc
+
+[vagrant@localuser vagrant]$ echo '/home/jason' | sed 's#/home/jason#/export/users/jasonc#'
+/export/users/jasonc
+
+[vagrant@localuser vagrant]$ echo '/home/jason' | sed 's:/home/jason:/export/users/jasonc:'
+/export/users/jasonc
+```
+- 검색 패턴이나 대체 텍스트에 슬래시를 사용해야 하는 경우 다른 **구분 기호**를 선택하세요.
+
+### 언제 사용하면 좋을지
+예를 들어 새 웹사이트를 지속적으로 배포하면서 웹사이트 이름만 제외하고 동일한 구성을 사용하는 경우 모든 표준 구성과 웹사이트 이름 자리 표시자를 포함하는 템플릿 파일을 만드는 것이 좋습니다.
+
+그런 다음 배포할 준비가 되면 `sed`를 사용하여 모든 자리 표시자를 실제 웹사이트 이름으로 간단히 바꿀 수 있습니다.
+
+- 대체 기능을 사용할 수 있는 또 다른 예로는 한 서버에서 다른 서버로 마이그레이션하거나 한 서버의 복원을 사용하여 다른 새 서버를 만들 때입니다.
+    - 이 예에서는 `/etc/hosts` 및 `/etc/hostname`과 같은 `etc` 디렉토리 파일에 있는 모든 파일에 대해 이전 호스트명을 찾아서 새 호스트명으로 바꿔야 하며, 시스템 구성에 따라 다른 호스트명이 있을 수도 있습니다.
+
+- 특정 서비스에 대한 구성을 한 호스트에서 다른 호스트로 복사할 때, 특히 클러스터에서 작업하는 경우 이 작업을 수행하게 될 수 있습니다.
+    - 한 호스트에서 클러스터에 추가할 새 호스트로 구성을 복사하기만 하면 됩니다.
+    - 일반적으로 구성 파일에서 호스트 이름을 변경해야 하며, 해당 호스트 이름이 해당 구성에 여러 번 나타나는 경우 이 작업을 위해 `sed`를 사용하면 특히 유용할 수 있습니다.
+
+`sed` 대체 명령을 사용하여 `sed`가 포함된 일부 줄을 제거하거나 삭제하고 싶다고 가정해 보겠습니다.
+
+'모든 사람에게 거짓말을 하고 있다'는 문구를 삭제하려면 다른 문구가 아닌 해당 문구와 일치하는 검색 패턴을 찾아야 합니다.
+따라서 이 단어는 삭제하려는 줄에만 나타나므로 이 검색 패턴을 사용할 수 있습니다.
+
+검색 패턴은 `this`이고 명령은 `d`입니다.
+```sh
+[vagrant@localuser vagrant]$ cat love.txt
+I love sed.
+This is line 2.
+I love sed with all of my heart
+I love sed and my wife loves me. Also, my wife loves the cat.
+
+[vagrant@localuser vagrant]$ sed '/This/d' love.txt
+I love sed.
+I love sed with all of my heart
+I love sed and my wife loves me. Also, my wife loves the cat.
+```
+- 여기서 명확히 하기 위해 구문은 구분 기호이며 기본적으로 슬래시를 구분 기호로 사용하고 그 뒤에 검색 패턴과 닫는 구분 기호를 사용합니다.
+- `d`는 일치하는 줄을 삭제하라고 지시합니다.
+- `This` 라는 텍스트가 포함되어 있는 라인을 삭제 합니다.
+
+```sh
+[vagrant@localuser vagrant]$ sed '/love/d' love.txt
+This is line 2.
+```
+- `love` 가 들어가는 텍스트의 라인을 삭제 합니다.
+
+
+### 줄이 많은 구성 파일로 작업할 때 주석을 제거
+
+**comment 삭제**
+
+```sh
+[vagrant@localuser vagrant]$ sed '/^#/d' config
+User apache
+
+Group apache
+```
+- 검색 패턴은 실제로 정규식의 정규 표현식이라는 점을 기억하세요.
+- `#` 으로 시작하는(`^`, carrot) 줄을 삭제(`d`)
+
+**빈줄 제거**
+```sh
+[vagrant@localuser vagrant]$ sed '/^$/d' config
+User apache
+# Group to run service as.
+Group apache
+```
+- `^(당근 기호)`는 줄의 시작 부분과 일치합니다.
+- `$(달러 기호)`는 줄의 끝과 일치합니다.
+- 줄의 시작 바로 뒤에 다른 방식으로 말한 줄의 끝이 있는 경우.
+- `^$`는 빈 줄과 일치합니다.
+
+여러 명령어 또는 표현식을 사용하려면 이들을 `결합`해야 합니다.
+
+`;(세미콜론)`으로 결합 할 수 있습니다.
+```sh
+[vagrant@localuser vagrant]$ sed '/^#/d ; /^$/d' config
+User apache
+Group apache
+```
+
+추가로 **apach** 를 **httpd**로 변경해서 결합 보겠습니다.
+```sh
+[vagrant@localuser vagrant]$ sed '/^#/d ; /^$/d ; s/apache/httpd/' config
+User httpd
+Group httpd
+```
+- `;` 으로 구분해서 패턴을 추가하면 조합을 할수 있습니다.
+
+위 명령을 여러 번 실행하는 또 다른 방법
+
+주로 대본이나 다른 사람의 작품에서 우연히 보게 될 경우를 대비해 보여드리고자 합니다.
+따라서 이 작업을 수행하는 다른 방법은 실행할 각 명령에 대해 여러 옵션을 사용하는 것입니다.
+
+```sh
+[vagrant@localuser vagrant]$ sed -e '/^#/d' -e '/^$/d' -e 's/apache/httpd/' config
+User httpd
+Group httpd
+```
+- `-e` 옵션을 사용해서 패턴을 하나씩 입력하는 방식
+
+```sh
+[vagrant@localuser vagrant]$ echo '/^$/d' > script.sed
+[vagrant@localuser vagrant]$ echo '/^#/d' > script.sed
+[vagrant@localuser vagrant]$ echo '/^$/d' >> script.sed
+[vagrant@localuser vagrant]$ echo 's/apache/httpd/' >> script.sed
+[vagrant@localuser vagrant]$ cat script.sed
+/^#/d
+/^$/d
+s/apache/httpd/
+[vagrant@localuser vagrant]$ sed -f script.sed config
+User httpd
+Group httpd
+```
+- 패턴을 라인단위로 입력한 파일을 생성 후 `sed -f` 옵션을 사용해서 파일로 패턴 검색하는 방식
+
+주소와 주소 결정자를 사용하여 해당 명령이 어떤 줄에서 실행될지 결정하는 방법을 살펴보겠습니다.
+
+주소가 지정되지 않으면 모든 줄에서 명령이 수행됩니다.
+
+주소는 `sed` 명령 앞에 지정됩니다.
+
+가장 간단한 주소는 회선 번호입니다.
+
+다음은 파일의 두 번째 줄에 대해서만 실행되는 예제입니다.
+```sh
+[vagrant@localuser vagrant]$ cat config
+# User to run service as.
+User apache
+
+# Group to run service as.
+Group apache
+
+[vagrant@localuser vagrant]$ sed '2 s/apache/httpd/' config
+# User to run service as.
+User httpd
+
+# Group to run service as.
+Group apache
+```
+- apache의 검색 패턴은 두 번째 줄에서만 httpd 로 대체되었습니다.
+- `2s/apache/httpd/` 처럼 붙여서 써도 같은 결과가 나옵니다. 
+
+`Group`이라는 단어가 포함된 줄에서만 `apache` 를 `httpd` 로 바꾸고 싶다고 가정해 보겠습니다.
+```sh
+[vagrant@localuser vagrant]$ sed '/Group/ s/apache/httpd/' config
+# User to run service as.
+User apache
+
+# Group to run service as.
+Group httpd
+```
+
+쉼표로 구분하여 주소 사양을 지정하여 범위를 지정할 수도 있습니다.
+```sh
+[vagrant@localuser vagrant]$ sed '1,3 s/run/execute/' config
+# User to execute service as.
+User apache
+
+# Group to run service as.
+Group apache
+[vagrant@localuser vagrant]$ sed '1,4 s/run/execute/' config
+# User to execute service as.
+User apache
+
+# Group to execute service as.
+Group apache
+[vagrant@localuser vagrant]$ 
+[vagrant@localuser vagrant]$ 
+[vagrant@localuser vagrant]$ 
+[vagrant@localuser vagrant]$ sed '/# User/, /^$/ s/run/execute/' config
+# User to execute service as.
+User apache
+
+# Group to run service as.
+Group apache
+```
+- `# User`로 시작하는 줄과 다음 빈 줄 사이에 있는 모든 실행 인스턴스가 텍스트 실행으로 교환된 것을 볼 수 있습니다.
