@@ -1801,3 +1801,34 @@ User apache
 Group apache
 ```
 - `# User`로 시작하는 줄과 다음 빈 줄 사이에 있는 모든 실행 인스턴스가 텍스트 실행으로 교환된 것을 볼 수 있습니다.
+
+
+# tee
+이름
+    tee - 표준 입력에서 읽고 표준 출력 및 파일에 쓰기
+
+SYNOPSIS
+    tee [OPTION]... [FILE]...
+
+설명
+    표준 입력을 각 파일과 표준 출력으로 복사합니다.
+
+### Option
+Option | Description
+--- | ---
+-a, --append | 주어진 파일에 추가하고 덮어쓰지 마십시오.
+
+### Example
+```sh
+[vagrant@admin01 ~]$ echo '10.9.8.11 server01' | sudo tee -a /etc/hosts
+10.9.8.11 server01
+[vagrant@admin01 ~]$ echo '10.9.8.12 server02' | sudo tee -a /etc/hosts
+10.9.8.12 server02
+[vagrant@admin01 ~]$ cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+127.0.1.1 admin01 admin01
+10.9.8.11 server01
+10.9.8.12 server02
+```
+- `/etc/hosts` 파일에 `ip` 주소와 이름을 추가 합니다.
