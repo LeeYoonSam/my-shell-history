@@ -908,3 +908,26 @@ mkdir: hi: File exists
 ### 참고
 - [Make directory](https://linuxhint.com/30_bash_script_examples/#t21)
 - [Example](./example-file/make_directory.sh)
+
+
+# Make directory by checking existence (존재 여부를 확인하여 디렉토리 만들기)
+`mkdir` 명령어를 실행하기 전에 현재 위치에 디렉터리가 있는지 확인하려면 다음 코드를 사용할 수 있습니다. 
+`-d` 옵션은 특정 디렉터리의 존재 여부를 테스트하는 데 사용됩니다. 
+
+`directory_exist.sh`라는 파일을 생성하고 다음 코드를 추가하여 존재 여부를 확인하여 디렉터리를 생성합니다.
+
+
+**Output**
+```sh
+./directory_exist.sh
+Enter directory name
+albert
+Directory created
+
+ls
+albert
+```
+
+### 참고
+- [Make directory by checking existence](https://linuxhint.com/30_bash_script_examples/#t22)
+- [Example](./example-file/directory_exist.sh)
