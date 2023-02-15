@@ -931,3 +931,37 @@ albert
 ### 참고
 - [Make directory by checking existence](https://linuxhint.com/30_bash_script_examples/#t22)
 - [Example](./example-file/directory_exist.sh)
+
+
+# Read a file (파일 읽기)
+`loop`를 사용하여 bash에서 파일을 한 줄씩 읽을 수 있습니다. 
+
+`read_file.sh`라는 파일을 만들고 다음 코드를 추가하여 `book.txt`라는 기존 파일을 읽습니다.
+
+```sh
+#!/bin/bash
+
+file='book.txt'
+
+while read line 
+do
+    echo $line
+done > $file
+```
+
+**Output**
+```sh
+./read_file.sh
+1. play ground
+2. kotlin
+3. java
+
+cat book.txt
+1. play ground
+2. kotlin
+3. java
+```
+
+### 참고
+- [Read a file](https://linuxhint.com/30_bash_script_examples/#t23)
+- [Example](./example-file/read_file.sh)
