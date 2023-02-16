@@ -962,6 +962,60 @@ cat book.txt
 3. java
 ```
 
+## How to read file line by line in Bash script
+
+**company.txt** 파일
+```
+Company.txt
+Samsung
+Nokia
+LG
+Symphony
+iphone
+```
+
+### Example -1: Reading file content from command line
+명령줄에서 `cat` 명령 없이 `company.txt` 파일을 한 줄씩 읽으려고 한다고 가정해 보겠습니다. 다음 명령을 실행하여 작업을 수행합니다. `while` loop는 각 단계에서 `company.txt` 파일에서 각 줄을 읽고 나중에 인쇄될 `$line` 변수에 해당 줄의 내용을 저장합니다.
+
+**Output**
+```sh
+while read line; do echo $line; done < company.txt
+Company.txt
+Samsung
+Nokia
+LG
+Symphony
+```
+
+### Example -2: Reading file content using script
+bash 파일을 만들고 다음 코드를 추가하여 특정 파일의 콘텐츠를 읽습니다. 여기서 기존 파일 이름은 `$filename` 변수에 저장되고 `$n` 변수는 해당 파일의 줄 번호 값을 유지하는 데 사용됩니다. 이전 예제와 마찬가지로 줄 번호가 있는 파일을 읽기 위해 `while` 루프가 사용됩니다.
+
+```sh
+#!/bin/bash
+
+filename='company.txt'
+n=1
+
+while read line
+do
+    # Reading each line
+    echo "line No. $n : $line"
+    n=$((n+1))
+done < $filename
+```
+
+**Output**
+```sh
+./readfile1.sh
+line No. 1 : Company.txt
+line No. 2 : Samsung
+line No. 3 : Nokia
+line No. 4 : LG
+line No. 5 : Symphony
+```
+
+
 ### 참고
 - [Read a file](https://linuxhint.com/30_bash_script_examples/#t23)
+- [How to read file line by line in Bash script](https://linuxhint.com/read_file_line_by_line_bash/)
 - [Example](./example-file/read_file.sh)
