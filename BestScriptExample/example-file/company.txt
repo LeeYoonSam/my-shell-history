@@ -1,4 +1,3 @@
-Company.txt
 Samsung
 Nokia
 LG

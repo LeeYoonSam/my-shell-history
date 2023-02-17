@@ -987,7 +987,7 @@ LG
 Symphony
 ```
 
-### Example -2: Reading file content using script
+### [Example -2: Reading file content using script](./example-file/readfile1.sh)
 bash 파일을 만들고 다음 코드를 추가하여 특정 파일의 콘텐츠를 읽습니다. 여기서 기존 파일 이름은 `$filename` 변수에 저장되고 `$n` 변수는 해당 파일의 줄 번호 값을 유지하는 데 사용됩니다. 이전 예제와 마찬가지로 줄 번호가 있는 파일을 읽기 위해 `while` 루프가 사용됩니다.
 
 ```sh
@@ -1014,6 +1014,72 @@ line No. 4 : LG
 line No. 5 : Symphony
 ```
 
+### [Example -3: Passing filename from the command line and reading the file](./example-file/readfile2.sh)
+명령줄 인수에서 파일 이름을 가져옵니다. 
+
+첫 번째 인수 값은 읽을 파일명을 포함하는 변수 `$1`에서 읽습니다. 파일이 현재 위치에 있으면 동안 루프는 이전 예제처럼 파일을 한 줄씩 읽고 파일 내용을 인쇄합니다.
+
+```sh
+#!/bin/bash
+
+filename=$1
+
+while read line
+do
+    echo $line
+done < $filename
+```
+
+`employee.txt` 파일을 인수 값으로 사용하여 위 스크립트를 실행합니다. 출력에는 여분의 공백을 제거한 `employee.txt` 파일의 내용이 표시됩니다. `cat` 명령을 사용하면 `employee.txt` 파일의 원본 내용을 표시할 수 있습니다.
+
+**Output**
+```sh
+./readfile2.sh employee.txt
+ID NAME Department Post
+S001 Tester1 Sales Marketing Officer
+S002 Tester2 Sales Marketing Officer
+S003 Tester3 HR Manager
+S004 Tester4 HR Assistant Manager
+ 
+cat employee.txt 
+ID      NAME        Department      Post
+S001    Tester1     Sales           Marketing Officer
+S002    Tester2     Sales           Marketing Officer
+S003    Tester3     HR              Manager
+S004    Tester4     HR              Assistant Manager
+S005    Tester5     Tech            Programmer%     
+```
+
+### [Example – 4: Reading file by omitting backslash escape](./example-file/readfile3.sh)
+
+백슬래시 이스케이프를 생략하여 파일의 각 줄을 읽으려면 `while` 루프에서 읽기 명령과 함께 `-r` 옵션을 사용해야 합니다.
+
+```sh
+#!/bin/bash
+
+filename='company2.txt'
+
+while read -r line
+do
+    echo $line
+done < $filename
+```
+
+백슬래시가 있는 company2.txt라는 파일을 만들고 다음 명령을 실행하여 스크립트를 실행합니다. 출력에는 백슬래시 없이 파일 내용이 표시됩니다.
+
+**Output**
+```sh
+\tSamsung
+\tNokia
+\nLG
+Symphony
+
+# -r 옵션 없이 사용
+tSamsung
+tNokia
+nLG
+Symphony
+```
 
 ### 참고
 - [Read a file](https://linuxhint.com/30_bash_script_examples/#t23)
