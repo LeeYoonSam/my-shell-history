@@ -1832,3 +1832,15 @@ Option | Description
 10.9.8.12 server02
 ```
 - `/etc/hosts` 파일에 `ip` 주소와 이름을 추가 합니다.
+
+
+## Positional Parameters
+
+파라미터 | 설명
+--- | ---
+$0 | 스크립트 이름을 저장
+$1 | 첫번째 인자를 저장
+$2 | 두번째 인자를 저장
+$* | 따옴표로 묶어 사용: "$1 $2..."
+$@ | 따옴표로 묶어 사용: "$1" "$2" ..
+$# | Positional Parameter 갯수
