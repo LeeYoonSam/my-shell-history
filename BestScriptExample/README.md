@@ -1085,3 +1085,37 @@ Symphony
 - [Read a file](https://linuxhint.com/30_bash_script_examples/#t23)
 - [How to read file line by line in Bash script](https://linuxhint.com/read_file_line_by_line_bash/)
 - [Example](./example-file/read_file.sh)
+
+
+# Delete a File
+`rm` 명령은 bash에서 파일을 제거하는 데 사용됩니다. 
+
+다음 코드를 사용하여 사용자로부터 파일 이름을 가져와 제거할 `delete_file.sh`라는 파일을 생성합니다. 
+여기서 `-i` 옵션은 파일을 제거하기 전에 사용자의 권한을 얻기 위해 사용됩니다.
+
+```sh
+#!/bin/bash
+
+echo 'Enter filename to remove'
+read fn
+rm -i $fn
+```
+
+**Output**
+```sh
+ ll DeleteTest
+total 0
+-rw-r--r--  1 ys  staff     0B  2 20 08:29 test.txt
+
+./delete_file.sh
+Enter filename to remove
+./DeleteTest/test.txt
+remove ./DeleteTest/test.txt? y
+
+ll DeleteTest
+total 0
+```
+
+### 참고
+- [Delete a file](https://linuxhint.com/30_bash_script_examples/#t24)
+- [Example](./example-file/delete_file.sh)
