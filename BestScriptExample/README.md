@@ -1119,3 +1119,39 @@ total 0
 ### 참고
 - [Delete a file](https://linuxhint.com/30_bash_script_examples/#t24)
 - [Example](./example-file/delete_file.sh)
+
+
+# 25. Append to file
+bash에서 `>>` 연산자를 사용하여 기존 파일에 새 데이터를 추가할 수 있습니다. `append_file.sh`라는 파일을 생성하고 다음 코드를 추가하여 파일 끝에 새로운 콘텐츠를 추가합니다. 
+
+여기서는 스크립트 실행 후 `book.txt` 파일에 'Learning Laravel 5'가 추가됩니다.
+
+```sh
+#!/bin/bash
+
+echo 'Before appending the file'
+cat book.txt
+
+echo 'Learning Laravel 5'>> book.txt
+echo 'After appending the file'
+cat book.txt
+```
+
+**Output**
+```sh
+./append_file.sh
+
+Before appending the file
+1. play ground
+2. kotlin
+3. java
+After appending the file
+1. play ground
+2. kotlin
+3. java
+Learning Laravel 5
+```
+
+### 참고
+- [Append to file](https://linuxhint.com/30_bash_script_examples/#t25)
+- [Example](./example-file/append_file.sh)
