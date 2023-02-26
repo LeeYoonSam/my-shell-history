@@ -1155,3 +1155,34 @@ Learning Laravel 5
 ### 참고
 - [Append to file](https://linuxhint.com/30_bash_script_examples/#t25)
 - [Example](./example-file/append_file.sh)
+
+
+# 26. Test if File Exist
+`-e` 또는 `-f` 옵션을 사용하여 bash에서 파일 존재 여부를 확인할 수 있습니다. 다음 스크립트에서는 `-f` 옵션을 사용하여 파일 존재 여부를 테스트합니다. 
+
+`file_exist.sh`라는 파일을 생성하고 다음 코드를 추가합니다. 여기서 파일 이름은 명령줄에서 전달됩니다.
+
+```sh
+#!/bin/bash
+
+filename=$1
+if [[ -f "${filename}" ]]
+then
+    echo 'File exists'
+else
+    echo 'File does not exist'
+fi
+```
+
+**Output**
+```sh
+ ./file_exist.sh book.txt
+File exists
+ 
+ ./file_exist.sh book2.txt
+File does not exist
+```
+
+### 참고
+- [Test if File Exist](https://linuxhint.com/30_bash_script_examples/#t26)
+- [Example](./example-file/file_exist.sh)
