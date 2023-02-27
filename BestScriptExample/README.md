@@ -1186,3 +1186,29 @@ File does not exist
 ### 참고
 - [Test if File Exist](https://linuxhint.com/30_bash_script_examples/#t26)
 - [Example](./example-file/file_exist.sh)
+
+
+# 27. Send Email Example
+`mail` 또는 `sendmail` 명령을 사용하여 이메일을 보낼 수 있습니다. 이 명령어를 사용하기 전에 필요한 모든 패키지를 설치해야 합니다. 
+
+`mail_example.sh`라는 파일을 생성하고 다음 코드를 추가하여 이메일을 전송합니다.
+
+```sh
+#!/bin/bash
+
+read -p 'Enter the Recipient: ' RECIPIENT
+read -p 'Enter the Subject: ' SUBJECT
+read -p 'Enter the Message: ' MESSAGE
+
+`mail -s ${SUBJECT} ${RECIPIENT} <<< ${MESSAGE}`
+```
+
+**Output**
+
+![send a mail](./examples/send_mail.png)
+
+### 참고
+- [Send Email Example](https://linuxhint.com/30_bash_script_examples/#t27)
+- [Example](./examples/mail_example.sh)
+
+
