@@ -1212,3 +1212,33 @@ read -p 'Enter the Message: ' MESSAGE
 - [Example](./examples/mail_example.sh)
 
 
+# 28. Get Parse Current Date
+`date` 명령을 사용하여 현재 시스템 날짜 및 시간 값을 가져올 수 있습니다. 날짜 및 시간 값의 모든 부분은 `Y`, `m`, `d`, `H`, `M`, `S`를 사용하여 구문 분석할 수 있습니다. 
+
+`date_parse.sh`라는 새 파일을 생성하고 다음 코드를 추가하여 일, 월, 연, 시, 분, 초 값을 구분합니다.
+
+```sh
+#!/bin/bash
+
+Year=`date +%Y`
+Month=`date +%m`
+Day=`date +%d`
+Hour=`date +%H`
+Minute=`date +%M`
+Second=`date +%S`
+echo `date`
+echo "Current Date is: ${Day}-${Month}-${Year}"
+echo "Current Time is: ${Hour}-${Minute}-${Second}"
+```
+
+**Output**
+```sh
+./date_parse.sh
+2023년 2월 28일 화요일 10시 08분 39초 KST
+Current Date is: 28-02-2023
+Current Time is: 10-08-39
+```
+
+### 참고
+- [Get Parse Current Date](https://linuxhint.com/30_bash_script_examples/#t28)
+- [Example](./example-date/date_parse.sh)
