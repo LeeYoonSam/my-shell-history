@@ -6,11 +6,22 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
 
+def versionCode = 100
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+def versionBuild = 01
+
+def alphaVersionName = "${versionMajor}.${versionMinor}.${versionPatch}-alpha${versionBuild}"
+def rcVersionName = "${versionMajor}.${versionMinor}.${versionPatch}-rc${versionBuild}"
+def releaseVersionName = "${versionMajor}.${versionMinor}.${versionPatch}"
+
+
 android {
     defaultConfig {
         applicationId "com.some.package"
 
-        versionCode 100
+        versionCode $versionCode
         versionName "1.0.0"
 
         archivesBaseName = project.name + "-v$versionName-$versionCode"
@@ -62,4 +73,24 @@ dependencies {
     testImplementation "org.mockito.kotlin:mockito-kotlin:3.2.0"
 
     testImplementation "com.squareup.okhttp3:mockwebserver:$okHttpVersion"
+}
+
+task updateVersionCodeAndName() {
+    doLast {
+        def file = file("build.gradle")
+        def content = file.getText()
+
+        content = content.replaceAll(/versionCode \d+/, "versionCode ${versionCode}")
+        content = content.replaceAll(/versionName ".*?"/, "versionName \"${versionName}\"")
+
+        file.write(content)
+
+        def commitMsg = "Update versionCode ${versionCode}, versionName ${versionName}"
+        def cmd = "git commit -am \"${commitMsg}\""
+        def result = cmd.execute()
+
+        if (result.exitValue() != 0) {
+            throw new GradleException("Failed to commit: ${result.err.text}")
+        }
+    }
 }
