@@ -1242,3 +1242,33 @@ Current Time is: 10-08-39
 ### 참고
 - [Get Parse Current Date](https://linuxhint.com/30_bash_script_examples/#t28)
 - [Example](./example-date/date_parse.sh)
+
+
+# 29. Wait Command
+`wait`는 실행 중인 프로세스가 완료될 때까지 기다리는 Linux의 기본 제공 명령입니다. 
+
+`wait` 명령은 특정 프로세스 ID 또는 작업 ID와 함께 사용됩니다. 
+
+`wait` 명령과 함께 프로세스 ID 또는 작업 ID를 지정하지 않으면 현재 모든 하위 프로세스가 완료될 때까지 기다렸다가 종료 상태를 반환합니다. 
+
+`wait_example.sh`라는 파일을 생성하고 다음 스크립트를 추가합니다.
+
+```sh
+#!/bin/bash
+
+echo 'Wait command'
+process_id=$!
+wait $process_id
+echo "Exited with status $?"
+```
+
+**Output**
+```sh
+./wait_example.sh
+Wait command
+Exited with status 0
+```
+
+### 참고
+- [Wait Command](https://linuxhint.com/30_bash_script_examples/#t29)
+- [Example](./example-wait/wait_example.sh)
