@@ -1380,3 +1380,28 @@ NOT OK
 - [Example - wait1](./example-wait/wait1.sh)
 - [Example - wait2](./example-wait/wait2.sh)
 - [Example - wait3](./example-wait/wait3.sh)
+
+
+# 30. Sleep Command
+특정 기간 동안 명령 실행을 일시 중지하려면 `sleep` 명령을 사용할 수 있습니다. 초(s), 분(m), 시간(h), 일(d) 단위로 지연 시간을 설정할 수 있습니다. 
+
+`sleep_example.sh`라는 파일을 생성하고 다음 스크립트를 추가합니다. 이 스크립트는 실행 후 5초 동안 대기합니다.
+
+```sh
+#!/bin/bash
+
+echo 'Wait for 5 seconds'
+sleep 5
+echo 'Complete'
+```
+
+**Output**
+```sh
+./sleep_example.sh
+Wait for 5 seconds
+Complete
+```
+
+### 참고
+- [Sleep Command](https://linuxhint.com/30_bash_script_examples/#t30)
+- [Example](./example-sleep/sleep_example.sh)
