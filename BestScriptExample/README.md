@@ -1269,6 +1269,114 @@ Wait command
 Exited with status 0
 ```
 
+## Wait Command in Linux
+`wait`는 실행 중인 프로세스가 완료될 때까지 기다리는 Linux의 기본 제공 명령입니다. 
+`wait` 명령은 특정 프로세스 ID 또는 작업 ID와 함께 사용됩니다. 
+셸에서 여러 프로세스가 실행 중인 경우 현재 셸은 마지막 명령의 프로세스 ID만 알 수 있습니다. 
+
+이번에 `wait` 명령이 실행되면 마지막 명령에 적용됩니다. `wait` 명령과 함께 프로세스 ID 또는 작업 ID가 지정되지 않으면 현재 모든 하위 프로세스가 완료될 때까지 기다린 후 종료 상태를 반환합니다.
+
+`wait` 명령의 종료 상태 값은 마지막으로 지정한 피연산자가 나타내는 명령에 따라 달라집니다. 프로세스가 비정상적으로 종료되면 종료 상태는 128보다 크며 다른 명령의 종료 상태 값과 달라집니다. 
+
+`wait` 명령이 아무런 인수 없이 호출되고 현재 셸이 알고 있는 모든 프로세스 ID가 종료된 경우 0 값으로 종료됩니다. `wait` 명령이 오류를 감지하면 1에서 126 사이의 값을 반환합니다. 마지막 프로세스 ID를 알 수 없는 경우 `wait` 명령은 127 값으로 종료됩니다. 
+
+Linux에서 `wait` 명령을 사용하는 방법은 이 튜토리얼에 나와 있습니다.
+
+### Example-1: Using wait command for multiple processes (여러 프로세스에 대기 명령 사용)
+다음 스크립트를 실행하면 두 개의 프로세스가 백그라운드에서 실행되고 첫 번째 에코 명령의 프로세스 ID가 `$process_id` 변수에 저장됩니다. 
+
+`process_id`와 함께 `wait` 명령이 실행되면 다음 명령은 첫 번째 에코 명령의 작업이 완료될 때까지 대기합니다. 
+
+두 번째 `wait` 명령은 `'$!'`와 함께 사용되며, 이는 마지막으로 실행 중인 프로세스의 프로세스 ID를 나타냅니다. `'$?'`는 대기 명령의 상태 값을 읽는 데 사용됩니다.
+
+```sh
+#!/bin/bash
+
+echo 'testing wait command1' &
+process_id=$!
+echo 'testing wait command2' &
+wait $process_id
+echo Job 1 exited with status $?
+wait $!
+echo Job 2 exited with status $?
+```
+
+**Output**
+```sh
+./wait1.sh
+testing wait command1
+testing wait command2
+Job 1 exited with status 0
+Job 2 exited with status 0
+```
+
+### Example-2: Test wait command after using kill command (종료 명령 사용 후 대기 명령 테스트)
+다음 스크립트에서는 프로세스를 종료한 후 `wait` 명령어를 실행합니다. 
+`sleep` 명령어는 백그라운드 프로세스로 실행 중이며, 
+`kill` 명령어는 실행 중인 프로세스를 종료하는 명령어입니다. 
+그 후 종료된 프로세스의 프로세스 ID로 `wait` 명령이 실행됩니다. 
+
+출력에는 종료된 프로세스의 프로세스 ID가 표시됩니다.
+
+```sh
+#!/bin/bash
+
+echo 'Testing wait command'
+sleep 20 &
+pid=$!
+kill $pid
+wait $pid
+echo $pid was terminated.
+```
+
+**Output**
+```sh
+./wait2.sh
+Testing wait command
+./wait2.sh: line 7:  8106 Terminated: 15          sleep 20
+8106 was terminated.
+```
+
+### Example-3: Check the exit status value (종료 상태 값 확인)
+다음 스크립트에서는 두 개의 인수 값으로 `check()` 함수를 호출합니다. 
+
+튜토리얼 시작 부분에서 대기 명령이 성공적으로 실행되면 종료 값이 0이 되고 대기 명령이 오류를 감지하면 1에서 126 사이의 값을 반환한다고 설명했습니다. 
+
+스크립트를 실행한 후 두 번째 인수 값으로 0을 전달하면 `wait` 명령이 성공적으로 종료되고 0보다 큰 값을 전달하면 실패로 종료됩니다.
+
+```sh
+#!/bin/bash
+
+function check()
+{
+    echo "Sleep for $1 seconds"
+    sleep $1
+    exit $2
+}
+
+check $1 $2 &
+b=$!
+echo 'Checking the status'
+wait $b && echo OK || echo NOT OK
+```
+
+**Output**
+```sh
+./wait3.sh 3 0
+Checking the status
+Sleep for 3 seconds
+OK
+
+./wait3.sh 3 5
+Checking the status
+Sleep for 3 seconds
+NOT OK
+```
+
 ### 참고
 - [Wait Command](https://linuxhint.com/30_bash_script_examples/#t29)
+- [Wait Command in Linux](https://linuxhint.com/wait_command_linux/)
 - [Example](./example-wait/wait_example.sh)
+- [Example - wait1](./example-wait/wait1.sh)
+- [Example - wait2](./example-wait/wait2.sh)
+- [Example - wait3](./example-wait/wait3.sh)
