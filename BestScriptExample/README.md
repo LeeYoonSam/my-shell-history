@@ -1402,6 +1402,152 @@ Wait for 5 seconds
 Complete
 ```
 
+## Sleep Command in Linux
+`sleep` 명령은 스크립트를 실행하는 동안 일정 시간 동안 지연시키는 데 사용됩니다. 코더가 특정 목적을 위해 명령 실행을 일시 중지해야 하는 경우 이 명령은 특정 시간 값과 함께 사용됩니다. 지연 시간은 초(s), 분(m), 시간(h), 일(d) 단위로 설정할 수 있습니다.  
+
+이 튜토리얼은 다양한 bash 스크립트를 사용하여 `sleep` 명령의 사용법을 배우는 데 도움이 됩니다.
+
+**Sleep command syntax:**
+```sh
+sleep number[suffix]
+```
+시간 값으로 정수 또는 분수를 사용할 수 있습니다. 이 명령의 접미사 부분은 선택 사항입니다. 접미사를 생략하면 시간 값은 기본적으로 초 단위로 계산됩니다. 접미사 값으로 `s, m, h, d`를 사용할 수 있습니다. 
+
+다음 예는 다양한 접미사를 사용한 `sleep` 명령의 사용법을 보여줍니다.
+
+### Example-1: sleep command without any suffix
+다음 스크립트에서 `sleep` 명령은 숫자 값 2와 함께만 사용되며 접미사는 사용되지 않습니다. 
+
+따라서 스크립트를 실행하면 2초 동안 기다린 후 "작업 완료"라는 문자열이 인쇄됩니다.
+
+```sh
+#!/bin/bash
+
+echo 'Waiting for 2 seconds...'
+sleep 2
+echo 'Task Completed'
+```
+
+**Output**
+```sh
+time ./sleep1.sh 
+Waiting for 2 seconds...
+Task Completed
+./sleep1.sh  0.00s user 0.01s system 0% cpu 2.010 total
+```
+
+### Example-2: sleep command with a minute suffix
+다음 스크립트에서 `m`은 `sleep` 명령의 접미사로 사용됩니다. 
+
+여기서 시간 값은 0.05분입니다. 0.05분을 기다린 후 "작업 완료" 메시지가 인쇄됩니다.
+
+```sh
+#!/bin/bash
+
+echo 'Waiting for 0.05 minutes...'
+sleep 0.05m
+echo 'Task Completed'
+```
+
+**Output**
+```sh
+time ./sleep2.sh 
+Waiting for 0.05 minutes...
+usage: sleep seconds
+Task Completed
+./sleep2.sh  0.00s user 0.00s system 69% cpu 0.009 total
+```
+
+### Example-3: sleep command with hour suffix
+다음 스크립트에서 `h`는 `sleep` 명령의 접미사로 사용됩니다. 
+
+여기서 시간 값은 0.003시간입니다. 0.003시간 대기 후 화면에 "작업 완료"가 출력되어야 하지만 실제로는 `h` 접미사를 사용할 때 더 많은 시간이 필요합니다.
+
+```sh
+#!/bin/bash
+
+echo 'Waiting for 0.003 hours...'
+sleep 0.003h
+echo 'Task Completed'
+```
+
+**Output**
+```sh
+time ./sleep3.sh   
+Waiting for 0.003 hours...
+usage: sleep seconds
+Task Completed
+./sleep3.sh  0.00s user 0.00s system 1% cpu 0.361 total
+```
+
+### Example-4: sleep command with loop
+ `sleep` 명령은 다양한 용도로 사용할 수 있습니다. 
+ 
+ 다음 예제에서는 `sleep` 명령어를 `while 루프`와 함께 사용합니다. 처음에는 변수 n의 값이 1로 설정되어 있으며, 2초 간격으로 4회씩 1씩 증가합니다. 
+ 
+ 따라서 스크립트를 실행하면 2초를 기다린 후 각 출력이 나타납니다.
+
+```sh
+#!/bin/bash
+
+n=1
+while [ $n -lt 5 ]
+do
+    echo "the value of n is now $n"
+    sleep 2
+    echo ' '
+    ((n=$n+1))
+done
+```
+
+**Output**
+```sh
+time ./sleep4.sh
+the value of n is now 1
+ 
+the value of n is now 2
+ 
+the value of n is now 3
+ 
+the value of n is now 4
+ 
+./sleep4.sh  0.00s user 0.01s system 0% cpu 8.034 total
+```
+
+### Example-5: sleep command in the terminal with other commands
+여러 명령을 실행하고 두 명령의 출력 사이에 고정된 시간 간격을 설정하려는 경우 슬립 명령을 사용하여 해당 작업을 수행할 수 있습니다. 이 예제에서는 `ls` 명령과 `pwd` 명령이 절전 명령과 함께 사용됩니다. 명령을 실행하면 `ls` 명령은 현재 디렉터리의 디렉터리 목록을 표시하고 2초 동안 기다린 후 현재 작업 디렉터리 경로를 표시합니다.
+
+```sh
+ls && sleep 2 && pwd
+```
+
+**Output**
+```sh
+ls && sleep 2 && pwd
+sleep1.sh        sleep2.sh        sleep3.sh        sleep4.sh        sleep_example.sh
+/Users/ys/Documents/my-shell-history/BestScriptExample/example-sleep
+```
+
+### Example-6: Using sleep command from the command prompt
+`sleep` 명령은 다음 예제에서 두 개의 에코 명령 사이에 사용됩니다. 명령 실행 후 세 개의 시간 값이 표시됩니다.
+
+```sh
+time (echo "Start"; sleep 5; echo "End")
+```
+
+**Output**
+```sh
+time (echo "Start"; sleep 5; echo "End")
+Start
+End
+( echo "Start"; sleep 5; echo "End"; )  0.00s user 0.00s system 0% cpu 5.008 total
+```
+
 ### 참고
 - [Sleep Command](https://linuxhint.com/30_bash_script_examples/#t30)
+- [Sleep Command in Linux](https://linuxhint.com/sleep_command_linux/)
 - [Example](./example-sleep/sleep_example.sh)
+- [sleep1](./example-sleep/sleep1.sh)
+- [sleep2](./example-sleep/sleep2.sh)
+- [sleep3](./example-sleep/sleep3.sh)
+- [sleep4](./example-sleep/sleep4.sh)
