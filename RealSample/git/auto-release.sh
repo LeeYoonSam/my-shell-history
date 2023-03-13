@@ -5,15 +5,15 @@
 
 usage() 
 {
-    echo "Usage: $0 [VERSION] [NEW_VERSION] [NEW_VERSION_CODE]" >&2
-    echo "example: $0 1.0.0 1.0.1 2"
+    echo "Usage: $0 [VERSION] [NEW_VERSION] [VERSION_CODE] [NEW_VERSION_CODE]" >&2
+    echo "example: $0 1.0.0 1.0.1 1 2"
 }
 
 checkCommandStatus() 
 {
     if [[ "${?}" -ne 0 ]]
     then
-        echo 'failed to command'
+        echo "failed to git commands"
         exit 1
     fi
 }
@@ -25,12 +25,13 @@ then
 fi
 
 BRANCH_MSTER='master'
-BRANCH_DEV='develop'
+BRANCH_DEV='main'
 BRANCH_RELEASE='release'
 
 VERSION=${1}
 NEW_VERSION=${2}
-NEW_VERSION_CODE=${3}
+VERSION_CODE=${3}
+NEW_VERSION_CODE=${4}
 
 # git 변경사항 가져오기
 git fetch &> /dev/null
@@ -58,17 +59,19 @@ git rebase "${BRANCH_MSTER}" &> /dev/null
 checkCommandStatus
 
 # build.gradle 에서 versionCode 를 찾아서 변경
-VERSION_CODE="1"
-sed "s/versionCode ${VERSION_CODE}/versionCode ${NEW_VERSION_CODE}/" ./build.gradle
+sed "s/versionCode ${VERSION_CODE}/versionCode ${NEW_VERSION_CODE}/" ./app/build.gradle > tmpfile && mv tmpfile ./app/build.gradle
 
 # build.gradle 에서 versionName 을 찾아서 $NEW_VERSION 으로 변경
-sed "s/versionName \"${VERSION}\"/versionName \"${NEW_VERSION}\"/" ./build.gradle
+sed "s/versionName \"${VERSION}\"/versionName \"${NEW_VERSION}\"/" ./app/build.gradle > tmpfile && mv tmpfile ./app/build.gradle
 
 # versionCode $code versionName $NEW_VERSION 으로 git commit
-git commit -m "'versionCode ${NEW_VERSION_CODE}, versionName \"${NEW_VERSION}-dev01\"'"
+git add app/build.gradle tmpfile
+git commit -m "versionCode ${NEW_VERSION_CODE}, versionName ${NEW_VERSION}-dev01" &> /dev/null
+checkCommandStatus
 
 # develop 브랜치에 git push
 git push origin "${BRANCH_DEV}" &> /dev/null
+checkCommandStatus
 
 echo 'Completed Auto Release'
 exit 0
