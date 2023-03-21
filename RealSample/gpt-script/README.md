@@ -42,3 +42,10 @@
 ### 기록
 - ex) "$1"/*; -> 해당 경로에 있는 path 전체 출력
     - echo ~/Downloads/*
+
+
+## [5. 디렉토리, 파일명, 내용을 입력하면 해당 경로에 파일을 만들어주는 스크립트](write-file-directory.sh)
+
+### 기록
+- cat > file 에 내용을 덮어 씌운다.
+    - cat > "$dirname/$filename.txt" 
