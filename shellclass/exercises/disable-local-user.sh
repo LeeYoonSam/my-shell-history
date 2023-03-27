@@ -88,31 +88,31 @@ do
     fi
   fi # END of if "${ARCHIVE}" = 'true'
 
-  if [[ "${DELETE_USER}" = 'true' ]]
-  then
-    # Delete the user.
-    userdel ${REMOVE_OPTION} ${USERNAME}
-
-    # Check to see if the userdel command succeeded.
-    # We don't want to tell the user that an account was deleted when it hasn't been.
-    if [[ "${?}" -ne 0 ]]
+    if [[ "${DELETE_USER}" = 'true' ]]
     then
-      echo "The account ${USERNAME} was NOT deleted." >&2
-      exit 1
-    fi
-    echo "The account ${USERNAME} was deleted."
-  else
-    chage -E 0 ${USERNAME}
+        # Delete the user.
+        userdel ${REMOVE_OPTION} ${USERNAME}
 
-    # Check to see if the chage command succeeded.
-    # We don't want to tell the user that an account was disabled when it hasn't been.
-    if [[ "${?}" -ne 0 ]]
-    then
-      echo "The account ${USERNAME} was NOT disabled." >&2
-      exit 1
-    fi
-    echo "The account ${USERNAME} was disabled."
-  fi # END of if "${DELETE_USER}" = 'true'
+        # Check to see if the userdel command succeeded.
+        # We don't want to tell the user that an account was deleted when it hasn't been.
+        if [[ "${?}" -ne 0 ]]
+        then
+            echo "The account ${USERNAME} was NOT deleted." >&2
+            exit 1
+        fi
+        echo "The account ${USERNAME} was deleted."
+    else
+        chage -E 0 ${USERNAME}
+
+        # Check to see if the chage command succeeded.
+        # We don't want to tell the user that an account was disabled when it hasn't been.
+        if [[ "${?}" -ne 0 ]]
+        then
+            echo "The account ${USERNAME} was NOT disabled." >&2
+            exit 1
+        fi
+        echo "The account ${USERNAME} was disabled."
+    fi # END of if "${DELETE_USER}" = 'true'
 done
 
 exit 0
