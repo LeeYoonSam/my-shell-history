@@ -1409,7 +1409,7 @@ daemon:x:2:2:daemon:/sbin:/sbin/nologin
 - 세 번째 열은 문자 수
 - 공백으로 제한되는 0이 아닌 길이의 문자 시퀀스로 단어를 간주합니다.
 
-대시 w를 사용하여 wc가 단어 수를 표시하도록 할 수 있습니다.
+-w를 사용하여 wc가 단어 수를 표시하도록 할 수 있습니다.
 ```sh
 [vagrant@localuser ~]$ wc -l /etc/passwd
 26 /etc/passwd
