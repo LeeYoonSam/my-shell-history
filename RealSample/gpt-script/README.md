@@ -111,3 +111,38 @@ sed 's/^[^a-zA-Z0-9]*//;s/[^a-zA-Z0-9]*$//'
 - `$path` 경로의 모든 파일에 대해 수정 시간과 파일 경로를 stat 명령어를 사용하여 출력
 - `sort` 명령어를 사용하여 수정 시간이 최근인 파일을 맨 위로 정렬
 - `head` 명령어와 `awk` 명령어를 사용하여 최근 수정된 파일의 경로를 출력
+
+
+## [11. 디렉토리 파일 정리](organizing-files.sh)
+
+디렉토리에서 파일을 정리하는 프로세스를 자동화하는 데 도움이 되는 셸 스크립트를 작성하세요. 
+
+이 스크립트는 사용자에게 디렉토리 경로를 입력하라는 메시지를 표시한 다음 유형별(예: 한 폴더의 모든 이미지 파일, 다른 폴더의 모든 문서 파일), 크기별(예: 한 폴더의 특정 크기 이상의 모든 파일) 또는 수정 날짜별(예: 한 폴더의 지난 주에 수정된 모든 파일)로 파일을 정리할 수 있는 옵션을 제공해야 합니다.
+
+### 기록
+- `read` 명령을 사용하여 사용자에게 디렉터리 경로를 묻는 메시지를 표시한 다음 대/소문자 문을 사용하여 유형, 크기 또는 수정한 날짜별로 파일을 정리할 수 있는 옵션을 제공합니다. 
+- 정리 프로세스가 완료되면 사용자에게 원래 디렉터리에 남아 있는 파일을 삭제할 수 있는 옵션도 제공합니다.
+- `stat`: 파일 상태 표시
+    - `$(stat -f %z "$path")` : $path 에 해당하는 파일 크기(bytes) 정보
+
+### Conventions
+- `cd ... || exit` 로 cd 실패시에 대한 안정성을 확보
+    - [SC2164 – ShellCheck Wiki](https://www.shellcheck.net/wiki/SC2164)
+- `read` 사용시에 `read -r` 을 기본적으로 사용
+    - `-r`: 이 옵션을 지정하면 백슬래시가 이스케이프 문자로 작동하지 않습니다.
+    - [SC2162 – ShellCheck Wiki](https://www.shellcheck.net/wiki/SC2162)
+
+### 사용방법
+```sh
+./organizing-files.sh
+Enter directory path: /Users/ys/Downloads/organize-test2
+Select organization option:
+1. Organize by file type
+2. Organize by file size
+3. Organize by date modified
+Enter option number: 2
+Enter file size (in bytes): 200000
+Delete remaining files in original directory? (y/n)n
+Organization complete!
+```
+- `directory path` 를 절대 경로로 입력해야함
