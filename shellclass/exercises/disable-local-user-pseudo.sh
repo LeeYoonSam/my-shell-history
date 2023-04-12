@@ -2,6 +2,8 @@
 #
 # This script disables, deletes, and/or archives users on the local system.
 
+ARCHIVE_DIR='/archive'
+
 usage() {
     # Display the usage and exit.
     echo "Usage: ${0} [-dra] USER [USERN]..." >&2
@@ -21,23 +23,28 @@ usage() {
 # If the user doesn't supply at least one argument, give them help.
 
 # Loop through all the usernames supplied as arguments.
-for USERNAME in "${@}"
-do
+for USERNAME in "${@}"; do
     echo "Processing user: ${USERNAME}"
 
     # Make sure the UID of the account is at least 1000.
 
     # Create an archive if requested to do so.
+    if [[ "${ARCHIVE}" = 'true' ]]; then
+        # Make sure the ARCHIVE_DIR directory exists.
 
+        # Archive the user's home directory and move it into the ARCHIVE_DIR
+    fi # END of if "${ARCHIVE}" = 'true'
+
+    # Deletes accounts
+    if [[ "${DELEE_USER}" = 'true' ]]; then
         # Delete the user.
 
         # Check to see if the userdel command succeeded.
         # We don't want to tell the user that an account was deleted when it hasn't been.
-    
-    
+
         # Check to see if the chage command succeeded.
         # We don't want to tell the user that an account was disabled when it hasn't been.
-    
+    fi # END of if "${DELETE_USER}" = 'true'
 done
 
 exit 0
