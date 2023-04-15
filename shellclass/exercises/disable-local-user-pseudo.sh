@@ -36,9 +36,8 @@ for USERNAME in "${@}"; do
     fi # END of if "${ARCHIVE}" = 'true'
 
     # Deletes accounts
-    if [[ "${DELEE_USER}" = 'true' ]]; then
+    if [[ "${DELETE_USER}" = 'true' ]]; then
         # Delete the user.
-
         # Check to see if the userdel command succeeded.
         # We don't want to tell the user that an account was deleted when it hasn't been.
 

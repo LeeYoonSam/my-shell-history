@@ -16,7 +16,7 @@ usage() {
 
 # Make sure the script is being executed with superuser privileges.
 if [[ "${UID}" -ne 0 ]]; then
-	echo "Please run with sudo or as root."
+	echo "Please run with sudo or as root." >&2
 	exit 1
 fi
 
@@ -45,37 +45,36 @@ for USERNAME in "${@}"; do
 
     # Make sure the UID of the account is at least 1000.
 	USERID=$(id -u "${USERNAME}")
-	if [[ "${USERID}" -lt 1000 ]]; then 
+	if [[ "${USERID}" -lt 1000 ]]; then
 		echo "Refusing to remove the ${USERNAME} account with UID ${USERID}." >&2
 		exit 1
 	fi
-    
-	# Create an archive if requested to do so.
+
+    # Create an archive if requested to do so.
     if [[ "${ARCHIVE}" = 'true' ]]; then
         # Make sure the ARCHIVE_DIR directory exists.
 		if [[ ! -d "${ARCHIVE_DIR}" ]]; then
 			echo "Creating ${ARCHIVE_DIR} directory."
-			
+
 			if ! mkdir -p ${ARCHIVE_DIR}; then
 				echo "The archive directory ${ARCHIVE_DIR} could not be created." >&2
 				exit 1
 			fi
 		fi
-        
-		# Archive the user's home directory and move it into the ARCHIVE_DIR
+
+        # Archive the user's home directory and move it into the ARCHIVE_DIR
 		HOME_DIR="/home/${USERNAME}"
 		ARCHIVE_FILE="${ARCHIVE_DIR}/${USERNAME}.tgz"
 		if [[ -d "${HOME_DIR}" ]]; then
 			echo "Archiving ${HOME_DIR} to ${ARCHIVE_FILE}"
-			if ! tar -zcf "${ARCHIVE_FILE}" "${HOME_DIR}" &>/dev/null ; then
+			if ! tar -zcf "${ARCHIVE_FILE}" "${HOME_DIR}"&>/dev/null; then
 				echo "Could not create ${ARCHIVE_FILE}." >&2
-				exit 1	
+				exit 1
 			fi
 		else
 			echo "${HOME_DIR} does not exist or is not a directory." >&2
 			exit 1
-		fi		
-
+		fi
     fi # END of if "${ARCHIVE}" = 'true'
 
     # Deletes accounts
@@ -95,7 +94,7 @@ for USERNAME in "${@}"; do
 			echo "The account ${USERNAME} was NOT disabled." >&2
 			exit 1
 		fi
-		echo "The account ${USERNAME} was disabled."
+		echo "The account ${USERNAME} was diabeld."
     fi # END of if "${DELETE_USER}" = 'true'
 done
 
