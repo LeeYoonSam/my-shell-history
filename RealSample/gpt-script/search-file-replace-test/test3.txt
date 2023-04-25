@@ -1,0 +1,1 @@
+If the above didn't help or you want to skip the verification of insecure directories you can set the variable ZSH_DISABLE_COMPFIX to "true" before oh-my-zsh is sourced in your zshrc file.
