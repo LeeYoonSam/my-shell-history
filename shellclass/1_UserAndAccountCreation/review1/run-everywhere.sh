@@ -18,46 +18,65 @@ usage() {
 }
 
 # Make sure the script is not being executed with superuser privileges.
-
+if [[ "${UID}" -ne 0 ]]; then
+	echo "Do not execute this script as root. Use the -s option instead." >&2
+	usage
+fi
 
 # Parse the options.
-
+while getopts f:nsv OPTION
+do
+	case ${OPTION} in
+		f) SERVER_LIST="${OPTARG}" ;;
+		n) DRY_RUN='true' ;;
+		s) SUDO='sudo' ;;
+		v) VERBOSE='true' ;;
+		?) usage ;;
+	esac
+done
 
 # Remove the options while leaving the remaining arguments.
-
+shift "$((OPTIND -1))"
 
 # If the user doesn't supply at least one argument, give them help.
-
+if [[ "${#}" -lt 1 ]]; then
+	usage
+fi
 
 # Anything that remains on the command line is to be treated as a single command.
-
+COMMAND=( "${@}" )
 
 # Make sure the SERVER_LIST file exists.
-
+if [[ ! -e "${SERVER_LIST}" ]]; then
+	echo "Cannot open server list file ${SERVER_LIST}." >&2
+	exit 1
+fi
 
 # Expect the best, prepare for the worst.
 EXIT_STATUS='0'
 
 # Loop through the SERVER_LIST
-while 
+while IFS= read -r SERVER 
 do
-    # If it's a verbose
 	if [[ "${VERBOSE}" = 'true' ]]; then
 		echo "${SERVER}"
 	fi
 
-    # Create a SSH_COMMAND
-	
+	SSH_COMMAND="ssh ${SSH_OPTIONS} ${SERVER} ${SUDO}" "$("${COMMAND[@]}")"
 
 	# If it's a dry run, don't execute anything, just echo it.
 	if [[ "${DRY_RUN}" = 'true' ]]; then
-		
+		echo "DRY RUN: ${SSH_COMMAND}"
 	else
-		
+		${SSH_COMMAND}
+		SSH_EXIT_STATUS="${?}"
 
 		# Capture any non-zero exit status from the SSH_COMMAND and report to the user.
-		
+		if [[ "${SSH_EXIT_STATUS}" -ne 0 ]]; then
+			EXIT_STATUS=${SSH_EXIT_STATUS}
+			echo "Execution on ${SERVER} failed." >&2
+		fi
 	fi
-done
+done < "${SERVER_LIST}"
 
 exit ${EXIT_STATUS}
