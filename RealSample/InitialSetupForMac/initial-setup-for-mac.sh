@@ -39,6 +39,9 @@ sed -i '' 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnoster"/g' ~/.zshrc
 # Install Android SDK
 brew install android-sdk
 
+# Install ADB
+brew install --cask android-platform-tools
+
 # Set environment variable for Android SDK
 echo 'export ANDROID_HOME=/usr/local/share/android-sdk' >> ~/.zshrc
 echo 'export PATH=$PATH:$ANDROID_HOME/bin' >> ~/.zshrc
