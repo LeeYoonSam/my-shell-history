@@ -67,6 +67,9 @@ else
     echo "android-sdk installation failed. Please check the installation logs for more details."
 fi
 
+# Install ADB
+brew install --cask android-platform-tools
+
 function getBashAliases() {
     # get Default alias
     git clone https://github.com/LeeYoonSam/my-shell-history --depth=1
@@ -78,6 +81,10 @@ function getBashAliases() {
 }
 
 getBashAliases
+
+# Set environment variable for Android SDK
+echo 'export ANDROID_HOME=/usr/local/share/android-sdk' >> ~/.zshrc
+echo 'export PATH=$PATH:$ANDROID_HOME/bin' >> ~/.zshrc
 
 # Install Figma
 brew install --cask figma
