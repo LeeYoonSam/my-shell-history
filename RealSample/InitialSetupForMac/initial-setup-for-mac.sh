@@ -6,7 +6,7 @@ xcode-select --install
 # Check if Homebrew is installed, and install it if it's not
 if ! [ -x "$(command -v brew)" ]; then
     echo "Installing Homebrew..."
-    /bin/bash -c "$(curl -fsSL <https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh>)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 fi
 
 # Update Homebrew and any existing formulae
