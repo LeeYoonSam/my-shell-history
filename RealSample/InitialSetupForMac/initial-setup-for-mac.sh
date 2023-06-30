@@ -4,9 +4,9 @@
 xcode-select --install
 
 # Check if Homebrew is installed, and install it if it's not
-if test ! $(which brew); then
-  echo "Installing Homebrew..."
-  /bin/bash -c "$(curl -fsSL <https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh>)"
+if ! [ -x "$(command -v brew)" ]; then
+    echo "Installing Homebrew..."
+    /bin/bash -c "$(curl -fsSL <https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh>)"
 fi
 
 # Update Homebrew and any existing formulae
@@ -33,15 +33,51 @@ brew install zsh
 # Install Oh My Zsh
 sh -c "$(curl -fsSL <https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh>)"
 
-# Set theme for Oh My Zsh
-sed -i '' 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnoster"/g' ~/.zshrc
+# Check if installation was successful
+if [ $? -eq 0 ]; then
+    echo "zsh installation completed successfully."
+
+    # Perform action after installation
+    echo "Performing post-installation action..."
+
+    # Set theme for Oh My Zsh
+    sed -i '' 's/ZSH_THEME="robbyrussell"/ZSH_THEME="agnoster"/g' ~/.zshrc
+
+    echo "Post-installation action completed."
+else
+    echo "Oh My Zsh installation failed. Please check the installation logs for more details."
+fi
+
+# Install PowerLine Font
+git clone https://github.com/powerline/fonts.git --depth=1
+cd fonts
+./install.sh
+cd ..
+rm -rf fonts
+
 
 # Install Android SDK
 brew install android-sdk
 
-# Set environment variable for Android SDK
-echo 'export ANDROID_HOME=/usr/local/share/android-sdk' >> ~/.zshrc
-echo 'export PATH=$PATH:$ANDROID_HOME/bin' >> ~/.zshrc
+if [ $? -eq 0 ]; then
+    # Set environment variable for Android SDK
+    echo 'export ANDROID_HOME=/usr/local/share/android-sdk' >> ~/.zshrc
+    echo 'export PATH=$PATH:$ANDROID_HOME/bin' >> ~/.zshrc
+else
+    echo "android-sdk installation failed. Please check the installation logs for more details."
+fi
+
+function getBashAliases() {
+    # get Default alias
+    git clone https://github.com/LeeYoonSam/my-shell-history --depth=1
+    cd my-shell-history/RealSample/alias/usecase
+    cp .bash_aliases ~/.bash_aliases
+    cd ../../../../
+    rm -rf my-shell-history
+    source ~/.bash_aliases
+}
+
+getBashAliases
 
 # Install Figma
 brew install --cask figma

@@ -79,6 +79,15 @@ ZSH_THEME="agnoster"
 1. Save and close the `.zshrc` file.
 2. Restart your terminal to see the new theme in action.
 
+## PowerLine Font 설치
+```bash
+git clone https://github.com/powerline/fonts.git --depth=1
+cd fonts
+./install.sh
+cd ..
+rm -rf fonts
+```
+
 ## Mac OS Command Line Tool 설치
 
 Mac OS Command Line Tool은 개발에 필요한 여러 유틸리티를 제공하는 패키지입니다. Command Line Tool을 설치하려면 다음 단계를 따르세요:
