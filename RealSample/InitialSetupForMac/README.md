@@ -203,3 +203,15 @@ brew install --cask google-chrome
 
 ## 참고
 - Notion 에서 제공하는 AI 기능을 이용해서 노션 문서 작성 및 쉘 스크립트를 생성했습니다.
+
+# Git
+
+## Git clone
+
+```
+git clone https://github.com/LeeYoonSam/my-shell-history --depth=1
+```
+- 기존의 클론과 다른 점은 depth 숫자만큼의 git commit 이력을 가져오는 것입니다.
+
+### 참고
+- [shallow clone](https://bitlog.tistory.com/66)
