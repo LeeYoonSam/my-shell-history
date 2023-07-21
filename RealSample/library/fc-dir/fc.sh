@@ -9,8 +9,8 @@ function fc {
         printf "
 [ fc ] - favorite command collection
 
-usage: fc [add | remove | list | clean | find | help]
-short: fc [a   | rm     | l    | c     | f    | help]
+usage: fc [add | remove | list | clean | help]
+short: fc [a   | rm     | l    | c     | help]
 
 Examples
 fc add     => Add command to fc index file.
