@@ -9,7 +9,7 @@ function fc {
         printf "
 [ fc ] - favorite command collection
 
-usage: fc [add | remove | list | clean | help]
+usage: fc [add | remove | list | clean  | help]
 short: fc [a   | rm     | l    | c     | help]
 
 Examples
@@ -31,6 +31,3 @@ fc help    => Show help.
 
     __fc_main $@
 }
-
-# todo: remove
-fc
