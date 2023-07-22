@@ -1,24 +1,24 @@
-# Favorite Command(FC)
+# Favorite Command Collection(FCC)
 터미널에서는 특정 명령어나 실행했던 명령을 다시 찾아볼때가 많은데 history 로 찾아서 하기엔 번거롭기도 하고 이게 무엇인지 기억이 안나기도 한다.
 
 [fav-dir](https://github.com/johngrib/fav-dir/tree/master) 에서 영감을 받아서 자주쓰는 명령어를 저장하고 사용하는데 목적을 두고 스크립트를 작성해 봅니다.
 
 ## Todo
-- FC 도움말
-- FC 메인 화면
-- ~~FC 명령어 정의~~
-- FC 저장
-- FC 삭제
-- FC 리스트
+- FCC 도움말
+- FCC 메인 화면
+- ~~FCC 명령어 정의~~
+- FCC 저장
+- FCC 삭제
+- FCC 리스트
 - root function(fc) 다른곳에서 어떻게 실행하는지 리서치
 - ~~fzf 가 무엇인가?~~
 - ~~local 에 설치하는 방법~~
 - home brew 배포
 
-## FC 명령어 정의
+## FCC 명령어 정의
 명령어 | 옵션 | 설명
 --- | --- | ---
-fc | | 명령어 선택화면으로 이동
+fcc | | 명령어 선택화면으로 이동
 add, a | | 명령 저장
 remove, rm | | 명령 삭제
 clean, c | | 디스크에 존재하지 않는 경로를 즐겨찾기 목록에서 제거합니다.
@@ -29,7 +29,7 @@ help | | FC 도움말 표시
 > fzf는 범용 명령줄 퍼지 파인더입니다.<br>
 파일, 명령 기록, 프로세스, 호스트 이름, 북마크, git 커밋 등 모든 목록에 사용할 수 있는 명령줄용 대화형 유닉스 필터입니다.
 
-- fzf 를 사용하면 검색이 지원되서 검색 기능을 넣을 필요가 없을듯 해서 fc find 명렁어 제외
+- fzf 를 사용하면 검색이 지원되서 검색 기능을 넣을 필요가 없을듯 해서 fcc find 명렁어 제외
 
 ## local에 스크립트 설치하는 방법
 `/usr/local/bin` 디렉토리는 macOS를 포함한 유닉스 계열 운영 체제에서 필수적인 역할을 합니다. 사용자가 설치한 실행 파일(프로그램, 스크립트 및 바이너리)이 배치되는 표준 위치입니다.
@@ -53,16 +53,16 @@ help | | FC 도움말 표시
 
 
 ```bash
-sudo mv my_script.sh /usr/local/bin/
+sudo cp fcc.sh /usr/local/bin/
 ```
-- 사용자 암호를 입력하라는 메시지가 표시됩니다. 암호를 입력하면 스크립트가 /usr/local/bin 디렉토리로 이동됩니다.
+- 사용자 암호를 입력하라는 메시지가 표시됩니다. 암호를 입력하면 스크립트가 /usr/local/bin 디렉토리로 복사됩니다.
 
 
 **설치 확인**
 이제 다음 명령을 실행하여 스크립트가 /usr/local/bin에 설치되어 있고 올바른 실행 권한이 있는지 확인할 수 있습니다.
 
 ```bash
-ls -l /usr/local/bin/my_script.sh
+ls -l /usr/local/bin/fcc.sh
 ```
 - 출력에는 /usr/local/bin에 설치되었음을 나타내는 올바른 권한이 있는 스크립트가 표시되어야 합니다.
 
@@ -71,14 +71,22 @@ ls -l /usr/local/bin/my_script.sh
 이제 스크립트가 `/usr/local/bin` 디렉토리에 있으므로 이름을 부르기만 하면 시스템의 모든 위치에서 실행할 수 있습니다.
 
 ```bash
-my_script.sh
+fcc.sh
 ```
 - 스크립트가 실행되고 터미널에 스크립트 출력이 표시되어야 합니다.
 
 **.bashrc, .zshrc 에 추가**
 ```bash
-source $(which fc.sh)
+source $(which fcc.sh)
 ```
+
+**fcc 실행**
+```bash
+fcc
+fcc add
+fcc help
+```
+- fcc 명령어로 실행
 
 ## 구현시 사용한 명령어 정리
 
