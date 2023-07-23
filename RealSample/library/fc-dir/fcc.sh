@@ -2,7 +2,7 @@
 
 function fcc {
     local FCC_DIRECTORY="$HOME/.config/fcc-dir"
-    local INDEX="$FAV_DIRECTORY/index"
+    local INDEX="$FCC_DIRECTORY/index"
     local PREVIEW="ls -alh"
 
     function __fcc_help() {
@@ -22,19 +22,37 @@ fcc help    => Show help.
     }
 
     function __fcc_main() {
-        
+        # create_index
+        if [ ! -d "$FCC_DIRECTORY" ]; then
+            mkdir -p $FCC_DIRECTORY
+        fi
+        if [ ! -f "$INDEX" ]; then
+            touch $INDEX
+        fi
+
         # controller
         case $1 in
             "help"|"-h")
                 __fcc_help;;
+            "add"|"a")
+                __fcc_add_command;;
             *)
-                local TARGET_PATH=$(__fcc_get_target_path)
-                if [ ! "$TARGET_PATH" = "" ]; then
-                    cd $TARGET_PATH
-                fi
+                __fcc_get_list
+                # local TARGET_PATH=$(__fcc_get_target_path)
+                # if [ ! "$TARGET_PATH" = "" ]; then
+                #     cd $TARGET_PATH
+                # fi
                 ;;
         esac
-        
+    }
+
+    function __fcc_add_command() {
+        local CURRENT_COMMAND=$(history -1 | awk '{print $2}')
+        echo "current_command: $CURRENT_COMMAND"
+        echo "$CURRENT_COMMAND" > $INDEX.temp
+        cat $INDEX >> $INDEX.temp
+        __fcc_save_temp_to_index
+        echo "Added => $CURRENT_COMMAND"
     }
 
     function __fcc_get_list() {
@@ -60,6 +78,10 @@ fcc help    => Show help.
             done | sort -r
             
         )"
+    }
+
+    function __fcc_save_temp_to_index() {
+        sort $INDEX.temp | uniq > $INDEX
     }
 
     __fcc_main $@
