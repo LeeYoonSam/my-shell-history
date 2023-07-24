@@ -36,6 +36,8 @@ fcc help    => Show help.
                 __fcc_help;;
             "add"|"a")
                 __fcc_add_command;;
+            "remove"|"rm")
+                __fcc_remove_command;;
             *)
                 __fcc_get_list
                 # local TARGET_PATH=$(__fcc_get_target_path)
@@ -67,6 +69,17 @@ fcc help    => Show help.
         );
         echo $TARGET_PATH
 
+    }
+
+    function __fcc_remove_command() {
+        echo -n '' >$INDEX.temp
+        echo $(
+            for command in `__fcc_get_list | fzf -m` ; do
+                grep -v $command $INDEX >> $INDEX.temp
+                echo "Removed => $command"
+            done
+        )
+        __fcc_save_temp_to_index
     }
 
     function printParentsRecursive() {

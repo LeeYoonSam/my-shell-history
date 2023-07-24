@@ -8,8 +8,15 @@
 - ~~FCC 메인 화면~~
 - ~~FCC 명령어 정의~~
 - FCC 저장
+    - ~~명령어 저장~~
+    - 저장할 명령어를 history 에서 찾기 (add 와 구분해야 할지 고민)
+    - 명령어를 fzf 로 보이게 처리하기
+    - 명령어 클릭시 실행
+
 - FCC 삭제
-- FCC 리스트
+    - ~~명령어 삭제~~
+    - 명령어가 없을때 처리
+- ~~FCC 리스트~~
 - root function(fc) 다른곳에서 어떻게 실행하는지 리서치
 - ~~fzf 가 무엇인가?~~
 - ~~local 에 설치하는 방법~~
@@ -129,3 +136,6 @@ $CURRENT_COMMAND > $INDEX.temp
 echo "$CURRENT_COMMAND" > $INDEX.temp
 ```
 - 명령어 자체를 출력하기 위해 echo 를 사용해서 출력하고 그 결과를 명령어에 저장 하도록 처리
+
+## Reference
+- [rbenv](https://github.com/rbenv/rbenv) : README.md 에서 OS 나 shell 환경별 설정 참고
