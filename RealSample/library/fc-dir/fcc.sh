@@ -40,10 +40,10 @@ fcc help    => Show help.
                 __fcc_remove_command;;
             *)
                 __fcc_get_list
-                # local TARGET_PATH=$(__fcc_get_target_path)
-                # if [ ! "$TARGET_PATH" = "" ]; then
-                #     cd $TARGET_PATH
-                # fi
+                local TARGET_COMMAND=$(__fcc_get_target_command)
+                if [ ! "$TARGET_COMMAND" = "" ]; then
+                    echo "Run $TARGET_COMMAND"
+                fi
                 ;;
         esac
     }
@@ -61,14 +61,9 @@ fcc help    => Show help.
         grep -v '^ *$' $INDEX
     }
 
-    function __fcc_get_target_path() {
-        local TARGET_PATH=$( \
-            (printParentsRecursive ; echo '' ; __fcc_get_list) \
-            | cat \
-            | fzf --preview="echo {} | xargs $PREVIEW" \
-        );
-        echo $TARGET_PATH
-
+    function __fcc_get_target_command() {
+        local TARGET_COMMAND=$(__fcc_get_list | cat | fzf -m);
+        echo $TARGET_COMMAND | sort -r
     }
 
     function __fcc_remove_command() {
