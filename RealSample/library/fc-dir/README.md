@@ -112,6 +112,32 @@ awk | | `awk '{print $n}'` 명령은 입력 데이터의 각 레코드에서 n�
 ## 발생한 문제
 
 ### 최근 명령어 저장시 발생한 문제
+
+**[문제-미해결]**
+
+```bash
+adb devices
+fcc add
+
+current_command: adb
+Added => adb
+```
+- fcc add > 실행시 앞쪽의 adb 만 저장되는 문제 발생
+- `$(history -1 | awk '{print $2}')` awk 로 2번째 필드를 저장해서 발생한 문제
+
+**[해결]**
+
+---
+
+**[문제-미해결]**
+
+- fcc > alias 로 등록된것을 실행시 command not found 에러 발생
+- `__fcc_main:22: command not found: adb-c`
+
+**[해결]**
+
+---
+
 **[문제]**
 
 - !! 를 사용해서 가장 최근에 사용한 명령을 가져오려고 하니 명령어를 찾을수 없는 문제가 발생
@@ -123,6 +149,8 @@ awk | | `awk '{print $n}'` 명령은 입력 데이터의 각 레코드에서 n�
 ```bash
 local CURRENT_COMMAND=$(history -1 | awk '{print $2}')
 ```
+
+---
 
 ### 명령어 자체를 저장 하기
 **[문제]**
