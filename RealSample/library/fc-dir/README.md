@@ -9,14 +9,14 @@
 - ~~FCC 명령어 정의~~
 - FCC 저장
     - ~~명령어 저장~~
-    - 저장할 명령어를 history 에서 찾기 (add 와 구분해야 할지 고민)
-    - 명령어를 fzf 로 보이게 처리하기
-    - 명령어 클릭시 실행
-
-- FCC 삭제
-    - ~~명령어 삭제~~
-    - 명령어가 없을때 처리
+    - ~~명령어를 fzf 로 보이게 처리하기~~
+    - ~~명령어 클릭시 실행~~
+    - ~~명렁어 저장시 history 앞 구분자 빼고 다 저장하기~~
+    - 이미 저장된 명령어 알려주기
+- ~~FCC 삭제~~
 - ~~FCC 리스트~~
+- FCC 기능 개선
+    - 저장할 명령어를 history 에서 찾기 (add 와 구분해야 할지 고민)
 - ~~root function(fc) 다른곳에서 어떻게 실행하는지 리서치~~
 - ~~fzf 가 무엇인가?~~
 - ~~local 에 설치하는 방법~~
@@ -107,6 +107,8 @@ fcc help
 grep | -v, --invert-match | 선택된 줄은 지정된 패턴과 일치하지 않는 줄입니다.
 !! | | 가장 최근에 입력한 명령을 가져옵니다.
 awk | | `awk '{print $n}'` 명령은 입력 데이터의 각 레코드에서 n번째 필드를 추출하고 인쇄하는 데 사용됩니다.
+history | -n | 최근에 실행한 명령어를 n개 조회
+cut | -d | 구분자를 기준으로 필드를 분리
 
 
 ## 발생한 문제
@@ -126,6 +128,22 @@ Added => adb
 - `$(history -1 | awk '{print $2}')` awk 로 2번째 필드를 저장해서 발생한 문제
 
 **[해결]**
+```bash
+history -1 | cut -d' ' -f4-
+>adb devices
+history -1 | cut -d' ' -f3-
+> adb devices
+history -1 | cut -d' ' -f2-
+>1350  adb devices
+history -1 | cut -d' ' -f1-
+> 1352  adb devices
+```
+- history 1개만 가져와서 구분자를 공백으로해서 필드를 나누고 4번째 필드부터 출력
+
+```bash
+`$(history -1 | awk '{print $2}')` -> 
+$(history -1 | cut -d' ' -f4-)
+```
 
 ---
 

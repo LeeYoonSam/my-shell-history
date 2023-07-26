@@ -50,7 +50,7 @@ fcc help    => Show help.
     }
 
     function __fcc_add_command() {
-        local CURRENT_COMMAND=$(history -1 | awk '{print $2}')
+        local CURRENT_COMMAND=$(history -1 | cut -d' ' -f4-)
         echo "current_command: $CURRENT_COMMAND"
         echo "$CURRENT_COMMAND" > $INDEX.temp
         cat $INDEX >> $INDEX.temp
@@ -68,7 +68,7 @@ fcc help    => Show help.
     }
 
     function __fcc_remove_command() {
-        echo -n '' >$INDEX.temp
+        echo -n '' > $INDEX.temp
         echo $(
             for command in `__fcc_get_list | fzf -m` ; do
                 grep -v $command $INDEX >> $INDEX.temp
