@@ -17,9 +17,10 @@
 - ~~FCC 리스트~~
 - FCC 기능 개선
     - 저장할 명령어를 history 에서 찾기 (add 와 구분해야 할지 고민)
-    - 데이터셋 변경 (id, category, command 등)
+    - 데이터셋 변경 (id, category, command, description 등)
     - 수정기능 추가
     - 파라미터 받아서 커맨드 실행
+    - 명령어 저장시 옵셔널로 설명 추가
 - ~~root function(fc) 다른곳에서 어떻게 실행하는지 리서치~~
 - ~~fzf 가 무엇인가?~~
 - ~~local 에 설치하는 방법~~
