@@ -54,8 +54,9 @@ fcc help    => Show help.
         echo "current_command: $CURRENT_COMMAND"
         echo "$CURRENT_COMMAND" > $INDEX.temp
         cat $INDEX >> $INDEX.temp
-        __fcc_save_temp_to_index
-        echo "Added => $CURRENT_COMMAND"
+
+        local successMessage="Added => $CURRENT_COMMAND"
+        checkDuplicationCommand $successMessage
     }
 
     function __fcc_get_list() {
@@ -91,6 +92,23 @@ fcc help    => Show help.
 
     function __fcc_save_temp_to_index() {
         sort $INDEX.temp | uniq > $INDEX
+        echo $1
+    }
+
+    function checkDuplicationCommand() {
+        # 커맨드 정렬 및 중복 명령 찾기
+        sorted_commands=$(sort $INDEX.temp)
+        duplicate_commands=$(echo "$sorted_commands" | uniq -d)
+    
+        if [ -z "$duplicate_commands" ]; then
+            __fcc_save_temp_to_index $1
+        else
+            # 중복된 라인 출력
+            while IFS= read -r command; do
+                IS_DUPLICATED=true
+                echo "Duplicated => $command"
+            done <<< "$duplicate_commands"
+        fi
     }
 
     __fcc_main $@
