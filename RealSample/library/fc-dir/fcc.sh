@@ -9,11 +9,12 @@ function fcc {
         printf "
 [ fcc ] - favorite command collection
 
-usage: fcc [add | remove | list | clean  | help]
-short: fcc [a   | rm     | l    | c     | help]
+usage: fcc [add | select | remove | list | clean | help]
+short: fcc [a   | s      | rm     | l    | c     | help]
 
 Examples
 fcc add     => Add command to fcc index file.
+fcc select  => Add command to fcc from history index file.
 fcc remove  => Remove selected command in index file.
 fcc list    => Print index file.
 fcc clean   => Remove invalid directories in index file.
@@ -38,6 +39,8 @@ fcc help    => Show help.
                 __fcc_add_command;;
             "remove"|"rm")
                 __fcc_remove_command;;
+            "select" |"s")
+                __fcc_select_command;;
             *)
                 __fcc_get_list
                 local TARGET_COMMAND=$(__fcc_get_target_command)
@@ -51,7 +54,7 @@ fcc help    => Show help.
 
     function __fcc_add_command() {
         local CURRENT_COMMAND=$(history -1 | cut -d' ' -f4-)
-        echo "current_command: $CURRENT_COMMAND"
+        echo "Current Command: $CURRENT_COMMAND"
         echo "$CURRENT_COMMAND" > $INDEX.temp
         cat $INDEX >> $INDEX.temp
 
@@ -77,6 +80,20 @@ fcc help    => Show help.
             done
         )
         __fcc_save_temp_to_index
+    }
+
+    function __fcc_select_command() {
+        local HISTORY_COMMAND=$(history -10 | cut -d' ' -f4- | fzf -m);
+
+        echo $(
+            for command in $HISTORY_COMMAND ; do
+                echo "$command" > $INDEX.temp
+                cat $INDEX >> $INDEX.temp
+
+                local successMessage="Added => $command"
+                checkDuplicationCommand $successMessage
+            done
+        )
     }
 
     function printParentsRecursive() {
