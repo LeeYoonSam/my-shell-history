@@ -10,7 +10,7 @@ function fcc {
 [ fcc ] - favorite command collection
 
 usage: fcc [add | select | remove | list | clean | help]
-short: fcc [a   | s      | rm     | l    | c     | help]
+short: fcc [a   | s      | rm     | l    | c     | h   ]
 
 Examples
 fcc add     => Add command to fcc index file.
@@ -33,7 +33,7 @@ fcc help    => Show help.
 
         # controller
         case $1 in
-            "help"|"-h")
+            "help"|"h")
                 __fcc_help;;
             "add"|"a")
                 __fcc_add_command;;
@@ -83,7 +83,7 @@ fcc help    => Show help.
     }
 
     function __fcc_select_command() {
-        local HISTORY_COMMAND=$(history -10 | cut -d' ' -f4- | fzf -m);
+        local HISTORY_COMMAND=$(history -15 | cut -d' ' -f4- | fzf -m | sort -r);
 
         echo $(
             for command in $HISTORY_COMMAND ; do
