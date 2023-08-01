@@ -46,7 +46,7 @@ fcc help    => Show help.
                 local TARGET_COMMAND=$(__fcc_get_target_command)
                 if [ ! "$TARGET_COMMAND" = "" ]; then
                     echo "Run $TARGET_COMMAND"
-                    $TARGET_COMMAND
+                    eval $TARGET_COMMAND
                 fi
                 ;;
         esac

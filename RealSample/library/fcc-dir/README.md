@@ -21,6 +21,7 @@
     - 수정기능 추가
     - 파라미터 받아서 커맨드 실행
     - 명령어 저장시 옵셔널로 설명 추가
+    - 명령 실행시 `eval` 을 사용하면 보안에 취약해질수 있기 때문에 `eval`을 대체할수 있는 방안 검토
 - ~~root function(fc) 다른곳에서 어떻게 실행하는지 리서치~~
 - ~~fzf 가 무엇인가?~~
 - ~~local 에 설치하는 방법~~
@@ -123,7 +124,7 @@ while | read -r variable | read 명령은 입력 소스(예: 파일 또는 명�
 
 ### 최근 명령어 저장시 발생한 문제
 
-**[문제-미해결]**
+**[문제]**
 
 ```bash
 adb devices
@@ -155,12 +156,31 @@ $(history -1 | cut -d' ' -f4-)
 
 ---
 
-**[문제-미해결]**
+**[문제]**
 
 - fcc > alias 로 등록된것을 실행시 command not found 에러 발생
 - `__fcc_main:22: command not found: adb-c`
 
 **[해결]**
+- bash에 문자열로 저장된 명령을 실행하려면 eval 명령을 사용할 수 있습니다. eval 명령을 사용하면 문자열로 표시되는 명령을 평가하고 실행할 수 있습니다. 일반적인 구문은 다음과 같습니다.
+
+
+```bash
+eval "command_string"
+```
+- 예를 들어 변수에 문자열로 저장된 명령이 있는 경우 eval을 사용하여 실행할 수 있습니다.
+
+
+```bash
+# Command stored as a string in a variable
+command_string="echo 'Hello, world!'"
+
+# Using eval to execute the command
+eval "$command_string"
+```
+- 이 예에서 eval 명령은 echo 'Hello, world!' 명령을 실행하고 "Hello, world!"를 인쇄합니다.
+- 특히 `명령 문자열이 사용자 입력으로 구성되는 경우 보안에 영향을 미칠 수 있으므로 eval을 사용할 때 주의`하십시오. 잠재적인 코드 삽입 공격을 방지하기 위해 명령 문자열을 구성하는 데 사용되는 모든 사용자 입력을 검증하고 삭제하는 것이 중요합니다.
+- 대부분의 경우 가능하면 eval을 사용하지 않고 함수나 다른 프로그래밍 구조를 사용하여 목표를 달성할 수 있는 대체 방법을 찾는 것이 좋습니다. 그러나 합법적인 사용 사례가 있고 잠재적인 위험을 이해하고 있다면 eval을 사용하여 문자열에서 명령을 실행할 수 있습니다.
 
 ---
 
