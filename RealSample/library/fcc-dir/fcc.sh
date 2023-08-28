@@ -77,9 +77,10 @@ fcc help    => Show help.
             for command in `__fcc_get_list | fzf -m` ; do
                 grep -v $command $INDEX >> $INDEX.temp
                 echo "Removed => $command"
+
+                __fcc_save_temp_to_index
             done
         )
-        __fcc_save_temp_to_index
     }
 
     function __fcc_select_command() {
